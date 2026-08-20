@@ -477,6 +477,14 @@
           <span class="titulo">Intervalos</span>
           <span class="desc">Gráfica, notación y operaciones</span>
         </button>
+        <button class="tarjeta" data-modulo="intersecciones">
+          <span class="titulo">Intersecciones con ejes</span>
+          <span class="desc">Corte con x (y=0) y con y (x=0)</span>
+        </button>
+        <button class="tarjeta" data-modulo="curvas">
+          <span class="titulo">Intersecciones entre curvas</span>
+          <span class="desc">f(x) = g(x)</span>
+        </button>
         <button class="tarjeta proximamente" disabled>
           <span class="titulo">Valor absoluto básico</span>
           <span class="desc">Próximamente</span>
@@ -684,6 +692,46 @@
       </div>
       <div id="errorOp" class="error" hidden></div>
       <div id="resOp"></div>
+    </div>
+
+    <div id="modulo-intersecciones" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Intersecciones con los ejes</h2>
+      <div class="card">
+        <input id="entradaInterc" type="text" placeholder="Ej: y = 2x + 3  ó  3x + 2y = 6" autocomplete="off">
+      </div>
+      <div class="card">
+        <button id="botonIntercX" class="btn">Corte con el eje X</button>
+        <button id="botonIntercY" class="btn">Corte con el eje Y</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaInterc" data-valor="y = 2x + 3">y = 2x + 3</button>
+        <button type="button" class="ejercicio" data-fill="entradaInterc" data-valor="y = x² - 4">y = x² − 4</button>
+        <button type="button" class="ejercicio" data-fill="entradaInterc" data-valor="3x + 2y = 6">3x + 2y = 6</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplo desarrollado</span>
+        <button type="button" class="ejercicio" data-fill="entradaInterc" data-valor="y = 3x + 1">y = 3x + 1</button>
+      </div>
+      <div id="errorInterc" class="error" hidden></div>
+      <div id="resInterc"></div>
+    </div>
+
+    <div id="modulo-curvas" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Intersecciones entre curvas</h2>
+      <div class="card">
+        <input id="entradaCurvas" type="text" placeholder="Ej: y = √(2x), y = x − 2  ó  √(2x) y x − 2" autocomplete="off">
+        <button id="botonCurvas" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos desarrollados</span>
+        <button type="button" class="ejercicio" data-fill="entradaCurvas" data-valor="√(2x) y x - 2" data-run="botonCurvas">1) √(2x) y x − 2</button>
+        <button type="button" class="ejercicio" data-fill="entradaCurvas" data-valor="√(2x) y -x" data-run="botonCurvas">2) √(2x) y −x</button>
+      </div>
+      <div id="errorCurvas" class="error" hidden></div>
+      <div id="resCurvas"></div>
     </div>
   </div>
 
@@ -937,12 +985,12 @@
       // extremos
       const added = {};
       segments.forEach(function (s) {
-        if (isFinite(s.from) && !added['a' + s.from]) {
-          added['a' + s.from] = true;
+        if (isFinite(s.from) && !added['p' + s.from]) {
+          added['p' + s.from] = true;
           svg += dot(X(s.from), my, s.fromClosed);
         }
-        if (isFinite(s.to) && !added['b' + s.to]) {
-          added['b' + s.to] = true;
+        if (isFinite(s.to) && !added['p' + s.to]) {
+          added['p' + s.to] = true;
           svg += dot(X(s.to), my, s.toClosed);
         }
       });
@@ -1839,6 +1887,382 @@
       return 'x ' + mostrarSigno(sol.op) + ' ' + v;
     }
 
+    // ============ MÓDULO INTERSECCIONES ============
+    function parsearLinealXY(texto) {
+      let t = texto.replace(/\s/g, '').replace(/−/g, '-');
+      t = t.replace(/-/g, '+-');
+      const tokens = t.split('+').filter(function (x) { return x !== ''; });
+      let coefX = 0, coefY = 0, c = 0;
+      for (const tok of tokens) {
+        if (tok.endsWith('x')) {
+          const cs = tok.slice(0, -1);
+          coefX += (cs === '' || cs === '+') ? 1 : (cs === '-' ? -1 : parseNum(cs));
+        } else if (tok.endsWith('y')) {
+          const cs = tok.slice(0, -1);
+          coefY += (cs === '' || cs === '+') ? 1 : (cs === '-' ? -1 : parseNum(cs));
+        } else {
+          c += parseNum(tok);
+        }
+      }
+      return { coefX: coefX, coefY: coefY, c: c };
+    }
+
+    function parsearFuncion(texto) {
+      const partes = texto.split('=');
+      if (partes.length !== 2) throw new Error('Debe tener un = (ej. y = 2x + 3).');
+      const izq = partes[0].trim(), der = partes[1].trim();
+      if (izq.replace(/\s/g, '') === 'y') {
+        const { a, b, c } = parsearCuadratica(der);
+        return { forma: 'y', a: a, b: b, c: c, f: function (x) { return a * x * x + b * x + c; } };
+      }
+      const li = parsearLinealXY(izq);
+      if (li.coefY === 0) throw new Error('La ecuación no tiene variable y.');
+      const C = parseNum(der) - li.c;
+      const ax = li.coefX, by = li.coefY;
+      return { forma: 'general', a: ax, b: by, C: C, f: function (x) { return (C - ax * x) / by; } };
+    }
+
+    function renderPlano(puntos) {
+      if (!puntos.length) return '';
+      const xs = puntos.map(function (p) { return p.x; }).filter(isFinite);
+      const ys = puntos.map(function (p) { return p.y; }).filter(isFinite);
+      let xMin = Math.min.apply(null, xs.concat([0]));
+      let xMax = Math.max.apply(null, xs.concat([0]));
+      let yMin = Math.min.apply(null, ys.concat([0]));
+      let yMax = Math.max.apply(null, ys.concat([0]));
+      const padX = Math.max(2, (xMax - xMin) * 0.5);
+      const padY = Math.max(2, (yMax - yMin) * 0.5);
+      xMin -= padX; xMax += padX;
+      yMin -= padY; yMax += padY;
+
+      const W = 430, H = 330, m = 48;
+      const sx = (W - 2 * m) / (xMax - xMin);
+      const sy = (H - 2 * m) / (yMax - yMin);
+      const X = function (x) { return m + (x - xMin) * sx; };
+      const Y = function (y) { return H - m - (y - yMin) * sy; };
+
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+      for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+        svg += '<line x1="' + X(i) + '" y1="' + Y(yMin) + '" x2="' + X(i) + '" y2="' + Y(yMax) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+        svg += '<line x1="' + X(xMin) + '" y1="' + Y(j) + '" x2="' + X(xMax) + '" y2="' + Y(j) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      svg += '<line x1="' + X(xMin) + '" y1="' + Y(0) + '" x2="' + X(xMax) + '" y2="' + Y(0) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<polygon points="' + X(xMax) + ',' + Y(0) + ' ' + (X(xMax) - 9) + ',' + (Y(0) - 4) + ' ' + (X(xMax) - 9) + ',' + (Y(0) + 4) + '" fill="#475569"/>';
+      svg += '<polygon points="' + X(0) + ',' + Y(yMax) + ' ' + (X(0) - 4) + ',' + (Y(yMax) + 9) + ' ' + (X(0) + 4) + ',' + (Y(yMax) + 9) + '" fill="#475569"/>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
+      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="12" fill="#64748b">0</text>';
+
+      puntos.forEach(function (p) {
+        svg += '<circle cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="5" fill="#e11d48"/>';
+        svg += '<text x="' + (X(p.x) + 9) + '" y="' + (Y(p.y) - 9) + '" font-size="13" font-weight="600" fill="#e11d48">' + p.etiqueta + '</text>';
+      });
+      svg += '</svg>';
+      return svg;
+    }
+
+    function renderPasos(pasos) {
+      let html = '<div class="etiqueta">Pasos</div>';
+      pasos.forEach(function (p, i) {
+        html += cuadernoLinea('Paso ' + (i + 1) + ': ' + p.titulo + '  →  ' + p.ecu);
+      });
+      return html;
+    }
+
+    function resolverIntercepcionX(texto) {
+      const fn = parsearFuncion(texto);
+      const pasos = [];
+      const puntos = [];
+      let resultado = '';
+
+      if (fn.forma === 'y') {
+        const a = fn.a, b = fn.b, c = fn.c;
+        pasos.push({ titulo: 'hacer y = 0', ecu: fmtPolinomio(a, b, c) + ' = 0' });
+        if (a === 0) {
+          if (b === 0) {
+            pasos.push({ titulo: 'recta horizontal', ecu: 'no corta el eje x' });
+          } else {
+            const x = -c / b;
+            pasos.push({ titulo: 'pasar el término independiente', ecu: terminoX(b) + ' = ' + fmtRacional(-c).replace(/-/g, '−') });
+            pasos.push({ titulo: 'despejar x', ecu: 'x = ' + fmtRacional(x) });
+            pasos.push({ titulo: 'punto de corte', ecu: '(' + fmtRacional(x) + ', 0)' });
+            resultado = 'Punto (' + fmtRacional(x) + ', 0)';
+            puntos.push({ x: x, y: 0, etiqueta: '(' + fmtRacional(x) + ', 0)' });
+          }
+        } else {
+          const D = b * b - 4 * a * c;
+          if (D < 0) {
+            pasos.push({ titulo: 'discriminante', ecu: 'D < 0 → no corta el eje x' });
+          } else if (Math.abs(D) < 1e-9) {
+            const x = -b / (2 * a);
+            pasos.push({ titulo: 'raíz doble', ecu: 'x = ' + fmtRacional(x) });
+            pasos.push({ titulo: 'punto de corte', ecu: '(' + fmtRacional(x) + ', 0)' });
+            resultado = 'Punto (' + fmtRacional(x) + ', 0)';
+            puntos.push({ x: x, y: 0, etiqueta: '(' + fmtRacional(x) + ', 0)' });
+          } else {
+            const r1 = (-b - Math.sqrt(D)) / (2 * a);
+            const r2 = (-b + Math.sqrt(D)) / (2 * a);
+            pasos.push({ titulo: 'aplicar la fórmula general', ecu: 'x₁ = ' + fmtRacional(r1) + ' · x₂ = ' + fmtRacional(r2) });
+            pasos.push({ titulo: 'puntos de corte', ecu: '(' + fmtRacional(r1) + ', 0) y (' + fmtRacional(r2) + ', 0)' });
+            resultado = 'Puntos (' + fmtRacional(r1) + ', 0) y (' + fmtRacional(r2) + ', 0)';
+            puntos.push({ x: r1, y: 0, etiqueta: '(' + fmtRacional(r1) + ', 0)' });
+            puntos.push({ x: r2, y: 0, etiqueta: '(' + fmtRacional(r2) + ', 0)' });
+          }
+        }
+      } else {
+        const a = fn.a, C = fn.C;
+        pasos.push({ titulo: 'hacer y = 0', ecu: terminoX(a) + ' = ' + fmtRacional(C).replace(/-/g, '−') });
+        if (a === 0) {
+          pasos.push({ titulo: 'sin variable x', ecu: 'no corta el eje x' });
+        } else {
+          const x = C / a;
+          pasos.push({ titulo: 'despejar x', ecu: 'x = ' + fmtRacional(x) });
+          pasos.push({ titulo: 'punto de corte', ecu: '(' + fmtRacional(x) + ', 0)' });
+          resultado = 'Punto (' + fmtRacional(x) + ', 0)';
+          puntos.push({ x: x, y: 0, etiqueta: '(' + fmtRacional(x) + ', 0)' });
+        }
+      }
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar(texto) + '</div>';
+      html += cuadernoLinea('y = 0');
+      pasos.forEach(function (p, i) {
+        if (i === pasos.length - 1) html += cuadernoResultado(p.ecu);
+        else html += cuadernoLinea(p.ecu);
+      });
+      html += '</div>';
+      html += '<div class="grafica">' + renderPlano(puntos) + '</div>';
+      html += renderPasos(pasos);
+      return html;
+    }
+
+    function resolverIntercepcionY(texto) {
+      const fn = parsearFuncion(texto);
+      const pasos = [];
+      const puntos = [];
+      let resultado = '';
+
+      if (fn.forma === 'y') {
+        const a = fn.a, b = fn.b, c = fn.c;
+        pasos.push({ titulo: 'sustituir en la función', ecu: 'f(0) = ' + fmtPolinomioSustituido(a, b, c, 0) });
+        pasos.push({ titulo: 'punto de corte', ecu: '(0, ' + fmtRacional(c) + ')' });
+        resultado = 'Punto (0, ' + fmtRacional(c) + ')';
+        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
+      } else {
+        const C = fn.C, by = fn.b;
+        pasos.push({ titulo: 'hacer x = 0', ecu: terminoX(by).replace(/x/g, 'y') + ' = ' + fmtRacional(C).replace(/-/g, '−') });
+        const y = C / by;
+        pasos.push({ titulo: 'despejar y', ecu: 'y = ' + fmtRacional(y) });
+        pasos.push({ titulo: 'punto de corte', ecu: '(0, ' + fmtRacional(y) + ')' });
+        resultado = 'Punto (0, ' + fmtRacional(y) + ')';
+        puntos.push({ x: 0, y: y, etiqueta: '(0, ' + fmtRacional(y) + ')' });
+      }
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar(texto) + '</div>';
+      html += cuadernoLinea('x = 0');
+      pasos.forEach(function (p, i) {
+        if (i === pasos.length - 1) html += cuadernoResultado(p.ecu);
+        else html += cuadernoLinea(p.ecu);
+      });
+      html += '</div>';
+      html += '<div class="grafica">' + renderPlano(puntos) + '</div>';
+      html += renderPasos(pasos);
+      return html;
+    }
+
+    function separarDosCurvas(texto) {
+      let t = texto.trim();
+      if (t.indexOf(',') !== -1) {
+        const partes = t.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+        if (partes.length >= 2) return [partes[0], partes[1]];
+        throw new Error('Deben ser dos curvas.');
+      }
+      const idx1 = t.indexOf('=');
+      if (idx1 > 0) {
+        const rest = t.slice(idx1 + 1);
+        const m = rest.match(/\s+(?:y\s*=|f\(x\)\s*=|g\(x\)\s*=)/);
+        if (m) {
+          const inicioSegunda = idx1 + 1 + m.index;
+          const primera = t.slice(0, inicioSegunda).trim().replace(/(\s+y)+$/, '');
+          const segunda = t.slice(inicioSegunda).trim();
+          return [primera, segunda];
+        }
+      }
+      const partes = t.split(/\s+y\s+/);
+      if (partes.length === 2) return [partes[0].trim(), partes[1].trim()];
+      throw new Error('Separe las dos curvas con coma (,) o con la palabra "y".');
+    }
+
+    function parsearCurva(texto) {
+      let t = texto.trim().replace(/^([fg])\(x\)\s*=\s*/i, '').replace(/^y\s*=\s*/i, '').replace(/\s/g, '').replace(/−/g, '-');
+      if (t.indexOf('=') !== -1) {
+        const partes = t.split('=');
+        if (partes.length === 2 && partes[0].indexOf('y') !== -1) {
+          const li = parsearLinealXY(partes[0]);
+          const c = parseNum(partes[1]) - li.c;
+          return { tipo: 'sistema', a: li.coefX, b: li.coefY, c: c };
+        }
+      }
+      const raiz = t.match(/^(?:√|sqrt\()\(?([+-]?\d*\.?\d*)x(?:([+-]\d+))?\)?\)?$/i);
+      if (raiz) {
+        const aTexto = raiz[1] === '' || raiz[1] === '+' ? '1' : raiz[1] === '-' ? '-1' : raiz[1];
+        return { tipo: 'raiz', a: parseFloat(aTexto), c: raiz[2] ? parseFloat(raiz[2]) : 0, evaluar: function (x) { return Math.sqrt(this.a * x + this.c); } };
+      }
+      const lineal = t.match(/^([+-]?\d*\.?\d*)x([+-]\d+(?:\.\d+)?)?$/i);
+      if (lineal) {
+        const m = lineal[1] === '' || lineal[1] === '+' ? 1 : lineal[1] === '-' ? -1 : parseFloat(lineal[1]);
+        const b = lineal[2] ? parseFloat(lineal[2]) : 0;
+        return { tipo: 'lineal', m: m, b: b, evaluar: function (x) { return this.m * x + this.b; } };
+      }
+      throw new Error('Use una forma como √(2x), x − 2 o 2x − 3y = 13.');
+    }
+
+    function renderPasosCurvas(pasos) {
+      let html = '<div class="etiqueta">Pasos</div>';
+      pasos.forEach(function (p, i) {
+        html += cuadernoLinea('Paso ' + (i + 1) + ': ' + p.titulo + '  →  ' + p.ecu);
+      });
+      return html;
+    }
+
+    function fmtLinealXY(li) {
+      let s = '';
+      if (li.a !== 0) s += terminoX(li.a);
+      if (li.b !== 0) {
+        if (li.b === 1) s += (s ? ' + ' : '') + 'y';
+        else if (li.b === -1) s += ' − y';
+        else s += (li.b < 0 ? ' − ' : ' + ') + fmtRacional(Math.abs(li.b)) + 'y';
+      }
+      return s || '0';
+    }
+
+    function resolverSistemaHtml(f, g, pasos) {
+      let html = '';
+      html += cuadernoLinea(fmtLinealXY(f) + ' = ' + fmtRacional(f.c));
+      html += cuadernoLinea(fmtLinealXY(g) + ' = ' + fmtRacional(g.c));
+      const det = f.a * g.b - g.a * f.b;
+      if (det === 0) {
+        html += cuadernoLinea('Rectas paralelas: no hay punto de intersección');
+        pasos.push({ titulo: 'comprobar pendientes', ecu: 'paralelas → sin intersección' });
+        return html;
+      }
+      let x, y;
+      if (f.b + g.b === 0) {
+        const sumA = f.a + g.a, sumC = f.c + g.c;
+        html += cuadernoLinea('Sumar las dos ecuaciones (se cancela y)');
+        html += cuadernoLinea(terminoX(sumA) + ' = ' + fmtRacional(sumC));
+        x = sumC / sumA;
+        html += cuadernoLinea('x = ' + fmtRacional(x));
+        html += cuadernoLinea('Sustituir en la primera ecuación');
+        const rest = f.c - f.a * x;
+        html += cuadernoLinea(terminoX(f.b).replace(/x/g, 'y') + ' = ' + fmtRacional(rest).replace(/-/g, '−'));
+        y = rest / f.b;
+        html += cuadernoLinea('y = ' + fmtRacional(y));
+        pasos.push({ titulo: 'sumar las ecuaciones', ecu: terminoX(sumA) + ' = ' + fmtRacional(sumC) });
+        pasos.push({ titulo: 'despejar x', ecu: 'x = ' + fmtRacional(x) });
+        pasos.push({ titulo: 'sustituir y despejar y', ecu: 'y = ' + fmtRacional(y) });
+      } else if (f.a + g.a === 0) {
+        const sumB = f.b + g.b, sumC = f.c + g.c;
+        html += cuadernoLinea('Sumar las dos ecuaciones (se cancela x)');
+        html += cuadernoLinea((Math.abs(sumB) === 1 ? (sumB < 0 ? '−y' : 'y') : fmtRacional(sumB) + 'y') + ' = ' + fmtRacional(sumC));
+        y = sumC / sumB;
+        html += cuadernoLinea('y = ' + fmtRacional(y));
+        html += cuadernoLinea('Sustituir en la primera ecuación');
+        const rest = f.c - f.b * y;
+        html += cuadernoLinea(terminoX(f.a) + ' = ' + fmtRacional(rest).replace(/-/g, '−'));
+        x = rest / f.a;
+        html += cuadernoLinea('x = ' + fmtRacional(x));
+        pasos.push({ titulo: 'sumar las ecuaciones', ecu: (Math.abs(sumB) === 1 ? (sumB < 0 ? '−y' : 'y') : fmtRacional(sumB) + 'y') + ' = ' + fmtRacional(sumC) });
+        pasos.push({ titulo: 'despejar y', ecu: 'y = ' + fmtRacional(y) });
+        pasos.push({ titulo: 'sustituir y despejar x', ecu: 'x = ' + fmtRacional(x) });
+      } else {
+        x = (f.c * g.b - g.c * f.b) / det;
+        y = (f.a * g.c - g.a * f.c) / det;
+        html += cuadernoLinea('x = ' + fmtRacional(x));
+        html += cuadernoLinea('y = ' + fmtRacional(y));
+        pasos.push({ titulo: 'resolver el sistema', ecu: 'x = ' + fmtRacional(x) + ' · y = ' + fmtRacional(y) });
+      }
+      html += cuadernoResultado('Punto (' + fmtRacional(x) + ', ' + fmtRacional(y) + ')');
+      pasos.push({ titulo: 'punto de intersección', ecu: '(' + fmtRacional(x) + ', ' + fmtRacional(y) + ')' });
+      return html;
+    }
+
+    function resolverCurvas() {
+      const texto = document.getElementById('entradaCurvas').value.trim();
+      const error = document.getElementById('errorCurvas');
+      const resultado = document.getElementById('resCurvas');
+      error.hidden = true;
+      resultado.innerHTML = '';
+      if (!texto) {
+        error.textContent = 'Escriba la línea con las dos curvas.';
+        error.hidden = false;
+        return;
+      }
+      try {
+        const dos = separarDosCurvas(texto);
+        const f = parsearCurva(dos[0]);
+        const g = parsearCurva(dos[1]);
+        const pasos = [];
+        let html = '<div class="desarrollo">';
+        html += '<div class="linea">' + escapar(texto) + '</div>';
+
+        if (f.tipo === 'sistema' && g.tipo === 'sistema') {
+          pasos.push({ titulo: 'identificar las dos rectas', ecu: fmtLinealXY(f) + ' = ' + fmtRacional(f.c) + ' · ' + fmtLinealXY(g) + ' = ' + fmtRacional(g.c) });
+          html += resolverSistemaHtml(f, g, pasos);
+        } else {
+          const radical = f.tipo === 'raiz' ? f : g.tipo === 'raiz' ? g : null;
+          const recta = f.tipo === 'lineal' ? f : g.tipo === 'lineal' ? g : null;
+          if (!radical || !recta) throw new Error('Por ahora se necesita una curva con raíz y otra lineal.');
+          const A = recta.m * recta.m;
+          const B = 2 * recta.m * recta.b - radical.a;
+          const C = recta.b * recta.b - radical.c;
+          const D = B * B - 4 * A * C;
+          if (D < 0) throw new Error('No hay puntos de intersección reales.');
+          const r1 = (-B - Math.sqrt(D)) / (2 * A);
+          const r2 = (-B + Math.sqrt(D)) / (2 * A);
+          const ecuacionCuadratica = fmtPolinomio(A, B, C) + ' = 0';
+          const radicalTxt = '√(' + radical.a + 'x' + (radical.c ? ' + ' + radical.c : '') + ')';
+          const rectaTxt = terminoX(recta.m) + (recta.b >= 0 ? ' + ' + recta.b : ' − ' + Math.abs(recta.b));
+
+          html += cuadernoLinea(dos[0]);
+          html += cuadernoLinea(dos[1]);
+          html += cuadernoLinea('f(x) = g(x)');
+          html += cuadernoLinea(radicalTxt + ' = ' + rectaTxt);
+          html += cuadernoLinea('(' + radicalTxt + ')² = (' + rectaTxt + ')²');
+          html += cuadernoLinea(ecuacionCuadratica);
+          html += cuadernoLinea('x₁ = ' + fmtRacional(r1) + ' · x₂ = ' + fmtRacional(r2));
+
+          const candidatos = [r1, r2];
+          candidatos.forEach(function (x) {
+            const yf = f.evaluar(x), yg = g.evaluar(x);
+            const valido = isFinite(yf) && isFinite(yg) && Math.abs(yf - yg) < 1e-7;
+            if (valido) {
+              html += cuadernoResultado('x = ' + fmtRacional(x) + ' → f = ' + fmtRacional(yf) + ', g = ' + fmtRacional(yg) + ' → sí: (' + fmtRacional(x) + ', ' + fmtRacional(yf) + ')');
+            } else {
+              html += cuadernoLinea('x = ' + fmtRacional(x) + ' → f = ' + fmtRacional(yf) + ', g = ' + fmtRacional(yg) + ' → no cumple, se descarta');
+            }
+          });
+
+          pasos.push({ titulo: 'igualar las curvas', ecu: radicalTxt + ' = ' + rectaTxt });
+          pasos.push({ titulo: 'elevar al cuadrado ambos lados', ecu: '(' + radicalTxt + ')² = (' + rectaTxt + ')²' });
+          pasos.push({ titulo: 'formar la ecuación cuadrática', ecu: ecuacionCuadratica });
+          pasos.push({ titulo: 'hallar candidatos', ecu: 'x₁ = ' + fmtRacional(r1) + ' · x₂ = ' + fmtRacional(r2) });
+          pasos.push({ titulo: 'verificar en las ecuaciones originales', ecu: 'se descartan los que no cumplen' });
+        }
+
+        html += '</div>';
+        html += renderPasosCurvas(pasos);
+        resultado.innerHTML = html;
+      } catch (e) {
+        error.textContent = e.message;
+        error.hidden = false;
+      }
+    }
+
     // ============ WIRING ============
     function mostrarVista(id) {
       document.getElementById('home').hidden = true;
@@ -1868,6 +2292,10 @@
     bind('botonFormula', 'entradaFormula', 'errorFormula', 'resFormula', resolverFormulaGeneral);
     bind('botonFactor', 'entradaFactor', 'errorFactor', 'resFactor', resolverFactorizacion);
     bind('botonAbs', 'entradaAbs', 'errorAbs', 'resAbs', resolverAbs);
+    bind('botonIntercX', 'entradaInterc', 'errorInterc', 'resInterc', resolverIntercepcionX);
+    bind('botonIntercY', 'entradaInterc', 'errorInterc', 'resInterc', resolverIntercepcionY);
+    document.getElementById('botonCurvas').addEventListener('click', resolverCurvas);
+    document.getElementById('entradaCurvas').addEventListener('keydown', function (e) { if (e.key === 'Enter') resolverCurvas(); });
 
     bind('botonDesig', 'entradaDesig', 'errorDesig', 'resDesig', function (texto) {
       const segs = desigualdadAIntervalo(texto);
