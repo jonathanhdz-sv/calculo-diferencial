@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cálculo Diferencial</title>
+<style>
+  :root {
+    --bg1: #eef2ff;
+    --bg2: #fdf2f8;
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --text: #1e293b;
+    --muted: #64748b;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --danger: #e11d48;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .container { width: 100%; max-width: 760px; }
+
+  h1 { font-size: 1.9rem; margin: 0 0 4px; text-align: center; }
+  h2 { font-size: 1.4rem; margin: 0 0 16px; }
+  .sub { text-align: center; color: var(--muted); margin: 0 0 24px; }
+
+  .volver {
+    background: none;
+    border: none;
+    color: var(--primary-dark);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 16px;
+  }
+  .volver:hover { text-decoration: underline; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+  }
+  .tarjeta:hover { border-color: var(--primary); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.12); }
+  .tarjeta:active { transform: translateY(1px); }
+  .tarjeta .titulo { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .tarjeta .desc { font-size: 0.85rem; color: var(--muted); }
+  .tarjeta.proximamente { opacity: 0.5; cursor: not-allowed; }
+  .tarjeta.proximamente:hover { border-color: var(--border); box-shadow: none; }
+  .tarjeta.proximamente:active { transform: none; }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.12);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .card label { font-weight: 600; font-size: 0.9rem; color: var(--muted); }
+
+  input, select {
+    flex: 1 1 260px;
+    font-size: 1.05rem;
+    padding: 11px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+  }
+  input:focus, select:focus { border-color: var(--primary); }
+  input.corto { flex: 1 1 140px; }
+  select.corto { flex: 0 0 auto; }
+
+  .btn {
+    font-size: 1.0rem;
+    font-weight: 600;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .btn:hover { background: var(--primary-dark); }
+  .btn:active { transform: translateY(1px); }
+
+  .error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: var(--danger);
+    border-radius: 10px;
+  }
+
+  .resultado {
+    margin-top: 20px;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.12);
+  }
+
+  .paso { margin-top: 18px; }
+  .paso h3 { font-size: 1.05rem; margin: 0 0 4px; color: var(--primary-dark); }
+  .paso p { margin: 0 0 8px; color: var(--muted); }
+
+  .ecuacion {
+    font-family: "Cambria Math", "Consolas", serif;
+    font-size: 1.2rem;
+    background: #f8fafc;
+    border-left: 4px solid var(--primary);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 6px;
+  }
+  .ecuacion.resultado {
+    border-left-color: #10b981;
+    background: #ecfdf5;
+    font-weight: 700;
+  }
+  .ecuacion del { color: var(--danger); text-decoration-thickness: 2px; }
+
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 4px;
+  }
+  .frac .fracline { border-top: 2px solid currentColor; height: 2px; }
+  .frac span:not(.fracline) { padding: 0 4px; }
+
+  .desarrollo {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .linea {
+    font-family: "Cambria Math", "Consolas", serif;
+    font-size: 1.25rem;
+    padding: 6px 0;
+  }
+  .linea.resultado { color: #047857; font-weight: 700; }
+  .linea del { color: var(--danger); text-decoration-thickness: 2px; }
+
+  .conclusion {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 10px;
+    color: #065f46;
+  }
+  .intervalo {
+    margin-left: 10px;
+    font-family: "Consolas", monospace;
+    background: #fff;
+    border: 1px solid #a7f3d0;
+    border-radius: 6px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  details.detalle {
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    background: #fbfdff;
+  }
+  details.detalle summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--primary-dark);
+    user-select: none;
+  }
+  details.detalle[open] summary { margin-bottom: 4px; }
+
+  .grafica {
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    background: #fff;
+  }
+  .grafica svg { display: block; width: 100%; height: auto; }
+
+  table.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 0.95rem;
+  }
+  table.tabla th, table.tabla td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: center;
+  }
+  table.tabla th { background: #f1f5f9; color: var(--text); }
+  table.tabla td.cumple { background: #ecfdf5; color: #065f46; font-weight: 700; }
+  table.tabla td.nocumple { background: #fef2f2; color: #9f1239; }
+
+  .separador {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .etiqueta {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 20px 0 8px;
+  }
+
+  .buscador { margin: 12px 0 8px; }
+  .buscador input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+  }
+  .buscador input:focus { border-color: var(--primary); }
+  .search-results { margin-top: 8px; }
+  .glosario-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+  .glosario-term { font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+  .glosario-tema {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 500;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+  }
+  .glosario-card p { margin: 0 0 6px; color: var(--muted); }
+  .glosario-card .ecuacion { margin: 2px 0; font-size: 1.05rem; }
+
+  .teoria {
+    background: #f8fafc;
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .teoria h3 { margin: 0 0 6px; color: var(--primary-dark); font-size: 1rem; }
+  .teoria h3:not(:first-child) { margin-top: 12px; }
+  .teoria p { margin: 0 0 8px; color: var(--muted); }
+  .teoria .ecuacion { margin: 4px 0; }
+
+  .tijeras {
+    margin: 14px 0;
+    font-family: "Cambria Math", "Consolas", serif;
+    font-size: 1.2rem;
+  }
+  .tijeras-fila {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .tijera-svg {
+    width: 360px;
+    max-width: 100%;
+    height: auto;
+    flex: 0 0 auto;
+  }
+  .tijeras-productos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    white-space: nowrap;
+  }
+  .tijeras-suma {
+    border-top: 2px solid #64748b;
+    padding-top: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div id="home">
+      <h1>Cálculo Diferencial</h1>
+      <p class="sub">Selecciona un módulo para resolver ejercicios</p>
+      <div class="buscador">
+        <input type="search" class="search-input" placeholder="Buscar conceptos y fórmulas (ej. discriminante, intervalo...)" autocomplete="off">
+        <div class="search-results"></div>
+      </div>
+      <div class="grid">
+        <button class="tarjeta" data-modulo="lineal">
+          <span class="titulo">Desigualdad lineal</span>
+          <span class="desc">ax + b &lt; cx + d</span>
+        </button>
+        <button class="tarjeta" data-modulo="cuadratica">
+          <span class="titulo">Desigualdad cuadrática</span>
+          <span class="desc">ax² + bx + c &lt; 0</span>
+        </button>
+        <button class="tarjeta" data-modulo="abs">
+          <span class="titulo">Valor absoluto</span>
+          <span class="desc">|x − a| &lt; k</span>
+        </button>
+        <button class="tarjeta" data-modulo="intervalos">
+          <span class="titulo">Intervalos</span>
+          <span class="desc">Gráfica, notación y operaciones</span>
+        </button>
+        <button class="tarjeta proximamente" disabled>
+          <span class="titulo">Valor absoluto básico</span>
+          <span class="desc">Próximamente</span>
+        </button>
+        <button class="tarjeta proximamente" disabled>
+          <span class="titulo">Funciones y gráficas</span>
+          <span class="desc">Próximamente</span>
+        </button>
+        <button class="tarjeta proximamente" disabled>
+          <span class="titulo">Dominio y rango</span>
+          <span class="desc">Próximamente</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="modulo-lineal" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Desigualdad lineal</h2>
+      <div class="card">
+        <input id="entrada" type="text" placeholder="Ej: -5x + 4x - 3 < 4x + 2" autocomplete="off">
+        <button id="boton" class="btn">Resolver</button>
+      </div>
+      <div id="error" class="error" hidden></div>
+      <div id="resultado"></div>
+    </div>
+
+    <div id="modulo-cuadratica" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Desigualdad cuadrática</h2>
+      <div class="card">
+        <input id="entradaCuad" type="text" placeholder="Ej: 2x² + 7x - 4 > 0" autocomplete="off">
+        <button id="botonCuad" class="btn">Resolver</button>
+      </div>
+      <div id="errorCuad" class="error" hidden></div>
+      <div id="resCuad"></div>
+      <div class="etiqueta">Métodos de resolución</div>
+      <div class="grid">
+        <button class="tarjeta" data-modulo="cuadratica-formula">
+          <span class="titulo">Fórmula general</span>
+          <span class="desc">x = (−b ± √(b²−4ac)) / 2a</span>
+        </button>
+        <button class="tarjeta" data-modulo="cuadratica-factor">
+          <span class="titulo">Factorización</span>
+          <span class="desc">ax² + bx + c = (px+q)(rx+s)</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="modulo-cuadratica-formula" class="modulo" hidden>
+      <button class="volver" data-volver="cuadratica">← Volver a Desigualdad cuadrática</button>
+      <h2>Fórmula general</h2>
+      <div class="card">
+        <input id="entradaFormula" type="text" placeholder="Ej: 2x² - 4x - 16 >= 0" autocomplete="off">
+        <button id="botonFormula" class="btn">Resolver</button>
+      </div>
+      <div id="errorFormula" class="error" hidden></div>
+      <div id="resFormula"></div>
+    </div>
+
+    <div id="modulo-cuadratica-factor" class="modulo" hidden>
+      <button class="volver" data-volver="cuadratica">← Volver a Desigualdad cuadrática</button>
+      <h2>Factorización</h2>
+      <div class="card">
+        <input id="entradaFactor" type="text" placeholder="Ej: 2x² - 4x - 16 >= 0" autocomplete="off">
+        <button id="botonFactor" class="btn">Resolver</button>
+      </div>
+      <div id="errorFactor" class="error" hidden></div>
+      <div id="resFactor"></div>
+    </div>
+
+    <div id="modulo-abs" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Desigualdad con valor absoluto</h2>
+      <div class="card">
+        <input id="entradaAbs" type="text" placeholder="Ej: |x - 2| < 4" autocomplete="off">
+        <button id="botonAbs" class="btn">Resolver</button>
+      </div>
+      <div id="errorAbs" class="error" hidden></div>
+      <div id="resAbs"></div>
+    </div>
+
+    <div id="modulo-intervalos" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Intervalos</h2>
+
+      <div class="etiqueta">1. De desigualdad a intervalo</div>
+      <div class="card">
+        <input id="entradaDesig" type="text" placeholder="Ej: 5 < x <= 11  ó  x > 3" autocomplete="off">
+        <button id="botonDesig" class="btn">Graficar</button>
+      </div>
+      <div id="errorDesig" class="error" hidden></div>
+      <div id="resDesig"></div>
+
+      <div class="etiqueta">2. De intervalo a desigualdad</div>
+      <div class="card">
+        <input id="entradaInter" type="text" placeholder="Ej: [3, 10)  ó  (-∞, 4)" autocomplete="off">
+        <button id="botonInter" class="btn">Convertir</button>
+      </div>
+      <div id="errorInter" class="error" hidden></div>
+      <div id="resInter"></div>
+
+      <div class="etiqueta">3. Operaciones con intervalos</div>
+      <div class="card">
+        <input id="intA" class="corto" type="text" placeholder="A = [-4, 4]" autocomplete="off">
+        <select id="opSelect" class="corto">
+          <option value="∩">A ∩ B (intersección)</option>
+          <option value="∪">A ∪ B (unión)</option>
+          <option value="−">A − B (diferencia)</option>
+        </select>
+        <input id="intB" class="corto" type="text" placeholder="B = (0, 6)" autocomplete="off">
+        <button id="botonOp" class="btn">Calcular</button>
+      </div>
+      <div id="errorOp" class="error" hidden></div>
+      <div id="resOp"></div>
+    </div>
+  </div>
+
+  <script>
+    const NORMALIZA = { '≤': '<=', '≥': '>=' };
+    const MUESTRA = { '<': '&lt;', '>': '&gt;', '<=': '≤', '>=': '≥' };
+    const INVERSO = { '<': '>', '>': '<', '<=': '>=', '>=': '<=' };
+
+    const GLOSARIO = [
+      { t: 'Desigualdad', tema: 'General', def: 'Comparación entre dos expresiones usando <, >, ≤ o ≥.', f: 'a < b, a ≤ b, a > b, a ≥ b' },
+      { t: 'Intervalo', tema: 'Intervalos', def: 'Conjunto continuo de números reales entre dos extremos.', f: '(a, b) excluye · [a, b] incluye' },
+      { t: 'Valor absoluto', tema: 'Valor absoluto', def: 'Distancia de un número al cero en la recta real.', f: '|x| = x si x ≥ 0; |x| = −x si x < 0' },
+      { t: 'Fórmula general', tema: 'Cuadrática', def: 'Resuelve la ecuación ax² + bx + c = 0.', f: 'x = (−b ± √(b²−4ac)) / 2a' },
+      { t: 'Discriminante', tema: 'Cuadrática', def: 'Indica cuántas raíces reales tiene la cuadrática.', f: 'D = b² − 4ac' },
+      { t: 'Factorización', tema: 'Cuadrática', def: 'Escribir el trinomio como producto de dos binomios.', f: 'ax² + bx + c = (px+q)(rx+s)' },
+      { t: 'Punto crítico', tema: 'Cuadrática', def: 'Valor de x que anula la expresión (la hace cero).', f: 'f(x) = 0' },
+      { t: 'Cero de una función', tema: 'Funciones', def: 'Valor de x donde la función vale cero.', f: 'f(x) = 0' },
+      { t: 'Dominio', tema: 'Funciones', def: 'Todos los valores de x que admite la función.', f: 'x ∈ ℝ permitidos' },
+      { t: 'Rango', tema: 'Funciones', def: 'Todos los valores de y que produce la función.', f: 'y = f(x)' },
+      { t: 'Intersección', tema: 'Intervalos', def: 'Elementos comunes a dos conjuntos.', f: 'A ∩ B' },
+      { t: 'Unión', tema: 'Intervalos', def: 'Todos los elementos de ambos conjuntos.', f: 'A ∪ B' },
+      { t: 'Diferencia', tema: 'Intervalos', def: 'Elementos del primero que no están en el segundo.', f: 'A − B' },
+      { t: 'Función par', tema: 'Funciones', def: 'Gráfica simétrica respecto al eje y.', f: 'f(−x) = f(x)' },
+      { t: 'Función impar', tema: 'Funciones', def: 'Gráfica simétrica respecto al origen.', f: 'f(−x) = −f(x)' },
+      { t: 'Recta numérica', tema: 'Intervalos', def: 'Línea donde se ubican los números reales en orden.', f: '… −2 −1 0 1 2 …' },
+      { t: 'Criterio de la recta vertical', tema: 'Funciones', def: 'Una gráfica es función si toda recta vertical la corta a lo más en un punto.', f: 'x = c corta en ≤ 1 punto' },
+      { t: 'Criterio de la recta horizontal', tema: 'Funciones', def: 'Una función es uno-a-uno si toda recta horizontal la corta a lo más en un punto.', f: 'y = c corta en ≤ 1 punto' }
+    ];
+
+    function buscarConceptos(q) {
+      const query = q.trim().toLowerCase();
+      if (!query) return '';
+      const resultados = GLOSARIO.filter(function (c) {
+        return c.t.toLowerCase().indexOf(query) !== -1 ||
+          c.def.toLowerCase().indexOf(query) !== -1 ||
+          c.tema.toLowerCase().indexOf(query) !== -1;
+      });
+      if (!resultados.length) {
+        return '<div class="conclusion">Sin resultados para «' + escapar(q) + '».</div>';
+      }
+      let html = '';
+      resultados.forEach(function (c) {
+        html += '<div class="glosario-card">';
+        html += '<div class="glosario-term">' + escapar(c.t) + '<span class="glosario-tema">' + escapar(c.tema) + '</span></div>';
+        html += '<p>' + escapar(c.def) + '</p>';
+        html += '<div class="ecuacion">' + escapar(c.f) + '</div>';
+        html += '</div>';
+      });
+      return html;
+    }
+
+    // ---------- utilidades ----------
+    function parseNum(s) {
+      const t = String(s).trim().replace(/−/g, '-');
+      if (t.includes('/')) {
+        const partes = t.split('/');
+        if (partes.length === 2) return parseFloat(partes[0]) / parseFloat(partes[1]);
+      }
+      if (t.includes('.')) return parseFloat(t);
+      return parseInt(t, 10);
+    }
+
+    function mcd(a, b) {
+      a = Math.abs(a); b = Math.abs(b);
+      while (b) { const t = b; b = a % b; a = t; }
+      return a;
+    }
+
+    function simplificar(num, den) {
+      if (!Number.isInteger(num) || !Number.isInteger(den)) {
+        return { num: num / den, den: 1 };
+      }
+      const g = mcd(num, den);
+      let n = num / g, d = den / g;
+      if (d < 0) { n = -n; d = -d; }
+      return { num: n, den: d };
+    }
+
+    function fmtNum(n) {
+      if (typeof n === 'number' && !Number.isInteger(n)) {
+        return String(Math.round(n * 1e9) / 1e9);
+      }
+      return String(n);
+    }
+
+    function fmtRacional(v) {
+      if (!isFinite(v)) return v > 0 ? '∞' : '−∞';
+      if (Math.abs(v - Math.round(v)) < 1e-9) return String(Math.round(v));
+      for (let d = 2; d <= 20; d++) {
+        const n = Math.round(v * d);
+        if (Math.abs(n / d - v) < 1e-9) return n + '/' + d;
+      }
+      return String(Math.round(v * 1000) / 1000);
+    }
+
+    function formatoX(coef) {
+      if (coef === 1) return 'x';
+      if (coef === -1) return '−x';
+      return fmtNum(coef) + 'x';
+    }
+
+    function mostrarSigno(s) { return MUESTRA[s]; }
+    function inversoSigno(s) { return INVERSO[s]; }
+    function escapar(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+    function fraccionHtml(num, den) {
+      return '<span class="frac"><span>' + num + '</span><span class="fracline"></span><span>' + den + '</span></span>';
+    }
+
+    function paso(titulo, texto, cuerpo) {
+      let h = '<div class="paso"><h3>' + titulo + '</h3>';
+      if (texto) h += '<p>' + texto + '</p>';
+      if (cuerpo) h += cuerpo;
+      return h + '</div>';
+    }
+    function ecuacion(html) { return '<div class="ecuacion">' + html + '</div>'; }
+    function ecuacionResultado(html) { return '<div class="ecuacion resultado">' + html + '</div>'; }
+    function cuadernoLinea(html) { return '<div class="linea">' + html + '</div>'; }
+    function cuadernoResultado(html) { return '<div class="linea resultado">' + html + '</div>'; }
+
+    function segmentoNum(v) {
+      if (v === Infinity) return Infinity;
+      if (v === -Infinity) return -Infinity;
+      return v;
+    }
+
+    function intervalToString(seg) {
+      const left = seg.fromClosed ? '[' : '(';
+      const right = seg.toClosed ? ']' : ')';
+      const from = seg.from === -Infinity ? '−∞' : fmtRacional(seg.from);
+      const to = seg.to === Infinity ? '∞' : fmtRacional(seg.to);
+      return left + from + ', ' + to + right;
+    }
+    function segsToString(segs) { return segs.map(intervalToString).join(' ∪ '); }
+
+    function describir(seg) {
+      const { from, to, fromClosed, toClosed } = seg;
+      let p = 'Todos los números reales x tales que ';
+      if (from === -Infinity && to === Infinity) return p + 'x es cualquier número real';
+      if (to === Infinity) {
+        return p + 'x es ' + (fromClosed ? 'mayor o igual que ' : 'mayor que ') + fmtRacional(from);
+      }
+      if (from === -Infinity) {
+        return p + 'x es ' + (toClosed ? 'menor o igual que ' : 'menor que ') + fmtRacional(to);
+      }
+      return p + 'x es ' + (fromClosed ? 'mayor o igual que ' : 'mayor que ') + fmtRacional(from) +
+        ' y ' + (toClosed ? 'menor o igual que ' : 'menor que ') + fmtRacional(to);
+    }
+
+    // ---------- render número real (SVG) ----------
+    function dot(x, y, closed) {
+      if (closed) return '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#4f46e5"/>';
+      return '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#fff" stroke="#4f46e5" stroke-width="2.5"/>';
+    }
+
+    function renderNumberLine(segments) {
+      const pts = [];
+      segments.forEach(function (s) {
+        if (isFinite(s.from)) pts.push(s.from);
+        if (isFinite(s.to)) pts.push(s.to);
+      });
+      if (pts.length === 0) return '';
+      let min = Math.min.apply(null, pts);
+      let max = Math.max.apply(null, pts);
+      if (min === max) { min -= 2; max += 2; }
+      const pad = Math.max(1, (max - min) * 0.3);
+      min -= pad; max += pad;
+
+      const W = 720, H = 96, mx = 46, my = H - 46;
+      const scale = (W - 2 * mx) / (max - min);
+      const X = function (v) { return mx + (v - min) * scale; };
+
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+      svg += '<line x1="' + X(min) + '" y1="' + my + '" x2="' + X(max) + '" y2="' + my + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<polygon points="' + X(max) + ',' + my + ' ' + (X(max) - 9) + ',' + (my - 4) + ' ' + (X(max) - 9) + ',' + (my + 4) + '" fill="#475569"/>';
+
+      // ticks en enteros
+      for (let i = Math.ceil(min); i <= Math.floor(max); i++) {
+        svg += '<line x1="' + X(i) + '" y1="' + (my - 4) + '" x2="' + X(i) + '" y2="' + (my + 4) + '" stroke="#475569"/>';
+        svg += '<text x="' + X(i) + '" y="' + (my + 20) + '" text-anchor="middle" font-size="12" fill="#334155">' + i + '</text>';
+      }
+
+      // etiquetas de extremos no enteros
+      const etiquetas = {};
+      segments.forEach(function (s) {
+        if (isFinite(s.from) && !Number.isInteger(s.from)) etiquetas[s.from] = fmtRacional(s.from);
+        if (isFinite(s.to) && !Number.isInteger(s.to)) etiquetas[s.to] = fmtRacional(s.to);
+      });
+      Object.keys(etiquetas).forEach(function (k) {
+        const v = parseFloat(k);
+        svg += '<text x="' + X(v) + '" y="' + (my + 36) + '" text-anchor="middle" font-size="12" fill="#4f46e5">' + etiquetas[k] + '</text>';
+      });
+
+      // sombreado
+      segments.forEach(function (s) {
+        const color = s.color || '#6366f1';
+        const x1 = X(isFinite(s.from) ? s.from : min);
+        const x2 = X(isFinite(s.to) ? s.to : max);
+        svg += '<line x1="' + x1 + '" y1="' + my + '" x2="' + x2 + '" y2="' + my + '" stroke="' + color + '" stroke-width="8" opacity="0.55"/>';
+      });
+
+      // extremos
+      const added = {};
+      segments.forEach(function (s) {
+        if (isFinite(s.from) && !added['a' + s.from]) {
+          added['a' + s.from] = true;
+          svg += dot(X(s.from), my, s.fromClosed);
+        }
+        if (isFinite(s.to) && !added['b' + s.to]) {
+          added['b' + s.to] = true;
+          svg += dot(X(s.to), my, s.toClosed);
+        }
+      });
+
+      svg += '</svg>';
+      return svg;
+    }
+
+    function renderQuadraticNumberLine(sol, A, B, C, op) {
+      const D = B * B - 4 * A * C;
+      if (D <= 0 || !sol.zonas || sol.zonas.length !== 3) return renderNumberLine(sol.segs);
+
+      const lo = Math.min((-B - Math.sqrt(D)) / (2 * A), (-B + Math.sqrt(D)) / (2 * A));
+      const hi = Math.max((-B - Math.sqrt(D)) / (2 * A), (-B + Math.sqrt(D)) / (2 * A));
+      const min = lo - Math.max(1, (hi - lo) * 0.35);
+      const max = hi + Math.max(1, (hi - lo) * 0.35);
+      const W = 720, H = 150, mx = 52, y = 62;
+      const scale = (W - 2 * mx) / (max - min);
+      const X = function (v) { return mx + (v - min) * scale; };
+      const colorValida = '#10b981', colorNoValida = '#f43f5e';
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="Recta de puntos críticos">';
+      svg += '<line x1="' + X(min) + '" y1="' + y + '" x2="' + X(max) + '" y2="' + y + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<polygon points="' + X(max) + ',' + y + ' ' + (X(max) - 9) + ',' + (y - 4) + ' ' + (X(max) - 9) + ',' + (y + 4) + '" fill="#475569"/>';
+
+      const zonas = [
+        { from: min, to: lo, cumple: sol.zonas[0].cumple },
+        { from: lo, to: hi, cumple: sol.zonas[1].cumple },
+        { from: hi, to: max, cumple: sol.zonas[2].cumple }
+      ];
+      zonas.forEach(function (z) {
+        svg += '<line x1="' + X(z.from) + '" y1="' + y + '" x2="' + X(z.to) + '" y2="' + y + '" stroke="' + (z.cumple ? colorValida : colorNoValida) + '" stroke-width="8" opacity="0.6"/>';
+      });
+
+      svg += '<text x="' + X(min) + '" y="24" text-anchor="middle" font-size="14" fill="#334155">−∞</text>';
+      svg += '<text x="' + X(lo) + '" y="24" text-anchor="middle" font-size="14" fill="#4f46e5">' + fmtRacional(lo) + '</text>';
+      svg += '<text x="' + X(hi) + '" y="24" text-anchor="middle" font-size="14" fill="#4f46e5">' + fmtRacional(hi) + '</text>';
+      svg += '<text x="' + X(max) + '" y="24" text-anchor="middle" font-size="14" fill="#334155">+∞</text>';
+      sol.zonas.forEach(function (z) {
+        const puntoX = Math.max(min, Math.min(max, z.punto));
+        svg += '<text x="' + X(puntoX) + '" y="43" text-anchor="middle" font-size="13" fill="#e11d48">x=' + fmtRacional(z.punto) + '</text>';
+        svg += '<text x="' + X(puntoX) + '" y="94" text-anchor="middle" font-size="16" font-weight="700" fill="' + (z.cumple ? colorValida : colorNoValida) + '">' + (z.signo > 0 ? '+' : '−') + '</text>';
+        svg += '<text x="' + X(puntoX) + '" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="' + (z.cumple ? colorValida : colorNoValida) + '">' + (z.cumple ? 'SI' : 'NO') + '</text>';
+      });
+      svg += '<line x1="' + X(lo) + '" y1="40" x2="' + X(lo) + '" y2="88" stroke="#4f46e5" stroke-width="3"/>';
+      svg += '<line x1="' + X(hi) + '" y1="40" x2="' + X(hi) + '" y2="88" stroke="#4f46e5" stroke-width="3"/>';
+      svg += '<text x="' + X(lo) + '" y="99" text-anchor="middle" font-size="13" fill="#4f46e5">0</text>';
+      svg += '<text x="' + X(hi) + '" y="99" text-anchor="middle" font-size="13" fill="#4f46e5">0</text>';
+      svg += '<text x="' + (W / 2) + '" y="143" text-anchor="middle" font-size="13" fill="#047857">Verde = cumple · Rojo = no cumple</text>';
+      svg += '</svg>';
+      return svg;
+    }
+
+    // ---------- parser de intervalos ----------
+    function invertOp(op) { return INVERSO[op]; }
+
+    function intervaloDesdeOp(op, num) {
+      if (op === '>') return { from: num, to: Infinity, fromClosed: false, toClosed: false };
+      if (op === '>=') return { from: num, to: Infinity, fromClosed: true, toClosed: false };
+      if (op === '<') return { from: -Infinity, to: num, fromClosed: false, toClosed: false };
+      if (op === '<=') return { from: -Infinity, to: num, fromClosed: false, toClosed: true };
+      return null;
+    }
+
+    function tokenizar(texto) {
+      const tokens = [];
+      const re = /(\d+\/\d+|\d+(?:\.\d+)?|x|>=|<=|>|<)/g;
+      let m;
+      while ((m = re.exec(texto)) !== null) {
+        const s = m[0];
+        if (s === 'x') tokens.push({ type: 'x' });
+        else if (/^(>=|<=|>|<)$/.test(s)) tokens.push({ type: 'op', val: s });
+        else tokens.push({ type: 'num', val: parseNum(s) });
+      }
+      return tokens;
+    }
+
+    function desigualdadAIntervalo(texto) {
+      const t = texto.replace(/\s/g, '').replace(/≤/g, '<=').replace(/≥/g, '>=').replace(/−/g, '-');
+      const tokens = tokenizar(t);
+      const ops = tokens.filter(function (x) { return x.type === 'op'; });
+      const nums = tokens.filter(function (x) { return x.type === 'num'; }).map(function (x) { return x.val; });
+      if (ops.length === 0) throw new Error('No se encontró un signo de desigualdad (<, >, ≤, ≥).');
+      if (nums.length === 0) throw new Error('Falta el número en la desigualdad.');
+
+      if (ops.length === 1) {
+        const op = ops[0].val;
+        const num = nums[0];
+        const xIdx = tokens.findIndex(function (x) { return x.type === 'x'; });
+        const opIdx = tokens.findIndex(function (x) { return x.type === 'op'; });
+        const xLeft = xIdx < opIdx;
+        return [xLeft ? intervaloDesdeOp(op, num) : intervaloDesdeOp(invertOp(op), num)];
+      }
+      if (ops.length === 2) {
+        const a = nums[0], b = nums[1];
+        return [{ from: a, to: b, fromClosed: ops[0].val === '<=', toClosed: ops[1].val === '<=' }];
+      }
+      throw new Error('No se pudo interpretar la desigualdad.');
+    }
+
+    function parseIntervaloNotacion(texto) {
+      let t = texto.trim().replace(/\s/g, '');
+      if (t.charAt(0) === ']') t = '(' + t.slice(1);
+      if (t.charAt(t.length - 1) === '[') t = t.slice(0, -1) + ')';
+      const m = t.match(/^([\(\[])(.+?),(.+?)([\)\]])$/);
+      if (!m) throw new Error('Formato de intervalo no válido. Ej: [3, 10) o (-∞, 4).');
+      const fromClosed = m[1] === '[';
+      const toClosed = m[4] === ']';
+      const from = (m[2] === '-∞' || m[2] === '−∞') ? -Infinity : parseNum(m[2]);
+      const to = (m[3] === '∞') ? Infinity : parseNum(m[3]);
+      return [{ from: from, to: to, fromClosed: fromClosed, toClosed: toClosed }];
+    }
+
+    function intervaloAInecuacion(seg) {
+      const { from, to, fromClosed, toClosed } = seg;
+      if (from === -Infinity) return 'x ' + (toClosed ? '≤ ' : '< ') + fmtRacional(to);
+      if (to === Infinity) return (fromClosed ? 'x ≥ ' : 'x > ') + fmtRacional(from);
+      return fmtRacional(from) + (fromClosed ? ' ≤ x' : ' < x') + (toClosed ? ' ≤ ' : ' < ') + fmtRacional(to);
+    }
+
+    // ---------- operaciones de intervalos ----------
+    function interseccion(s1, s2) {
+      const from = Math.max(s1.from, s2.from);
+      const to = Math.min(s1.to, s2.to);
+      let fromClosed = (from === s1.from) ? s1.fromClosed : s2.fromClosed;
+      let toClosed = (to === s1.to) ? s1.toClosed : s2.toClosed;
+      if (from === s1.from && from === s2.from) fromClosed = s1.fromClosed && s2.fromClosed;
+      if (to === s1.to && to === s2.to) toClosed = s1.toClosed && s2.toClosed;
+      if (from > to) return [];
+      if (from === to) {
+        if (fromClosed && toClosed) return [{ from: from, to: to, fromClosed: true, toClosed: true }];
+        return [];
+      }
+      return [{ from: from, to: to, fromClosed: fromClosed, toClosed: toClosed }];
+    }
+
+    function union(s1, s2) {
+      let A = s1, B = s2;
+      if (A.from > B.from) { const tmp = A; A = B; B = tmp; }
+      if (A.from === B.from && B.fromClosed && !A.fromClosed) { const tmp = A; A = B; B = tmp; }
+      if (B.from > A.to) return [A, B];
+      if (B.from === A.to && !A.toClosed && !B.fromClosed) return [A, B];
+      let toClosed;
+      if (A.to > B.to) toClosed = A.toClosed;
+      else if (A.to < B.to) toClosed = B.toClosed;
+      else toClosed = A.toClosed || B.toClosed;
+      return [{ from: A.from, to: Math.max(A.to, B.to), fromClosed: A.fromClosed, toClosed: toClosed }];
+    }
+
+    function diferencia(A, B) {
+      if (B.to <= A.from) return [A];
+      if (B.from >= A.to) return [A];
+      if (B.from <= A.from && B.to >= A.to) return [];
+      const res = [];
+      if (B.from > A.from) {
+        res.push({ from: A.from, to: B.from, fromClosed: A.fromClosed, toClosed: !B.fromClosed });
+      }
+      if (B.to < A.to) {
+        res.push({ from: B.to, to: A.to, fromClosed: !B.toClosed, toClosed: A.toClosed });
+      }
+      return res;
+    }
+
+    function operarIntervalos(A, B, op) {
+      if (op === '∩') return interseccion(A, B);
+      if (op === '∪') return union(A, B);
+      if (op === '−') return diferencia(A, B);
+      return [];
+    }
+
+    // ---------- parser lineal (con fracciones) ----------
+    function parsearLado(texto) {
+      let t = texto.replace(/\s/g, '').replace(/−/g, '-').replace(/–/g, '-');
+      t = t.replace(/-/g, '+-');
+      const tokens = t.split('+').filter(function (x) { return x !== ''; });
+      let coefX = 0, constante = 0;
+      const terminosX = [], terminosConst = [];
+      for (const tok of tokens) {
+        if (tok.endsWith('x')) {
+          const coefStr = tok.slice(0, -1);
+          let coef;
+          if (coefStr === '' || coefStr === '+') coef = 1;
+          else if (coefStr === '-') coef = -1;
+          else coef = parseNum(coefStr);
+          coefX += coef;
+          terminosX.push(tok);
+        } else {
+          constante += parseNum(tok);
+          terminosConst.push(tok);
+        }
+      }
+      return { coefX: coefX, constante: constante, terminosX: terminosX, terminosConst: terminosConst };
+    }
+
+    function separar(texto) {
+      const m = texto.match(/(<=|>=|≤|≥|<|>)/);
+      if (!m) throw new Error('No se encontró el signo de desigualdad. Usa <, >, <=, >=, ≤ o ≥.');
+      const signo = NORMALIZA[m[0]] || m[0];
+      return { izquierda: texto.slice(0, m.index), signo: signo, derecha: texto.slice(m.index + m[0].length) };
+    }
+
+    function unir(terminos) {
+      if (!terminos.length) return '0';
+      let res = terminos[0];
+      for (let i = 1; i < terminos.length; i++) {
+        const t = terminos[i];
+        if (t.startsWith('-')) res += ' − ' + t.slice(1);
+        else res += ' + ' + t;
+      }
+      return res;
+    }
+    function invertir(t) { return t.startsWith('-') ? t.slice(1) : '-' + t; }
+    function coeficiente(t) {
+      if (t.endsWith('x')) {
+        const cs = t.slice(0, -1);
+        if (cs === '' || cs === '+') return 1;
+        if (cs === '-') return -1;
+        return parseNum(cs);
+      }
+      return parseNum(t);
+    }
+
+    function detectarCancelados(terminos) {
+      const cancelados = new Set();
+      const usados = new Set();
+      for (let i = 0; i < terminos.length; i++) {
+        for (let j = i + 1; j < terminos.length; j++) {
+          if (usados.has(i) || usados.has(j)) continue;
+          if (coeficiente(terminos[i]) + coeficiente(terminos[j]) === 0) {
+            cancelados.add(i); cancelados.add(j);
+            usados.add(i); usados.add(j);
+          }
+        }
+      }
+      return cancelados;
+    }
+
+    function tachada(terminos, cancelados) {
+      if (cancelados.size === 0) return escapar(unir(terminos));
+      const partes = [];
+      for (let i = 0; i < terminos.length; i++) {
+        const t = terminos[i];
+        const signo = t.startsWith('-') ? '-' : '+';
+        let cuerpo = escapar(t.startsWith('-') ? t.slice(1) : t);
+        if (cancelados.has(i)) cuerpo = '<del>' + cuerpo + '</del>';
+        if (i === 0) partes.push((signo === '-' ? '−' : '') + cuerpo);
+        else partes.push((signo === '-' ? ' − ' : ' + ') + cuerpo);
+      }
+      return partes.join('');
+    }
+
+    function conclusion(signo, resultado) {
+      const v = resultado.den === 1 ? fmtNum(resultado.num) : resultado.num + '/' + resultado.den;
+      let frase, intervalo;
+      if (signo === '>') { frase = 'todos los valores de x mayores estrictamente a ' + v; intervalo = '(' + v + ', ∞)'; }
+      else if (signo === '<') { frase = 'todos los valores de x menores estrictamente a ' + v; intervalo = '(-∞, ' + v + ')'; }
+      else if (signo === '>=') { frase = 'todos los valores de x mayores o iguales a ' + v; intervalo = '[' + v + ', ∞)'; }
+      else { frase = 'todos los valores de x menores o iguales a ' + v; intervalo = '(-∞, ' + v + ']'; }
+      return { frase: frase, intervalo: intervalo };
+    }
+
+    function segmentosLineal(val, signoFinal) {
+      const closed = (signoFinal === '<=' || signoFinal === '>=');
+      const verde = '#10b981', rojo = '#f43f5e';
+      let valid, invalid;
+      if (signoFinal === '>' || signoFinal === '>=') {
+        valid = { from: val, to: Infinity, fromClosed: closed, toClosed: false, color: verde };
+        invalid = { from: -Infinity, to: val, fromClosed: false, toClosed: !closed, color: rojo };
+      } else {
+        valid = { from: -Infinity, to: val, fromClosed: false, toClosed: closed, color: verde };
+        invalid = { from: val, to: Infinity, fromClosed: !closed, toClosed: false, color: rojo };
+      }
+      return { valid: valid, invalid: invalid };
+    }
+
+    function fmtLadoEvaluado(lado, x) {
+      let s = '';
+      if (lado.coefX !== 0) {
+        const coefStr = lado.coefX === 1 ? '' : (lado.coefX === -1 ? '−' : fmtNum(lado.coefX));
+        s += coefStr + '(' + fmtRacional(x) + ')';
+      }
+      if (lado.constante !== 0) {
+        s += (lado.constante > 0 ? ' + ' : ' − ') + fmtRacional(Math.abs(lado.constante));
+      }
+      return s === '' ? '0' : s;
+    }
+
+    function comparar(v1, signo, v2) {
+      if (signo === '<') return v1 < v2;
+      if (signo === '>') return v1 > v2;
+      if (signo === '<=') return v1 <= v2;
+      return v1 >= v2;
+    }
+
+    function cuadroPruebasLineal(li, ld, signo, val) {
+      let testIzq, testDer;
+      if (Number.isInteger(val)) { testIzq = val - 1; testDer = val + 1; }
+      else { testIzq = Math.floor(val); testDer = Math.ceil(val); }
+      const puntos = [
+        { zona: 'x < ' + fmtRacional(val), x: testIzq },
+        { zona: 'x > ' + fmtRacional(val), x: testDer }
+      ];
+      let html = '<table class="tabla"><thead><tr><th>Zona</th><th>x prueba</th><th>Sustitución en la desigualdad original</th><th>¿Cumple?</th></tr></thead><tbody>';
+      puntos.forEach(function (p) {
+        const lv = li.coefX * p.x + li.constante;
+        const rv = ld.coefX * p.x + ld.constante;
+        const cumple = comparar(lv, signo, rv);
+        const subs = escapar(fmtLadoEvaluado(li, p.x) + ' ' + mostrarSigno(signo) + ' ' + fmtLadoEvaluado(ld, p.x)) + ' → ' + fmtRacional(lv) + ' ' + mostrarSigno(signo) + ' ' + fmtRacional(rv);
+        const cls = cumple ? 'cumple' : 'nocumple';
+        html += '<tr><td>' + p.zona + '</td><td>' + fmtRacional(p.x) + '</td><td>' + subs + '</td><td class="' + cls + '">' + (cumple ? 'Sí' : 'No') + '</td></tr>';
+      });
+      html += '</tbody></table>';
+      return html;
+    }
+
+    // ============ MÓDULO LINEAL ============
+    function resolver(texto) {
+      const { izquierda, signo, derecha } = separar(texto);
+      const li = parsearLado(izquierda);
+      const ld = parsearLado(derecha);
+
+      const nuevoIzq = li.terminosX.concat(ld.terminosX.map(invertir));
+      const nuevoDer = ld.terminosConst.concat(li.terminosConst.map(invertir));
+
+      const coefFinal = li.coefX - ld.coefX;
+      const constFinal = ld.constante - li.constante;
+      const signoDisp = mostrarSigno(signo);
+
+      const cancIzq = detectarCancelados(nuevoIzq);
+      const cancDer = detectarCancelados(nuevoDer);
+
+      const lineaAgrupada = escapar(unir(nuevoIzq)) + ' ' + signoDisp + ' ' + escapar(unir(nuevoDer));
+      const lineaTachada = tachada(nuevoIzq, cancIzq) + ' ' + signoDisp + ' ' + tachada(nuevoDer, cancDer);
+      const lineaSimplificada = (coefFinal === 0 ? '0' : formatoX(coefFinal)) + ' ' + signoDisp + ' ' + fmtNum(constFinal);
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar(texto) + '</div>';
+      html += '<div class="linea">' + lineaTachada + '</div>';
+      html += '<div class="linea">' + lineaSimplificada + '</div>';
+
+      if (coefFinal === 0) {
+        const verdad = { '<': constFinal > 0, '>': constFinal < 0, '<=': constFinal >= 0, '>=': constFinal <= 0 }[signo];
+        html += '</div>';
+        html += '<div class="conclusion">' + (verdad ? 'La desigualdad es siempre verdadera: todo valor de x cumple.' : 'La desigualdad es siempre falsa: no hay solución.') + '</div>';
+        html += '<details class="detalle"><summary>Ver pasos detallados</summary>';
+        html += paso('Paso 1 — Agrupar términos semejantes', 'Las variables a la izquierda y los números a la derecha. Al cruzar, cada término cambia de signo.', ecuacion(lineaAgrupada));
+        html += paso('Paso 2 — Simplificar (se cancelan los semejantes)', 'Los términos semejantes se suman o se restan entre sí.', ecuacion(lineaTachada) + ecuacionResultado(lineaSimplificada));
+        html += paso('Conclusión', '', ecuacionResultado(verdad ? 'Siempre verdadera.' : 'Siempre falsa.'));
+        html += '</details>';
+        return html;
+      }
+
+      const signoFinal = coefFinal < 0 ? inversoSigno(signo) : signo;
+      const signoFinalDisp = mostrarSigno(signoFinal);
+      const resultado = simplificar(constFinal, coefFinal);
+      const valorFinal = resultado.den === 1
+        ? fmtNum(resultado.num)
+        : fraccionHtml(fmtNum(resultado.num), fmtNum(resultado.den));
+
+      if (coefFinal !== 1 && coefFinal !== -1) {
+        const fraccion = fraccionHtml(fmtNum(constFinal), fmtNum(coefFinal));
+        html += '<div class="linea">x ' + signoFinalDisp + ' ' + fraccion + '</div>';
+      }
+      html += '<div class="linea resultado">x ' + signoFinalDisp + ' ' + valorFinal + '</div>';
+      html += '</div>';
+
+      const c = conclusion(signoFinal, resultado);
+      html += '<div class="conclusion">Conjunto solución: <strong>' + c.frase + '</strong><span class="intervalo">' + c.intervalo + '</span></div>';
+
+      const valNum = resultado.num / resultado.den;
+      const segs = segmentosLineal(valNum, signoFinal);
+      html += '<div class="grafica">' + renderNumberLine([segs.valid, segs.invalid]) + '</div>';
+      html += '<details class="detalle"><summary>Cuadro de pruebas (qué lado cumple y cuál no)</summary>';
+      html += '<p style="margin:8px 0 4px"><span style="color:#10b981;font-weight:600">■ Verde</span> = valores que cumplen · <span style="color:#f43f5e;font-weight:600">■ Rojo</span> = valores que no cumplen</p>';
+      html += cuadroPruebasLineal(li, ld, signo, valNum);
+      html += '</details>';
+
+      html += '<details class="detalle"><summary>Ver pasos detallados</summary>';
+      html += paso('Paso 1 — Agrupar términos semejantes', 'Las variables a la izquierda y los números a la derecha. Al cruzar, cada término cambia de signo.', ecuacion(lineaAgrupada));
+      html += paso('Paso 2 — Simplificar (se cancelan los semejantes)', 'Los términos semejantes se suman o se restan entre sí.', ecuacion(lineaTachada) + ecuacionResultado(lineaSimplificada));
+      if (coefFinal === 1 || coefFinal === -1) {
+        const explicacion = coefFinal === -1 ? 'El −x equivale a −1·x; al pasar el −1 a dividir, el signo se invierte.' : 'La x ya está despejada.';
+        html += paso('Paso 3 — Despejar x', explicacion, '');
+      } else {
+        const explicacion = coefFinal < 0 ? 'El ' + fmtNum(coefFinal) + ' está multiplicando a x, pasa a dividir. Como es negativo, el signo se invierte.' : 'El ' + fmtNum(coefFinal) + ' está multiplicando a x, pasa a dividir.';
+        const fraccion = fraccionHtml(fmtNum(constFinal), fmtNum(coefFinal));
+        html += paso('Paso 3 — Despejar x', explicacion, ecuacion('x ' + signoFinalDisp + ' ' + fraccion));
+      }
+      html += paso('Paso 4 — Simplificar', '', ecuacionResultado('x ' + signoFinalDisp + ' ' + valorFinal));
+      html += paso('Conclusión', 'El conjunto solución son <strong>' + c.frase + '</strong>.', ecuacionResultado('En intervalo: ' + c.intervalo));
+      html += '</details>';
+
+      return html;
+    }
+
+    // ============ MÓDULO CUADRÁTICA ============
+    function parsearCuadratica(texto) {
+      let t = texto.replace(/\s/g, '').replace(/−/g, '-').replace(/²/g, '^2');
+      t = t.replace(/-/g, '+-');
+      const tokens = t.split('+').filter(function (x) { return x !== ''; });
+      let a = 0, b = 0, c = 0;
+      for (const tok of tokens) {
+        const term = tok.replace(/\^2/g, '');
+        if (tok.includes('^2')) {
+          let coef = term.replace(/x/g, '');
+          coef = (coef === '' || coef === '+') ? 1 : (coef === '-' ? -1 : parseNum(coef));
+          a += coef;
+        } else if (tok.includes('x')) {
+          let coef = tok.replace(/x/g, '');
+          coef = (coef === '' || coef === '+') ? 1 : (coef === '-' ? -1 : parseNum(coef));
+          b += coef;
+        } else {
+          c += parseNum(tok);
+        }
+      }
+      return { a: a, b: b, c: c };
+    }
+
+    function fmtPolinomio(A, B, C) {
+      const parts = [];
+      if (A !== 0) parts.push({ c: A, v: 'x²' });
+      if (B !== 0) parts.push({ c: B, v: 'x' });
+      if (C !== 0) parts.push({ c: C, v: '' });
+      if (!parts.length) return '0';
+      let s = '';
+      parts.forEach(function (p, i) {
+        const abs = Math.abs(p.c);
+        let coefStr = '';
+        if (abs !== 1 || p.v === '') coefStr = fmtRacional(abs);
+        if (i === 0) s += (p.c < 0 ? '−' : '') + coefStr + p.v;
+        else s += (p.c < 0 ? ' − ' : ' + ') + coefStr + p.v;
+      });
+      return s;
+    }
+
+    function fmtPolinomioSustituido(A, B, C, x) {
+      const valor = fmtRacional(x);
+      const partes = [];
+      if (A !== 0) partes.push({ c: A, texto: (Math.abs(A) === 1 ? '' : fmtRacional(Math.abs(A))) + '(' + valor + ')²' });
+      if (B !== 0) partes.push({ c: B, texto: (Math.abs(B) === 1 ? '' : fmtRacional(Math.abs(B))) + '(' + valor + ')' });
+      if (C !== 0) partes.push({ c: C, texto: fmtRacional(Math.abs(C)) });
+      if (!partes.length) return '0 = 0';
+      let s = '';
+      partes.forEach(function (p, i) {
+        if (i === 0) s += (p.c < 0 ? '−' : '') + p.texto;
+        else s += p.c < 0 ? ' − ' + p.texto : ' + ' + p.texto;
+      });
+      return s + ' = ' + fmtRacional(evaluar(A, B, C, x));
+    }
+
+    function divisores(n) {
+      n = Math.abs(Math.round(n));
+      const d = [];
+      for (let i = 1; i <= n; i++) if (n % i === 0) { d.push(i); d.push(-i); }
+      return d;
+    }
+
+    function factorizarCuadratica(A, B, C) {
+      if (!Number.isInteger(A) || !Number.isInteger(B) || !Number.isInteger(C)) return null;
+      const divsA = divisores(A), divsC = divisores(C);
+      for (const p of divsA) for (const r of divsA) {
+        if (p * r !== A) continue;
+        for (const q of divsC) for (const s of divsC) {
+          if (q * s !== C) continue;
+          if (p * s + q * r === B) return [{ p: p, q: q }, { p: r, q: s }];
+        }
+      }
+      return null;
+    }
+
+    function fmtFactor(f) {
+      const coef = (f.p === 1) ? '' : (f.p === -1 ? '−' : fmtNum(f.p));
+      const constante = f.q >= 0 ? ' + ' + f.q : ' − ' + Math.abs(f.q);
+      return '(' + coef + 'x' + constante + ')';
+    }
+
+    function fracResult(r) {
+      if (r.den === 1) return fmtRacional(r.num);
+      return fraccionHtml(fmtRacional(r.num), fmtRacional(r.den));
+    }
+
+    function generalFormulaPasos(A, B, C) {
+      const D = B * B - 4 * A * C;
+      let html = '';
+      const aTexto = fmtRacional(A);
+      const bTexto = fmtRacional(B);
+      const cTexto = fmtRacional(C);
+      const bEntre = '(' + bTexto + ')';
+      const cEntre = '(' + cTexto + ')';
+      const formulaSustituida = '−' + bEntre + ' ± √(' + bEntre + '² − 4(' + aTexto + ')' + cEntre + ')';
+
+      html += paso('1. Convertir en ecuación', 'Para encontrar los puntos críticos, igualamos el trinomio a cero.', ecuacion(fmtPolinomio(A, B, C) + ' = 0'));
+      html += paso('2. Identificar a, b y c', 'Comparando con ax² + bx + c = 0.', ecuacion('a = ' + aTexto + ',   b = ' + bTexto + ',   c = ' + cTexto));
+      html += paso('3. Escribir la fórmula general', 'x = (−b ± √(b² − 4ac)) / (2a).', ecuacion('x = ' + fraccionHtml('−b ± √(b² − 4ac)', '2a')));
+      html += paso('4. Sustituir a, b y c', '', ecuacion('x = ' + fraccionHtml(formulaSustituida, '2(' + aTexto + ')')));
+      html += paso('5. Resolver el discriminante', 'D = b² − 4ac.', ecuacion('D = ' + bEntre + '² − 4(' + aTexto + ')' + cEntre + ' = ' + fmtRacional(D)));
+
+      if (D < 0) {
+        html += paso('6. Conclusión', 'El discriminante es negativo, por lo tanto no existen raíces reales.', ecuacionResultado('D < 0 → no hay soluciones reales'));
+        return html;
+      }
+
+      html += paso('6. Simplificar la raíz', '', ecuacion('x = ' + fraccionHtml(fmtRacional(-B) + ' ± √' + fmtRacional(D), fmtRacional(2 * A))));
+      const raiz = Math.sqrt(D);
+      if (D >= 0 && Number.isInteger(raiz)) {
+        const rMas = simplificar(-B + raiz, 2 * A);
+        const rMenos = simplificar(-B - raiz, 2 * A);
+        html += paso('7. Raíces', 'Como √' + fmtRacional(D) + ' = ' + fmtRacional(raiz) + ', el resultado es exacto.', ecuacion('x₁ = ' + fraccionHtml(fmtRacional(-B) + ' + ' + fmtRacional(raiz), fmtRacional(2 * A)) + ' = ' + fracResult(rMas)) + ecuacionResultado('x₂ = ' + fraccionHtml(fmtRacional(-B) + ' − ' + fmtRacional(raiz), fmtRacional(2 * A)) + ' = ' + fracResult(rMenos)));
+      } else {
+        const r1 = (-B - raiz) / (2 * A);
+        const r2 = (-B + raiz) / (2 * A);
+        html += paso('7. Raíces aproximadas', 'La raíz no es exacta; se deja en forma radical y se aproxima.', ecuacionResultado('x₁ = ' + fraccionHtml(fmtRacional(-B) + ' + √' + fmtRacional(D), fmtRacional(2 * A)) + ' ≈ ' + fmtRacional(r2) + '   ·   x₂ = ' + fraccionHtml(fmtRacional(-B) + ' − √' + fmtRacional(D), fmtRacional(2 * A)) + ' ≈ ' + fmtRacional(r1)));
+      }
+      return html;
+    }
+
+    function generalFormulaCuaderno(A, B, C) {
+      const D = B * B - 4 * A * C;
+      const aTexto = fmtRacional(A), bTexto = fmtRacional(B), cTexto = fmtRacional(C);
+      const bEntre = '(' + bTexto + ')';
+      const formulaSustituida = '−' + bEntre + ' ± √(' + bEntre + '² − 4(' + aTexto + ')(' + cTexto + '))';
+      let html = '';
+      html += cuadernoLinea('a = ' + aTexto);
+      html += cuadernoLinea('b = ' + bTexto);
+      html += cuadernoLinea('c = ' + cTexto);
+      html += cuadernoLinea('x = ' + fraccionHtml('−b ± √(b² − 4ac)', '2a'));
+      html += cuadernoLinea('x = ' + fraccionHtml(formulaSustituida, '2(' + aTexto + ')'));
+      html += cuadernoLinea('D = ' + bEntre + '² − 4(' + aTexto + ')(' + cTexto + ') = ' + fmtRacional(D));
+      if (D < 0) {
+        html += cuadernoResultado('D < 0 → no hay raíces reales');
+        return html;
+      }
+      html += cuadernoLinea('x = ' + fraccionHtml(fmtRacional(-B) + ' ± √' + fmtRacional(D), fmtRacional(2 * A)));
+      const raiz = Math.sqrt(D);
+      if (Number.isInteger(raiz)) {
+        const rMas = simplificar(-B + raiz, 2 * A);
+        const rMenos = simplificar(-B - raiz, 2 * A);
+        html += cuadernoResultado('x₁ = ' + fraccionHtml(fmtRacional(-B) + ' + ' + fmtRacional(raiz), fmtRacional(2 * A)) + ' = ' + fracResult(rMas));
+        html += cuadernoResultado('x₂ = ' + fraccionHtml(fmtRacional(-B) + ' − ' + fmtRacional(raiz), fmtRacional(2 * A)) + ' = ' + fracResult(rMenos));
+      } else {
+        const r1 = (-B - raiz) / (2 * A), r2 = (-B + raiz) / (2 * A);
+        html += cuadernoResultado('x₁ = ' + fraccionHtml(fmtRacional(-B) + ' + √' + fmtRacional(D), fmtRacional(2 * A)) + ' ≈ ' + fmtRacional(r2));
+        html += cuadernoResultado('x₂ = ' + fraccionHtml(fmtRacional(-B) + ' − √' + fmtRacional(D), fmtRacional(2 * A)) + ' ≈ ' + fmtRacional(r1));
+      }
+      return html;
+    }
+
+    function factorizacionCuaderno(factores) {
+      let html = '';
+      if (factores) {
+        const r1 = -factores[0].q / factores[0].p;
+        const r2 = -factores[1].q / factores[1].p;
+        html += cuadernoLinea(fmtFactor(factores[0]) + fmtFactor(factores[1]) + ' = 0');
+        html += cuadernoResultado('x₁ = ' + fmtRacional(r1));
+        html += cuadernoResultado('x₂ = ' + fmtRacional(r2));
+      } else {
+        html += cuadernoLinea('No factoriza con enteros (usar fórmula general)');
+      }
+      return html;
+    }
+
+    function terminoX(coef) {
+      if (coef === 1) return 'x';
+      if (coef === -1) return '−x';
+      return fmtRacional(coef).replace(/-/g, '−') + 'x';
+    }
+
+    function terminoConstante(coef) {
+      const s = fmtRacional(coef).replace(/-/g, '−');
+      return coef < 0 ? '(' + s + ')' : s;
+    }
+
+    function sumaTerminosX(a, b) {
+      const primero = terminoX(a);
+      const segundo = b < 0 ? ' − ' + terminoX(Math.abs(b)) : ' + ' + terminoX(b);
+      return primero + segundo + ' = ' + terminoX(a + b);
+    }
+
+    function tijeraSvg(terminoA, terminoC, izqArriba, izqAbajo, derArriba, derAbajo) {
+      let svg = '<svg class="tijera-svg" viewBox="0 0 400 230">';
+      svg += '<defs><marker id="tijeraTri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker></defs>';
+      svg += '<text x="95" y="24" text-anchor="middle" font-size="20" font-weight="700" fill="#1e293b">' + escapar(terminoA) + '</text>';
+      svg += '<text x="305" y="24" text-anchor="middle" font-size="20" font-weight="700" fill="#1e293b">' + escapar(terminoC) + '</text>';
+      svg += '<line x1="95" y1="34" x2="95" y2="62" stroke="#64748b" stroke-width="2" marker-end="url(#tijeraTri)"/>';
+      svg += '<line x1="305" y1="34" x2="305" y2="62" stroke="#64748b" stroke-width="2" marker-end="url(#tijeraTri)"/>';
+      svg += '<text x="95" y="86" text-anchor="middle" font-size="18" fill="#1e293b">' + escapar(izqArriba) + '</text>';
+      svg += '<text x="95" y="172" text-anchor="middle" font-size="18" fill="#1e293b">' + escapar(izqAbajo) + '</text>';
+      svg += '<text x="305" y="86" text-anchor="middle" font-size="18" fill="#1e293b">' + escapar(derArriba) + '</text>';
+      svg += '<text x="305" y="172" text-anchor="middle" font-size="18" fill="#1e293b">' + escapar(derAbajo) + '</text>';
+      svg += '<line x1="112" y1="95" x2="288" y2="163" stroke="#4f46e5" stroke-width="2" marker-end="url(#tijeraTri)"/>';
+      svg += '<line x1="112" y1="163" x2="288" y2="95" stroke="#4f46e5" stroke-width="2" marker-end="url(#tijeraTri)"/>';
+      svg += '</svg>';
+      return svg;
+    }
+
+    function factorizacionTijerasCuaderno(A, B, C, factores) {
+      if (!factores) return cuadernoLinea('No factoriza con enteros (usar fórmula general)');
+
+      const unitario = Math.abs(factores[0].p) === 1 ? factores[0] : factores[1];
+      const segundo = unitario === factores[0] ? factores[1] : factores[0];
+      const coefPrimerTermino = segundo.p;
+      const constanteUno = unitario.q;
+      const constanteDos = segundo.q;
+      const productoUno = constanteDos * unitario.p;
+      const productoDos = constanteUno * segundo.p;
+
+      let html = '<div class="tijeras">';
+      html += '<div class="tijeras-fila">';
+      html += tijeraSvg(
+        fmtRacional(A) + 'x²',
+        fmtRacional(C),
+        'x',
+        terminoX(coefPrimerTermino),
+        terminoConstante(constanteUno),
+        terminoConstante(constanteDos)
+      );
+      html += '<div class="tijeras-productos">';
+      html += '<div>x · ' + terminoConstante(constanteDos) + ' = ' + terminoX(productoUno) + '</div>';
+      html += '<div>' + terminoX(coefPrimerTermino) + ' · ' + terminoConstante(constanteUno) + ' = ' + terminoX(productoDos) + '</div>';
+      html += '<div class="tijeras-suma">' + sumaTerminosX(productoUno, productoDos) + '</div>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+      html += cuadernoLinea(fmtFactor(unitario) + fmtFactor(segundo) + ' = 0');
+      html += cuadernoResultado('x₁ = ' + fmtRacional(-unitario.q / unitario.p));
+      html += cuadernoResultado('x₂ = ' + fmtRacional(-segundo.q / segundo.p));
+      return html;
+    }
+
+    function factorizacionPasos(A, B, C, factores) {
+      let html = '';
+      if (!factores) {
+        html += paso('No se puede factorizar con enteros', 'Este trinomio no se descompone en binomios con números enteros; se resuelve con la fórmula general.', '');
+        return html;
+      }
+
+      const unitario = Math.abs(factores[0].p) === 1 ? factores[0] : factores[1];
+      const segundo = unitario === factores[0] ? factores[1] : factores[0];
+      const coefPrimerTermino = segundo.p;
+      const constanteUno = unitario.q;
+      const constanteDos = segundo.q;
+      const productoUno = constanteDos * unitario.p;
+      const productoDos = constanteUno * segundo.p;
+
+      html += paso('1. Igualar a cero', 'Para factorizar, primero escribimos el trinomio como una ecuación igual a cero.', ecuacion(fmtPolinomio(A, B, C) + ' = 0'));
+      html += paso('2. Descomponer el primer término', 'Buscamos dos términos que multiplicados den ' + fmtRacional(A) + 'x². Aquí ' + 'x' + ' · ' + terminoX(coefPrimerTermino) + ' = ' + fmtRacional(A) + 'x², por eso van en la columna izquierda.', ecuacion(fmtRacional(A) + 'x² = ' + 'x' + ' · ' + terminoX(coefPrimerTermino)));
+      html += paso('3. Descomponer el último término', 'Buscamos dos números que multiplicados den ' + fmtRacional(C) + '. Aquí ' + terminoConstante(constanteUno) + ' · ' + terminoConstante(constanteDos) + ' = ' + fmtRacional(C) + ', por eso van en la columna derecha.', ecuacion(fmtRacional(C) + ' = ' + terminoConstante(constanteUno) + ' · ' + terminoConstante(constanteDos)));
+      html += paso('4. Multiplicar en diagonal (tijera)', 'Se multiplica en cruz: el de arriba de la izquierda con el de abajo de la derecha, y el de abajo de la izquierda con el de arriba de la derecha.', ecuacion('x · ' + terminoConstante(constanteDos) + ' = ' + terminoX(productoUno)) + ecuacion(terminoX(coefPrimerTermino) + ' · ' + terminoConstante(constanteUno) + ' = ' + terminoX(productoDos)));
+      html += paso('5. Sumar los productos', 'Sumamos los dos resultados. Debe dar exactamente el término central ' + terminoX(B) + ' para que la descomposición sea correcta.', ecuacion(sumaTerminosX(productoUno, productoDos)));
+      html += paso('6. Verificar y escribir los factores', 'Como la suma coincide con el término central, la tijera cumple y los factores son correctos.', ecuacion(fmtFactor(unitario) + fmtFactor(segundo) + ' = 0'));
+      html += paso('7. Igualar cada factor a cero', 'Cada factor se iguala a cero para obtener las raíces (puntos críticos).', ecuacionResultado('x₁ = ' + fmtRacional(-unitario.q / unitario.p) + '   y   x₂ = ' + fmtRacional(-segundo.q / segundo.p)));
+      return html;
+    }
+
+    function evaluar(A, B, C, x) {
+      return A * x * x + B * x + C;
+    }
+
+    function construirSolucionCuadratica(A, B, C, op) {
+      const cumple = function (s) {
+        if (op === '>') return s > 0;
+        if (op === '<') return s < 0;
+        if (op === '>=') return s >= 0;
+        if (op === '<=') return s <= 0;
+      };
+      const D = B * B - 4 * A * C;
+      if (D < 0) {
+        const signoConst = A > 0 ? 1 : -1;
+        if (cumple(signoConst)) return { segs: [{ from: -Infinity, to: Infinity, fromClosed: true, toClosed: true }], zonas: [] };
+        return { segs: [], zonas: [] };
+      }
+      if (Math.abs(D) < 1e-9) {
+        const r = -B / (2 * A);
+        const positivo = A > 0;
+        const dosPartes = [
+          { from: -Infinity, to: r, fromClosed: false, toClosed: false },
+          { from: r, to: Infinity, fromClosed: false, toClosed: false }
+        ];
+        const todo = [{ from: -Infinity, to: Infinity, fromClosed: true, toClosed: true }];
+        const punto = [{ from: r, to: r, fromClosed: true, toClosed: true }];
+        if (op === '>') return positivo ? { segs: dosPartes, zonas: [] } : { segs: [], zonas: [] };
+        if (op === '<') return positivo ? { segs: [], zonas: [] } : { segs: dosPartes, zonas: [] };
+        if (op === '>=') return positivo ? { segs: todo, zonas: [] } : { segs: punto, zonas: [] };
+        return positivo ? { segs: punto, zonas: [] } : { segs: todo, zonas: [] };
+      }
+      const r1 = (-B - Math.sqrt(D)) / (2 * A);
+      const r2 = (-B + Math.sqrt(D)) / (2 * A);
+      const lo = Math.min(r1, r2), hi = Math.max(r1, r2);
+      const zonas = [];
+      const p1 = lo - 1;
+      const p2 = (lo + hi) / 2;
+      const p3 = hi + 1;
+      const s1 = Math.sign(evaluar(A, B, C, p1));
+      const s2 = Math.sign(evaluar(A, B, C, p2));
+      const s3 = Math.sign(evaluar(A, B, C, p3));
+      zonas.push({ nombre: '(−∞, ' + fmtRacional(lo) + ')', punto: p1, signo: s1, cumple: cumple(s1), expr: fmtPolinomioSustituido(A, B, C, p1) });
+      zonas.push({ nombre: '(' + fmtRacional(lo) + ', ' + fmtRacional(hi) + ')', punto: p2, signo: s2, cumple: cumple(s2), expr: fmtPolinomioSustituido(A, B, C, p2) });
+      zonas.push({ nombre: '(' + fmtRacional(hi) + ', ∞)', punto: p3, signo: s3, cumple: cumple(s3), expr: fmtPolinomioSustituido(A, B, C, p3) });
+
+      const cerrado = (op === '>=' || op === '<=');
+      const segs = [];
+      if (cumple(s1)) segs.push({ from: -Infinity, to: lo, fromClosed: false, toClosed: cerrado });
+      if (cumple(s2)) segs.push({ from: lo, to: hi, fromClosed: cerrado, toClosed: cerrado });
+      if (cumple(s3)) segs.push({ from: hi, to: Infinity, fromClosed: cerrado, toClosed: false });
+      return { segs: segs, zonas: zonas, lo: lo, hi: hi };
+    }
+
+    function resolverCuadratica(texto) {
+      const { izquierda, signo, derecha } = separar(texto);
+      const izq = parsearCuadratica(izquierda);
+      const der = parsearCuadratica(derecha);
+      const A = izq.a - der.a, B = izq.b - der.b, C = izq.c - der.c;
+
+      const polinomio = fmtPolinomio(A, B, C);
+      const sol = construirSolucionCuadratica(A, B, C, signo);
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar(texto) + '</div>';
+      html += '<div class="linea">' + polinomio + ' = 0</div>';
+      const D = B * B - 4 * A * C;
+      if (D > 0) {
+        const r1 = (-B - Math.sqrt(D)) / (2 * A);
+        const r2 = (-B + Math.sqrt(D)) / (2 * A);
+        html += cuadernoResultado('x₁ = ' + fmtRacional(Math.min(r1, r2)) + '   ·   x₂ = ' + fmtRacional(Math.max(r1, r2)));
+      }
+      html += '</div>';
+
+      html += resultadoCuadratica(sol, A, B, C, signo);
+      return html;
+    }
+
+    function resultadoCuadratica(sol, A, B, C, signo) {
+      let html = '';
+      if (sol.segs.length === 0) {
+        html += '<div class="conclusion">No hay solución: ningún valor de x cumple la desigualdad.</div>';
+        if (sol.zonas.length) html += tablaValidacion(sol.zonas);
+        return html;
+      }
+      if (sol.segs.length === 1 && sol.segs[0].from === -Infinity && sol.segs[0].to === Infinity) {
+        html += '<div class="conclusion">Solución: <strong>todos los números reales</strong> <span class="intervalo">(−∞, ∞)</span></div>';
+        return html;
+      }
+      html += '<div class="conclusion">Conjunto solución: <span class="intervalo">' + segsToString(sol.segs) + '</span></div>';
+      html += '<div class="grafica">' + renderQuadraticNumberLine(sol, A, B, C, signo) + '</div>';
+      if (sol.zonas.length) {
+        html += '<div class="etiqueta">Cuadro de validación de pruebas</div>';
+        html += tablaValidacion(sol.zonas);
+      }
+      return html;
+    }
+
+    function resolverFormulaGeneral(texto) {
+      const { izquierda, signo, derecha } = separar(texto);
+      const izq = parsearCuadratica(izquierda);
+      const der = parsearCuadratica(derecha);
+      const A = izq.a - der.a, B = izq.b - der.b, C = izq.c - der.c;
+      const polinomio = fmtPolinomio(A, B, C);
+      const sol = construirSolucionCuadratica(A, B, C, signo);
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar(texto) + '</div>';
+      html += '<div class="linea">' + polinomio + ' = 0</div>';
+      html += generalFormulaCuaderno(A, B, C);
+      html += '</div>';
+
+      html += resultadoCuadratica(sol, A, B, C, signo);
+      html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>' + generalFormulaPasos(A, B, C) + '</details>';
+      return html;
+    }
+
+    function resolverFactorizacion(texto) {
+      const { izquierda, signo, derecha } = separar(texto);
+      const izq = parsearCuadratica(izquierda);
+      const der = parsearCuadratica(derecha);
+      const A = izq.a - der.a, B = izq.b - der.b, C = izq.c - der.c;
+      const polinomio = fmtPolinomio(A, B, C);
+      const factores = factorizarCuadratica(A, B, C);
+      const sol = construirSolucionCuadratica(A, B, C, signo);
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + polinomio + ' = 0</div>';
+      html += factorizacionTijerasCuaderno(A, B, C, factores);
+      html += '</div>';
+
+      html += resultadoCuadratica(sol, A, B, C, signo);
+      html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>' + factorizacionPasos(A, B, C, factores) + '</details>';
+      return html;
+    }
+
+    function tablaValidacion(zonas) {
+      let html = '<table class="tabla"><thead><tr><th>Zona</th><th>x prueba</th><th>Sustitución</th><th>Signo</th><th>¿Cumple?</th></tr></thead><tbody>';
+      zonas.forEach(function (z) {
+        const cls = z.cumple ? 'cumple' : 'nocumple';
+        html += '<tr><td>' + z.nombre + '</td><td>' + fmtRacional(z.punto) + '</td><td>' + escapar(z.expr) + '</td><td>' + (z.signo > 0 ? '+' : (z.signo < 0 ? '−' : '0')) + '</td><td class="' + cls + '">' + (z.cumple ? 'Sí' : 'No') + '</td></tr>';
+      });
+      html += '</tbody></table>';
+      return html;
+    }
+
+    // ============ MÓDULO VALOR ABSOLUTO ============
+    function parsearLinealAbs(texto) {
+      let t = texto.trim();
+      let den = 1;
+      const mm = t.match(/^\((.*)\)\/(.+)$/);
+      if (mm) { t = mm[1]; den = parseNum(mm[2]); }
+      const p = parsearLado(t);
+      return { coef: p.coefX / den, c: p.constante / den };
+    }
+
+    function resolverLinealAbs(coef, c, op, k) {
+      const rhs = k - c;
+      let finalOp = op;
+      if (coef < 0) finalOp = INVERSO[op];
+      return { op: finalOp, val: rhs / coef };
+    }
+
+    function intervaloDesdeSol(op, val) {
+      if (op === '>') return { from: val, to: Infinity, fromClosed: false, toClosed: false };
+      if (op === '>=') return { from: val, to: Infinity, fromClosed: true, toClosed: false };
+      if (op === '<') return { from: -Infinity, to: val, fromClosed: false, toClosed: false };
+      if (op === '<=') return { from: -Infinity, to: val, fromClosed: false, toClosed: true };
+      return null;
+    }
+
+    function resolverAbs(texto) {
+      const t = texto.trim().replace(/−/g, '-').replace(/≤/g, '<=').replace(/≥/g, '>=');
+      const m = t.match(/^\|(.+)\|\s*(<=|>=|<|>)\s*(.+)$/);
+      if (!m) throw new Error('Formato: |expresión| < k. Ej: |x - 2| < 4');
+      const expr = m[1].trim();
+      const op = m[2];
+      const k = parseNum(m[3]);
+      const { coef, c } = parsearLinealAbs(expr);
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar('|' + expr + '| ' + mostrarSigno(op) + ' ' + fmtRacional(k)) + '</div>';
+
+      const esCentro = (op === '<' || op === '<=');
+      const esPuntas = (op === '>' || op === '>=');
+
+      if (esCentro) {
+        if (k <= 0) {
+          html += '</div>';
+          html += '<div class="conclusion">No hay solución: el valor absoluto nunca es ' + (op === '<' ? 'menor' : 'menor o igual') + ' a un número ' + (k < 0 ? 'negativo' : 'igual a cero') + '.</div>';
+          return html;
+        }
+        const izquierdaIneq = expr + ' > ' + fmtRacional(-k);
+        const derechaIneq = expr + ' ' + mostrarSigno(op) + ' ' + fmtRacional(k);
+        html += '</div>';
+        html += paso('Paso 1 — Regla del centro', '|x| < k  ⇔  −k < x < k. Separamos en dos desigualdades.', ecuacion('−' + fmtRacional(k) + ' < ' + expr + ' ' + mostrarSigno(op) + ' ' + fmtRacional(k)));
+        html += paso('Paso 2 — Resolver lado izquierdo', escapar(izquierdaIneq), ecuacionResultado(escFormat(resolverLinealAbs(coef, c, '>', -k))));
+        html += paso('Paso 3 — Resolver lado derecho', escapar(derechaIneq), ecuacionResultado(escFormat(resolverLinealAbs(coef, c, op, k))));
+        const segIzq = intervaloDesdeSol(resolverLinealAbs(coef, c, '>', -k).op, resolverLinealAbs(coef, c, '>', -k).val);
+        const segDer = intervaloDesdeSol(resolverLinealAbs(coef, c, op, k).op, resolverLinealAbs(coef, c, op, k).val);
+        const resultado = interseccion(segIzq, segDer);
+        html += '<div class="conclusion">Conjunto solución: <span class="intervalo">' + segsToString(resultado) + '</span></div>';
+        html += '<div class="grafica">' + renderNumberLine(resultado) + '</div>';
+        return html;
+      }
+
+      if (esPuntas) {
+        if (k < 0) {
+          html += '</div>';
+          html += '<div class="conclusion">Solución: <strong>todos los números reales</strong> (el valor absoluto siempre es ≥ 0).<span class="intervalo">(−∞, ∞)</span></div>';
+          return html;
+        }
+        const ramaIzq = expr + ' < ' + fmtRacional(-k);
+        const ramaDer = expr + ' > ' + fmtRacional(k);
+        html += '</div>';
+        html += paso('Paso 1 — Regla de las puntas', '|x| > k  ⇔  x < −k  o  x > k. Se resuelven dos casos.', ecuacion(expr + ' ' + mostrarSigno(op === '>' ? '<' : '<=') + ' −' + fmtRacional(k) + '   o   ' + expr + ' ' + mostrarSigno(op) + ' ' + fmtRacional(k)));
+        const opRamaIzq = (op === '>') ? '<' : '<=';
+        const sIzq = resolverLinealAbs(coef, c, opRamaIzq, -k);
+        const sDer = resolverLinealAbs(coef, c, op, k);
+        html += paso('Paso 2 — Rama izquierda', escapar(ramaIzq), ecuacionResultado(escFormat(sIzq)));
+        html += paso('Paso 3 — Rama derecha', escapar(ramaDer), ecuacionResultado(escFormat(sDer)));
+        const segIzq = intervaloDesdeSol(sIzq.op, sIzq.val);
+        const segDer = intervaloDesdeSol(sDer.op, sDer.val);
+        const resultado = union(segIzq, segDer);
+        html += '<div class="conclusion">Conjunto solución: <span class="intervalo">' + segsToString(resultado) + '</span></div>';
+        html += '<div class="grafica">' + renderNumberLine(resultado) + '</div>';
+        return html;
+      }
+
+      html += '</div>';
+      return html;
+    }
+
+    function escFormat(sol) {
+      const v = fmtRacional(sol.val);
+      return 'x ' + mostrarSigno(sol.op) + ' ' + v;
+    }
+
+    // ============ WIRING ============
+    function mostrarVista(id) {
+      document.getElementById('home').hidden = true;
+      document.querySelectorAll('.modulo').forEach(function (m) { m.hidden = true; });
+      if (id === 'home') document.getElementById('home').hidden = false;
+      else document.getElementById('modulo-' + id).hidden = false;
+    }
+
+    function bind(idBoton, idEntrada, idError, idRes, fn) {
+      document.getElementById(idBoton).addEventListener('click', function () {
+        const entrada = document.getElementById(idEntrada).value.trim();
+        const error = document.getElementById(idError);
+        const res = document.getElementById(idRes);
+        error.hidden = true;
+        res.innerHTML = '';
+        if (!entrada) { error.textContent = 'Escribe algo primero.'; error.hidden = false; return; }
+        try { res.innerHTML = fn(entrada); }
+        catch (e) { error.textContent = e.message; error.hidden = false; }
+      });
+      document.getElementById(idEntrada).addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') document.getElementById(idBoton).click();
+      });
+    }
+
+    bind('boton', 'entrada', 'error', 'resultado', resolver);
+    bind('botonCuad', 'entradaCuad', 'errorCuad', 'resCuad', resolverCuadratica);
+    bind('botonFormula', 'entradaFormula', 'errorFormula', 'resFormula', resolverFormulaGeneral);
+    bind('botonFactor', 'entradaFactor', 'errorFactor', 'resFactor', resolverFactorizacion);
+    bind('botonAbs', 'entradaAbs', 'errorAbs', 'resAbs', resolverAbs);
+
+    bind('botonDesig', 'entradaDesig', 'errorDesig', 'resDesig', function (texto) {
+      const segs = desigualdadAIntervalo(texto);
+      let html = '<div class="conclusion">Notación de intervalo: <span class="intervalo">' + segsToString(segs) + '</span></div>';
+      html += '<div class="grafica">' + renderNumberLine(segs) + '</div>';
+      html += paso('Descripción en palabras', '', '<p>' + describir(segs[0]) + '</p>');
+      return html;
+    });
+
+    bind('botonInter', 'entradaInter', 'errorInter', 'resInter', function (texto) {
+      const segs = parseIntervaloNotacion(texto);
+      let html = '<div class="conclusion">Desigualdad: <span class="intervalo">' + escapar(intervaloAInecuacion(segs[0])) + '</span></div>';
+      html += '<div class="grafica">' + renderNumberLine(segs) + '</div>';
+      return html;
+    });
+
+    bind('botonOp', 'intA', 'errorOp', 'resOp', function () {
+      const A = parseIntervaloNotacion(document.getElementById('intA').value)[0];
+      const B = parseIntervaloNotacion(document.getElementById('intB').value)[0];
+      const op = document.getElementById('opSelect').value;
+      const resultado = operarIntervalos(A, B, op);
+      let html;
+      if (resultado.length === 0) {
+        html = '<div class="conclusion">Resultado: <strong>conjunto vacío (∅)</strong></div>';
+      } else {
+        html = '<div class="conclusion">Resultado: <span class="intervalo">' + segsToString(resultado) + '</span></div>';
+        html += '<div class="grafica">' + renderNumberLine(resultado) + '</div>';
+      }
+      return html;
+    });
+
+    document.querySelectorAll('.tarjeta[data-modulo]').forEach(function (t) {
+      t.addEventListener('click', function () { mostrarVista(t.dataset.modulo); });
+    });
+    document.querySelectorAll('.volver').forEach(function (b) {
+      b.addEventListener('click', function () { mostrarVista(b.dataset.volver || 'home'); });
+    });
+
+    document.addEventListener('input', function (e) {
+      if (!e.target.classList.contains('search-input')) return;
+      const res = e.target.parentElement.querySelector('.search-results');
+      if (res) res.innerHTML = buscarConceptos(e.target.value);
+    });
+  </script>
+</body>
+</html>
