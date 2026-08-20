@@ -296,6 +296,121 @@
   .teoria p { margin: 0 0 8px; color: var(--muted); }
   .teoria .ecuacion { margin: 4px 0; }
 
+  .ejercicios {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ejercicios-titulo {
+    width: 100%;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 2px;
+  }
+  .ejercicio {
+    font-size: 0.85rem;
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .ejercicio:hover { border-color: var(--primary); color: var(--primary-dark); background: #eef2ff; }
+
+  .btn-glosario {
+    margin-top: 16px;
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    background: #eef2ff;
+    color: var(--primary-dark);
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .btn-glosario:hover { background: #e0e7ff; }
+  .btn-glosario:active { transform: translateY(1px); }
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .filtro-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .filtro-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+  .filtro-btn.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+
+  .flash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .flash {
+    perspective: 1000px;
+    cursor: pointer;
+    height: 180px;
+  }
+  .flash-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+  .flash.volteada .flash-inner { transform: rotateY(180deg); }
+  .flash-front, .flash-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .flash-front {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.06);
+  }
+  .flash-front .flash-titulo { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .flash-front .flash-hint { font-size: 0.75rem; color: var(--muted); margin-top: 10px; }
+  .flash-back {
+    background: #eef2ff;
+    border: 1px solid var(--primary);
+    transform: rotateY(180deg);
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
   .tijeras {
     margin: 14px 0;
     font-family: "Cambria Math", "Consolas", serif;
@@ -322,6 +437,17 @@
   .tijeras-suma {
     border-top: 2px solid #64748b;
     padding-top: 6px;
+  }
+  .cuad-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px;
+    gap: 24px;
+    align-items: start;
+  }
+  .abc-bloque { padding-top: 6px; }
+  @media (max-width: 600px) {
+    .cuad-intro { grid-template-columns: 1fr; gap: 4px; }
+    .abc-bloque { padding-top: 0; }
   }
 </style>
 </head>
@@ -364,6 +490,21 @@
           <span class="desc">Próximamente</span>
         </button>
       </div>
+      <button class="btn-glosario" data-modulo="glosario">Glosario</button>
+    </div>
+
+    <div id="modulo-glosario" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Glosario</h2>
+      <p class="sub">Toca una tarjeta para voltearla y ver la respuesta</p>
+      <div class="filtros">
+        <button type="button" class="filtro-btn active" data-filtro="Todos">Todos</button>
+        <button type="button" class="filtro-btn" data-filtro="Regla de oro">Reglas de oro</button>
+        <button type="button" class="filtro-btn" data-filtro="Concepto">Conceptos</button>
+        <button type="button" class="filtro-btn" data-filtro="Fórmula">Fórmulas</button>
+        <button type="button" class="filtro-btn" data-filtro="Tip">Tips</button>
+      </div>
+      <div id="glosario-contenido"></div>
     </div>
 
     <div id="modulo-lineal" class="modulo" hidden>
@@ -372,6 +513,23 @@
       <div class="card">
         <input id="entrada" type="text" placeholder="Ej: -5x + 4x - 3 < 4x + 2" autocomplete="off">
         <button id="boton" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 6</span>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="3x - 2 < 14" data-run="boton">6a) 3x − 2 &lt; 14</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="2x + 7 <= 7" data-run="boton">6b) 2x + 7 ≤ 7</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="9x + 1/3 >= 4 - 1/2x" data-run="boton">6c) 9x + 1/3 ≥ 4 − (1/2)x</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · 1.3.1 lineales</span>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="4x - 1 < 11" data-run="boton">1) 4x − 1 &lt; 11</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="-2x + 5 > 1" data-run="boton">2) −2x + 5 &gt; 1</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="5x - 3 >= 12" data-run="boton">3) 5x − 3 ≥ 12</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="-4x + 7 < 3" data-run="boton">4) −4x + 7 &lt; 3</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="3x + 4 <= -2" data-run="boton">5) 3x + 4 ≤ −2</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="-2x - 3 < -9" data-run="boton">6) −2x − 3 &lt; −9</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="7x - 5 > 16" data-run="boton">7) 7x − 5 &gt; 16</button>
+        <button type="button" class="ejercicio" data-fill="entrada" data-valor="-5x + 2 >= 7" data-run="boton">8) −5x + 2 ≥ 7</button>
       </div>
       <div id="error" class="error" hidden></div>
       <div id="resultado"></div>
@@ -383,6 +541,23 @@
       <div class="card">
         <input id="entradaCuad" type="text" placeholder="Ej: 2x² + 7x - 4 > 0" autocomplete="off">
         <button id="botonCuad" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 6</span>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="2x² + 7x - 4 > 0" data-run="botonCuad">6i) 2x² + 7x − 4 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="-3x² - 2x >= -1" data-run="botonCuad">6j) −3x² − 2x ≥ −1</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="3x² + 3 <= 5 - 5x" data-run="botonCuad">6k) 3x² + 3 ≤ 5 − 5x</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · 1.3.2 trinomios y dif. de cuadrados</span>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² + 5x - 6 > 0" data-run="botonCuad">x² + 5x − 6 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² - x - 6 > 0" data-run="botonCuad">x² − x − 6 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² + 2x - 8 > 0" data-run="botonCuad">x² + 2x − 8 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² + 7x + 10 > 0" data-run="botonCuad">x² + 7x + 10 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² - 4 >= 0" data-run="botonCuad">x² − 4 ≥ 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² - 36 < 0" data-run="botonCuad">x² − 36 &lt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² - 49 > 0" data-run="botonCuad">x² − 49 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaCuad" data-valor="x² - 1 <= 0" data-run="botonCuad">x² − 1 ≤ 0</button>
       </div>
       <div id="errorCuad" class="error" hidden></div>
       <div id="resCuad"></div>
@@ -406,6 +581,12 @@
         <input id="entradaFormula" type="text" placeholder="Ej: 2x² - 4x - 16 >= 0" autocomplete="off">
         <button id="botonFormula" class="btn">Resolver</button>
       </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 6</span>
+        <button type="button" class="ejercicio" data-fill="entradaFormula" data-valor="2x² + 7x - 4 > 0" data-run="botonFormula">6i) 2x² + 7x − 4 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaFormula" data-valor="-3x² - 2x >= -1" data-run="botonFormula">6j) −3x² − 2x ≥ −1</button>
+        <button type="button" class="ejercicio" data-fill="entradaFormula" data-valor="3x² + 3 <= 5 - 5x" data-run="botonFormula">6k) 3x² + 3 ≤ 5 − 5x</button>
+      </div>
       <div id="errorFormula" class="error" hidden></div>
       <div id="resFormula"></div>
     </div>
@@ -417,6 +598,12 @@
         <input id="entradaFactor" type="text" placeholder="Ej: 2x² - 4x - 16 >= 0" autocomplete="off">
         <button id="botonFactor" class="btn">Resolver</button>
       </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 6</span>
+        <button type="button" class="ejercicio" data-fill="entradaFactor" data-valor="2x² + 7x - 4 > 0" data-run="botonFactor">6i) 2x² + 7x − 4 &gt; 0</button>
+        <button type="button" class="ejercicio" data-fill="entradaFactor" data-valor="-3x² - 2x >= -1" data-run="botonFactor">6j) −3x² − 2x ≥ −1</button>
+        <button type="button" class="ejercicio" data-fill="entradaFactor" data-valor="3x² + 3 <= 5 - 5x" data-run="botonFactor">6k) 3x² + 3 ≤ 5 − 5x</button>
+      </div>
       <div id="errorFactor" class="error" hidden></div>
       <div id="resFactor"></div>
     </div>
@@ -427,6 +614,18 @@
       <div class="card">
         <input id="entradaAbs" type="text" placeholder="Ej: |x - 2| < 4" autocomplete="off">
         <button id="botonAbs" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 6</span>
+        <button type="button" class="ejercicio" data-fill="entradaAbs" data-valor="|(5x+2)/5| >= 2" data-run="botonAbs">6h) |(5x+2)/5| ≥ 2</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · 1.3.3 valor absoluto</span>
+        <button type="button" class="ejercicio" data-fill="entradaAbs" data-valor="|x| < 5" data-run="botonAbs">|x| &lt; 5</button>
+        <button type="button" class="ejercicio" data-fill="entradaAbs" data-valor="|x| <= 4" data-run="botonAbs">|x| ≤ 4</button>
+        <button type="button" class="ejercicio" data-fill="entradaAbs" data-valor="|x - 2| < 5" data-run="botonAbs">|x − 2| &lt; 5</button>
+        <button type="button" class="ejercicio" data-fill="entradaAbs" data-valor="|x - 3| < 4" data-run="botonAbs">|x − 3| &lt; 4</button>
+        <button type="button" class="ejercicio" data-fill="entradaAbs" data-valor="|x - 3| > 4" data-run="botonAbs">|x − 3| &gt; 4</button>
       </div>
       <div id="errorAbs" class="error" hidden></div>
       <div id="resAbs"></div>
@@ -441,6 +640,15 @@
         <input id="entradaDesig" type="text" placeholder="Ej: 5 < x <= 11  ó  x > 3" autocomplete="off">
         <button id="botonDesig" class="btn">Graficar</button>
       </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicios 1 y 4</span>
+        <button type="button" class="ejercicio" data-fill="entradaDesig" data-valor="x > 3" data-run="botonDesig">1a) x &gt; 3</button>
+        <button type="button" class="ejercicio" data-fill="entradaDesig" data-valor="5 < x <= 11" data-run="botonDesig">1b) 5 &lt; x ≤ 11</button>
+        <button type="button" class="ejercicio" data-fill="entradaDesig" data-valor="x <= 4" data-run="botonDesig">1c) x ≤ 4</button>
+        <button type="button" class="ejercicio" data-fill="entradaDesig" data-valor="0 <= x <= 1/2" data-run="botonDesig">1d) 0 ≤ x ≤ 1/2</button>
+        <button type="button" class="ejercicio" data-fill="entradaDesig" data-valor="0 <= x <= 5" data-run="botonDesig">4b) 0 ≤ x ≤ 5</button>
+        <button type="button" class="ejercicio" data-fill="entradaDesig" data-valor="-4 < x <= -2" data-run="botonDesig">4c) −4 &lt; x ≤ −2</button>
+      </div>
       <div id="errorDesig" class="error" hidden></div>
       <div id="resDesig"></div>
 
@@ -448,6 +656,12 @@
       <div class="card">
         <input id="entradaInter" type="text" placeholder="Ej: [3, 10)  ó  (-∞, 4)" autocomplete="off">
         <button id="botonInter" class="btn">Convertir</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 3</span>
+        <button type="button" class="ejercicio" data-fill="entradaInter" data-valor="[3, 10)" data-run="botonInter">3a) [3, 10)</button>
+        <button type="button" class="ejercicio" data-fill="entradaInter" data-valor="[-2, 5]" data-run="botonInter">3b) [−2, 5]</button>
+        <button type="button" class="ejercicio" data-fill="entradaInter" data-valor="(-∞, 4)" data-run="botonInter">3c) (−∞, 4)</button>
       </div>
       <div id="errorInter" class="error" hidden></div>
       <div id="resInter"></div>
@@ -462,6 +676,11 @@
         </select>
         <input id="intB" class="corto" type="text" placeholder="B = (0, 6)" autocomplete="off">
         <button id="botonOp" class="btn">Calcular</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 5</span>
+        <button type="button" class="ejercicio" data-run="botonOp" data-inta="[-4, 4]" data-op="∩" data-intb="[2, 8)">5a) A ∩ C</button>
+        <button type="button" class="ejercicio" data-run="botonOp" data-inta="[-4, 4]" data-op="−" data-intb="[2, 8)">5b) A − C</button>
       </div>
       <div id="errorOp" class="error" hidden></div>
       <div id="resOp"></div>
@@ -543,6 +762,55 @@
       return { num: n, den: d };
     }
 
+    function fracSimplificar(f) {
+      const g = mcd(Math.abs(f.n), Math.abs(f.d)) || 1;
+      let n = f.n / g, d = f.d / g;
+      if (d < 0) { n = -n; d = -d; }
+      return { n, d };
+    }
+    function fracSumar(a, b) { return fracSimplificar({ n: a.n * b.d + b.n * a.d, d: a.d * b.d }); }
+    function fracRestar(a, b) { return fracSimplificar({ n: a.n * b.d - b.n * a.d, d: a.d * b.d }); }
+    function fracDividir(a, b) { return fracSimplificar({ n: a.n * b.d, d: a.d * b.n }); }
+    function parsearFrac(s) {
+      const t = s.trim().replace(/−/g, '-');
+      if (t.indexOf('/') !== -1) {
+        const p = t.split('/');
+        return fracSimplificar({ n: parseInt(p[0], 10), d: parseInt(p[1], 10) });
+      }
+      if (t.indexOf('.') !== -1) {
+        const num = parseFloat(t);
+        const abs = t.replace('-', '');
+        const decPlaces = abs.length - abs.indexOf('.') - 1;
+        const d = Math.pow(10, decPlaces);
+        return fracSimplificar({ n: Math.round(num * d), d: d });
+      }
+      return { n: parseInt(t, 10), d: 1 };
+    }
+    function fmtFrac(f) {
+      if (f.d === 1) return String(f.n);
+      return f.n + '/' + f.d;
+    }
+    function fmtFracHtml(f) {
+      if (f.d === 1) return String(f.n);
+      return fraccionHtml(f.n, f.d);
+    }
+    function formatoXFrac(f) {
+      if (f.n === 0) return '0';
+      if (f.d === 1) {
+        if (f.n === 1) return 'x';
+        if (f.n === -1) return '−x';
+        return f.n + 'x';
+      }
+      const frac = fraccionHtml(Math.abs(f.n), f.d);
+      return (f.n < 0 ? '−' : '') + frac + 'x';
+    }
+    function fmtConstFrac(f) {
+      if (f.n === 0) return '0';
+      if (f.d === 1) return String(f.n);
+      const sign = f.n < 0 ? '−' : '';
+      return sign + fraccionHtml(Math.abs(f.n), f.d);
+    }
+
     function fmtNum(n) {
       if (typeof n === 'number' && !Number.isInteger(n)) {
         return String(Math.round(n * 1e9) / 1e9);
@@ -553,7 +821,7 @@
     function fmtRacional(v) {
       if (!isFinite(v)) return v > 0 ? '∞' : '−∞';
       if (Math.abs(v - Math.round(v)) < 1e-9) return String(Math.round(v));
-      for (let d = 2; d <= 20; d++) {
+      for (let d = 2; d <= 100; d++) {
         const n = Math.round(v * d);
         if (Math.abs(n / d - v) < 1e-9) return n + '/' + d;
       }
@@ -850,22 +1118,27 @@
       t = t.replace(/-/g, '+-');
       const tokens = t.split('+').filter(function (x) { return x !== ''; });
       let coefX = 0, constante = 0;
+      let coefXFrac = { n: 0, d: 1 };
+      let constanteFrac = { n: 0, d: 1 };
       const terminosX = [], terminosConst = [];
       for (const tok of tokens) {
         if (tok.endsWith('x')) {
           const coefStr = tok.slice(0, -1);
           let coef;
-          if (coefStr === '' || coefStr === '+') coef = 1;
-          else if (coefStr === '-') coef = -1;
-          else coef = parseNum(coefStr);
+          let f;
+          if (coefStr === '' || coefStr === '+') { coef = 1; f = { n: 1, d: 1 }; }
+          else if (coefStr === '-') { coef = -1; f = { n: -1, d: 1 }; }
+          else { coef = parseNum(coefStr); f = parsearFrac(coefStr); }
           coefX += coef;
+          coefXFrac = fracSumar(coefXFrac, f);
           terminosX.push(tok);
         } else {
           constante += parseNum(tok);
+          constanteFrac = fracSumar(constanteFrac, parsearFrac(tok));
           terminosConst.push(tok);
         }
       }
-      return { coefX: coefX, constante: constante, terminosX: terminosX, terminosConst: terminosConst };
+      return { coefX: coefX, constante: constante, coefXFrac: coefXFrac, constanteFrac: constanteFrac, terminosX: terminosX, terminosConst: terminosConst };
     }
 
     function separar(texto) {
@@ -968,13 +1241,15 @@
       return v1 >= v2;
     }
 
-    function cuadroPruebasLineal(li, ld, signo, val) {
+    function cuadroPruebasLineal(li, ld, signo, resultado) {
+      const val = resultado.num / resultado.den;
+      const valTxt = resultado.den === 1 ? String(resultado.num) : resultado.num + '/' + resultado.den;
       let testIzq, testDer;
       if (Number.isInteger(val)) { testIzq = val - 1; testDer = val + 1; }
       else { testIzq = Math.floor(val); testDer = Math.ceil(val); }
       const puntos = [
-        { zona: 'x < ' + fmtRacional(val), x: testIzq },
-        { zona: 'x > ' + fmtRacional(val), x: testDer }
+        { zona: 'x < ' + valTxt, x: testIzq },
+        { zona: 'x > ' + valTxt, x: testDer }
       ];
       let html = '<table class="tabla"><thead><tr><th>Zona</th><th>x prueba</th><th>Sustitución en la desigualdad original</th><th>¿Cumple?</th></tr></thead><tbody>';
       puntos.forEach(function (p) {
@@ -1000,6 +1275,8 @@
 
       const coefFinal = li.coefX - ld.coefX;
       const constFinal = ld.constante - li.constante;
+      const coefFinalFrac = fracRestar(li.coefXFrac, ld.coefXFrac);
+      const constFinalFrac = fracRestar(ld.constanteFrac, li.constanteFrac);
       const signoDisp = mostrarSigno(signo);
 
       const cancIzq = detectarCancelados(nuevoIzq);
@@ -1007,7 +1284,7 @@
 
       const lineaAgrupada = escapar(unir(nuevoIzq)) + ' ' + signoDisp + ' ' + escapar(unir(nuevoDer));
       const lineaTachada = tachada(nuevoIzq, cancIzq) + ' ' + signoDisp + ' ' + tachada(nuevoDer, cancDer);
-      const lineaSimplificada = (coefFinal === 0 ? '0' : formatoX(coefFinal)) + ' ' + signoDisp + ' ' + fmtNum(constFinal);
+      const lineaSimplificada = formatoXFrac(coefFinalFrac) + ' ' + signoDisp + ' ' + fmtConstFrac(constFinalFrac);
 
       let html = '<div class="desarrollo">';
       html += '<div class="linea">' + escapar(texto) + '</div>';
@@ -1028,15 +1305,12 @@
 
       const signoFinal = coefFinal < 0 ? inversoSigno(signo) : signo;
       const signoFinalDisp = mostrarSigno(signoFinal);
-      const resultado = simplificar(constFinal, coefFinal);
+      const resultadoFrac = fracDividir(constFinalFrac, coefFinalFrac);
+      const resultado = { num: resultadoFrac.n, den: resultadoFrac.d };
       const valorFinal = resultado.den === 1
         ? fmtNum(resultado.num)
         : fraccionHtml(fmtNum(resultado.num), fmtNum(resultado.den));
 
-      if (coefFinal !== 1 && coefFinal !== -1) {
-        const fraccion = fraccionHtml(fmtNum(constFinal), fmtNum(coefFinal));
-        html += '<div class="linea">x ' + signoFinalDisp + ' ' + fraccion + '</div>';
-      }
       html += '<div class="linea resultado">x ' + signoFinalDisp + ' ' + valorFinal + '</div>';
       html += '</div>';
 
@@ -1048,21 +1322,17 @@
       html += '<div class="grafica">' + renderNumberLine([segs.valid, segs.invalid]) + '</div>';
       html += '<details class="detalle"><summary>Cuadro de pruebas (qué lado cumple y cuál no)</summary>';
       html += '<p style="margin:8px 0 4px"><span style="color:#10b981;font-weight:600">■ Verde</span> = valores que cumplen · <span style="color:#f43f5e;font-weight:600">■ Rojo</span> = valores que no cumplen</p>';
-      html += cuadroPruebasLineal(li, ld, signo, valNum);
+      html += cuadroPruebasLineal(li, ld, signo, resultado);
       html += '</details>';
 
       html += '<details class="detalle"><summary>Ver pasos detallados</summary>';
       html += paso('Paso 1 — Agrupar términos semejantes', 'Las variables a la izquierda y los números a la derecha. Al cruzar, cada término cambia de signo.', ecuacion(lineaAgrupada));
       html += paso('Paso 2 — Simplificar (se cancelan los semejantes)', 'Los términos semejantes se suman o se restan entre sí.', ecuacion(lineaTachada) + ecuacionResultado(lineaSimplificada));
-      if (coefFinal === 1 || coefFinal === -1) {
-        const explicacion = coefFinal === -1 ? 'El −x equivale a −1·x; al pasar el −1 a dividir, el signo se invierte.' : 'La x ya está despejada.';
-        html += paso('Paso 3 — Despejar x', explicacion, '');
-      } else {
-        const explicacion = coefFinal < 0 ? 'El ' + fmtNum(coefFinal) + ' está multiplicando a x, pasa a dividir. Como es negativo, el signo se invierte.' : 'El ' + fmtNum(coefFinal) + ' está multiplicando a x, pasa a dividir.';
-        const fraccion = fraccionHtml(fmtNum(constFinal), fmtNum(coefFinal));
-        html += paso('Paso 3 — Despejar x', explicacion, ecuacion('x ' + signoFinalDisp + ' ' + fraccion));
-      }
-      html += paso('Paso 4 — Simplificar', '', ecuacionResultado('x ' + signoFinalDisp + ' ' + valorFinal));
+      const coefTexto = fmtFrac(coefFinalFrac);
+      const explicacion = (coefFinal === 1 || coefFinal === -1)
+        ? (coefFinal === -1 ? 'El −x equivale a −1·x; al pasar el −1 a dividir, el signo se invierte.' : 'La x ya está despejada.')
+        : (coefFinal < 0 ? 'El ' + coefTexto + ' está multiplicando a x, pasa a dividir. Como es negativo, el signo se invierte.' : 'El ' + coefTexto + ' está multiplicando a x, pasa a dividir.');
+      html += paso('Paso 3 — Despejar x', explicacion, ecuacionResultado('x ' + signoFinalDisp + ' ' + valorFinal));
       html += paso('Conclusión', 'El conjunto solución son <strong>' + c.frase + '</strong>.', ecuacionResultado('En intervalo: ' + c.intervalo));
       html += '</details>';
 
@@ -1196,9 +1466,6 @@
       const bEntre = '(' + bTexto + ')';
       const formulaSustituida = '−' + bEntre + ' ± √(' + bEntre + '² − 4(' + aTexto + ')(' + cTexto + '))';
       let html = '';
-      html += cuadernoLinea('a = ' + aTexto);
-      html += cuadernoLinea('b = ' + bTexto);
-      html += cuadernoLinea('c = ' + cTexto);
       html += cuadernoLinea('x = ' + fraccionHtml('−b ± √(b² − 4ac)', '2a'));
       html += cuadernoLinea('x = ' + fraccionHtml(formulaSustituida, '2(' + aTexto + ')'));
       html += cuadernoLinea('D = ' + bEntre + '² − 4(' + aTexto + ')(' + cTexto + ') = ' + fmtRacional(D));
@@ -1433,11 +1700,18 @@
       const polinomio = fmtPolinomio(A, B, C);
       const sol = construirSolucionCuadratica(A, B, C, signo);
 
-      let html = '<div class="desarrollo">';
+      let html = '<div class="cuad-intro">';
+      html += '<div class="desarrollo">';
       html += '<div class="linea">' + escapar(texto) + '</div>';
       html += '<div class="linea">' + polinomio + ' = 0</div>';
-      html += generalFormulaCuaderno(A, B, C);
       html += '</div>';
+      html += '<div class="abc-bloque">';
+      html += cuadernoLinea('a = ' + fmtRacional(A));
+      html += cuadernoLinea('b = ' + fmtRacional(B));
+      html += cuadernoLinea('c = ' + fmtRacional(C));
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="desarrollo">' + generalFormulaCuaderno(A, B, C) + '</div>';
 
       html += resultadoCuadratica(sol, A, B, C, signo);
       html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>' + generalFormulaPasos(A, B, C) + '</details>';
@@ -1625,7 +1899,7 @@
       return html;
     });
 
-    document.querySelectorAll('.tarjeta[data-modulo]').forEach(function (t) {
+    document.querySelectorAll('[data-modulo]').forEach(function (t) {
       t.addEventListener('click', function () { mostrarVista(t.dataset.modulo); });
     });
     document.querySelectorAll('.volver').forEach(function (b) {
@@ -1636,6 +1910,96 @@
       if (!e.target.classList.contains('search-input')) return;
       const res = e.target.parentElement.querySelector('.search-results');
       if (res) res.innerHTML = buscarConceptos(e.target.value);
+    });
+
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('.ejercicio');
+      if (!btn) return;
+      if (btn.dataset.fill) document.getElementById(btn.dataset.fill).value = btn.dataset.valor;
+      if (btn.dataset.inta !== undefined) document.getElementById('intA').value = btn.dataset.inta;
+      if (btn.dataset.op !== undefined) document.getElementById('opSelect').value = btn.dataset.op;
+      if (btn.dataset.intb !== undefined) document.getElementById('intB').value = btn.dataset.intb;
+      if (btn.dataset.run) document.getElementById(btn.dataset.run).click();
+    });
+
+    const FLASHCARDS = [
+      { cat: 'Regla de oro', front: 'Diferencia de cuadrados', back: 'a² − b² = (a+b)(a−b) · SIEMPRE' },
+      { cat: 'Regla de oro', front: '< 0 → Centro', back: 'x² < a² → (−a, a)' },
+      { cat: 'Regla de oro', front: '> 0 → Puntas', back: 'x² > a² → (−∞, −a) U (a, ∞)' },
+      { cat: 'Regla de oro', front: 'Trinomio x² + bx + c', back: 'm × n = c   y   m + n = b' },
+      { cat: 'Regla de oro', front: 'Cuadrado perfecto', back: 'a²+2ab+b² = (a+b)² · a²−2ab+b² = (a−b)²' },
+      { cat: 'Regla de oro', front: '( ) vs [ ]', back: '( ) no toca el extremo · [ ] sí lo toca' },
+      { cat: 'Regla de oro', front: 'Valor absoluto', back: '|x−a| < b → (a−b, a+b) · |x−a| > b → afuera' },
+      { cat: 'Regla de oro', front: 'Puntos críticos', back: 'Donde la expresión = 0. Ahí se parte la recta.' },
+      { cat: 'Regla de oro', front: 'Probar zonas', back: 'Probar 1 valor de cada zona: cumple (+) o no (−)' },
+
+      { cat: 'Concepto', front: 'Recta numérica', back: 'Línea donde cada punto es un número real' },
+      { cat: 'Concepto', front: 'Ecuación', back: 'Igualdad con = · solución puntual (x+2=5 → x=3)' },
+      { cat: 'Concepto', front: 'Desigualdad lineal', back: 'Comparación con x a la 1 · solución = un intervalo' },
+      { cat: 'Concepto', front: 'Desigualdad cuadrática', back: 'Comparación con x² · solución = dos zonas (centro o puntas)' },
+      { cat: 'Concepto', front: 'Polinomio', back: 'Expresión con varios términos sumando o restando' },
+      { cat: 'Concepto', front: 'MCD', back: 'Máximo común divisor · MCD(12,18) = 6' },
+      { cat: 'Concepto', front: 'Menor exponente', back: 'Para factor común, tomar la potencia más chica' },
+      { cat: 'Concepto', front: 'Factor común', back: 'Lo que se repite en todos los términos · 6x²+9x → 3x(2x+3)' },
+      { cat: 'Concepto', front: 'Variable', back: 'Letra que representa un valor que cambia (x, y, t)' },
+      { cat: 'Concepto', front: 'Expresión', back: 'Combinación de números, variables y operaciones' },
+      { cat: 'Concepto', front: 'Notación', back: 'Forma de escribir: f(x), |x|, √a, ≤, ≥, ±, ∞' },
+      { cat: 'Concepto', front: 'Coeficiente', back: 'Número que multiplica a la variable · 3x² → coeficiente 3' },
+      { cat: 'Concepto', front: 'Coeficiente 1 invisible', back: '1x = x · si no hay número, hay un 1 escondido' },
+      { cat: 'Concepto', front: 'Función', back: 'Máquina: una entrada → una salida · f(x) = x + 2' },
+      { cat: 'Concepto', front: 'Dominio', back: 'Valores que x SÍ puede tomar' },
+      { cat: 'Concepto', front: 'Rango', back: 'Valores que y SÍ puede dar de resultado' },
+      { cat: 'Concepto', front: 'Función lineal', back: 'Una recta · f(x)=mx+b · m=pendiente, b=corte con y' },
+      { cat: 'Concepto', front: 'Función cuadrática', back: 'Parábola (U) · a>0 abre arriba, a<0 abre abajo' },
+      { cat: 'Concepto', front: 'Función constante', back: 'Siempre el mismo valor · recta horizontal' },
+      { cat: 'Concepto', front: 'Pendiente', back: 'Qué tan inclinada está la recta · m = subida/corrida' },
+      { cat: 'Concepto', front: 'Vértice', back: 'Punta de la parábola · x = −b/(2a)' },
+      { cat: 'Concepto', front: 'Simetría', back: 'Una mitad es espejo de la otra' },
+      { cat: 'Concepto', front: 'Números reales', back: 'Todos los números de la recta · racionales + irracionales' },
+
+      { cat: 'Fórmula', front: 'Fórmula general', back: 'x = (−b ± √(b²−4ac)) / 2a' },
+      { cat: 'Fórmula', front: 'Discriminante', back: 'D = b² − 4ac · decide cuántas raíces reales hay' },
+      { cat: 'Fórmula', front: 'Eje de simetría', back: 'x = −b / (2a)' },
+      { cat: 'Fórmula', front: 'Pendiente', back: 'm = (y₂ − y₁) / (x₂ − x₁)' },
+      { cat: 'Fórmula', front: 'Factorización (tijera)', back: 'ax² + bx + c = (px+q)(rx+s)' },
+
+      { cat: 'Tip', front: 'Cuadro de validación', back: 'Método oficial de la docente: Zona | x prueba | signo | ¿cumple?' },
+      { cat: 'Tip', front: 'Fracción vs decimal', back: 'Dejar el resultado en fracción: 22/57, no 0.385' },
+      { cat: 'Tip', front: 'Cambio de signo', back: 'Al dividir entre negativo, la desigualdad se invierte' },
+      { cat: 'Tip', front: 'Intervalo final', back: 'Solo eje x · > y < con ( ) · ≥ y ≤ con [ ]' },
+      { cat: 'Tip', front: 'Orden de factorización', back: 'm×n = c   y   m+n = b (no al revés)' }
+    ];
+
+    function renderGlosario(filtro) {
+      const cats = filtro === 'Todos' ? ['Regla de oro', 'Concepto', 'Fórmula', 'Tip'] : [filtro];
+      let html = '';
+      cats.forEach(function (cat) {
+        const cards = FLASHCARDS.filter(function (c) { return c.cat === cat; });
+        if (!cards.length) return;
+        html += '<div class="etiqueta">' + escapar(cat) + '</div>';
+        html += '<div class="flash-grid">';
+        cards.forEach(function (c) {
+          html += '<div class="flash">';
+          html += '<div class="flash-inner">';
+          html += '<div class="flash-front"><span class="flash-titulo">' + escapar(c.front) + '</span><span class="flash-hint">Toca para voltear</span></div>';
+          html += '<div class="flash-back"><span>' + escapar(c.back) + '</span></div>';
+          html += '</div></div>';
+        });
+        html += '</div>';
+      });
+      return html;
+    }
+
+    document.getElementById('glosario-contenido').innerHTML = renderGlosario('Todos');
+
+    document.addEventListener('click', function (e) {
+      const flash = e.target.closest('.flash');
+      if (flash) { flash.classList.toggle('volteada'); return; }
+      const btn = e.target.closest('.filtro-btn');
+      if (!btn) return;
+      document.querySelectorAll('.filtro-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('glosario-contenido').innerHTML = renderGlosario(btn.dataset.filtro);
     });
   </script>
 </body>
