@@ -71,6 +71,25 @@ Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 - [ ] Commitear el avance actual del módulo "Funciones y gráficas".
 - [ ] Revisar casos borde: `D < 0`, raíz doble, coeficientes con fracciones en todos los módulos.
 
+## En curso — Corrección de posición y tamaño del teclado (22 ago 2026)
+
+- [x] **Layout**: el teclado NO cubre el contenido — `body` en flex columna `100vh` con
+      `overflow: hidden`; `.container` pasa a ser el área scrollable (`flex: 1`, `overflow-y: auto`).
+- [x] **Teclado en el flujo**: `.teclado-flotante` deja de ser `position: fixed` y pasa a ser
+      hermano estático al pie (`flex: 0 0 auto`, `width: 100%`, sin `z-index`). Quitar la regla
+      `body.teclado-abierto { padding-bottom: 200px; }` y su toggle en JS.
+- [x] **Scroll suave**: en `focusin` (con teclado visible) y al abrir el teclado, hacer
+      `scrollIntoView({ behavior: 'smooth', block: 'center' })` del campo activo.
+- [x] **Pestañas**: Básico = solo números y operadores básicos; mover avanzados
+      (`< > ≤ ≥ =`, `x²`, `√`, `|`, `[ ] { } ∞`, `f(x)`, `^`, `x³`) a la pestaña Símbolos.
+- [x] **Móvil**: media query `@media (max-width: 600px)` con teclas más pequeñas (36px).
+- [x] **z-index**: teclado sin `z-index` (en flujo); botón TE con `z-index: 100` (antes 1001).
+- [x] Probar con Node (extraer JS): inserción de teclas, capas, Resolver, backspace, clear,
+      scroll suave, capas reorganizadas y regresiones (24/24 nuevo + 33 lineal + 15 smoke
+      + 5 teclado previo).
+- [ ] Verificación manual en navegador: abrir teclado en un módulo y confirmar que el
+      contenido scrollea por encima del teclado y el campo enfocado queda visible.
+
 ## Cómo verificar (sdd-verify)
 
 1. Abrir `index.html` en el navegador.

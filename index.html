@@ -21,16 +21,27 @@
 
   body {
     margin: 0;
+    height: 100vh;
+    height: 100dvh;
     min-height: 100vh;
+    overflow: hidden;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     background: linear-gradient(135deg, var(--bg1), var(--bg2));
     color: var(--text);
     display: flex;
-    justify-content: center;
-    padding: 32px 16px;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .container { width: 100%; max-width: 760px; }
+  .container {
+    width: 100%;
+    max-width: 760px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 32px 16px 24px;
+  }
 
   h1 { font-size: 1.9rem; margin: 0 0 4px; text-align: center; }
   h2 { font-size: 1.4rem; margin: 0 0 16px; }
@@ -473,11 +484,10 @@
 
   /* ---- Teclado matemático global ---- */
   .teclado-flotante {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
     background: #0f172a;
     border-top: 2px solid #334155;
     box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.45);
@@ -561,7 +571,7 @@
     position: fixed;
     right: 14px;
     bottom: 14px;
-    z-index: 1001;
+    z-index: 100;
     border: none;
     border-radius: 50%;
     width: 54px;
@@ -573,7 +583,10 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
   }
   .teclado-boton-abrir[hidden] { display: none; }
-  body.teclado-abierto { padding-bottom: 200px; }
+  @media (max-width: 600px) {
+    .teclado-tecla { height: 36px; font-size: 0.92rem; }
+    .teclado-flotante { padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
+  }
 </style>
 </head>
 <body>
@@ -994,37 +1007,32 @@
       <button type="button" class="teclado-cerrar" id="tecladoCerrar" title="Cerrar">x</button>
     </div>
     <div class="teclado-fila" data-capa-contenido="basico">
-      <button type="button" class="teclado-tecla" data-tecla="7">7</button>
-      <button type="button" class="teclado-tecla" data-tecla="8">8</button>
-      <button type="button" class="teclado-tecla" data-tecla="9">9</button>
+      <button type="button" class="teclado-tecla" data-tecla="1">1</button>
+      <button type="button" class="teclado-tecla" data-tecla="2">2</button>
+      <button type="button" class="teclado-tecla" data-tecla="3">3</button>
       <button type="button" class="teclado-tecla" data-tecla="+">+</button>
       <button type="button" class="teclado-tecla" data-tecla="-">-</button>
-      <button type="button" class="teclado-tecla" data-tecla="*">*</button>
-      <button type="button" class="teclado-tecla" data-tecla="/">/</button>
-      <button type="button" class="teclado-tecla" data-tecla="(">(</button>
-      <button type="button" class="teclado-tecla" data-tecla=")">)</button>
     </div>
     <div class="teclado-fila" data-capa-contenido="basico">
       <button type="button" class="teclado-tecla" data-tecla="4">4</button>
       <button type="button" class="teclado-tecla" data-tecla="5">5</button>
       <button type="button" class="teclado-tecla" data-tecla="6">6</button>
+      <button type="button" class="teclado-tecla" data-tecla="*">*</button>
+      <button type="button" class="teclado-tecla" data-tecla="/">/</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="basico">
+      <button type="button" class="teclado-tecla" data-tecla="7">7</button>
+      <button type="button" class="teclado-tecla" data-tecla="8">8</button>
+      <button type="button" class="teclado-tecla" data-tecla="9">9</button>
+      <button type="button" class="teclado-tecla" data-tecla="(">(</button>
+      <button type="button" class="teclado-tecla" data-tecla=")">)</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="basico">
+      <button type="button" class="teclado-tecla" data-tecla="0">0</button>
       <button type="button" class="teclado-tecla" data-tecla=".">.</button>
       <button type="button" class="teclado-tecla" data-tecla="x">x</button>
       <button type="button" class="teclado-tecla" data-tecla="y">y</button>
-      <button type="button" class="teclado-tecla" data-tecla="^2">x2</button>
-      <button type="button" class="teclado-tecla" data-tecla="sqrt(">raiz</button>
-      <button type="button" class="teclado-tecla" data-tecla="|">|</button>
-    </div>
-    <div class="teclado-fila" data-capa-contenido="basico">
-      <button type="button" class="teclado-tecla" data-tecla="1">1</button>
-      <button type="button" class="teclado-tecla" data-tecla="2">2</button>
-      <button type="button" class="teclado-tecla" data-tecla="3">3</button>
-      <button type="button" class="teclado-tecla" data-tecla="0">0</button>
-      <button type="button" class="teclado-tecla" data-tecla="f(x)">f(x)</button>
-      <button type="button" class="teclado-tecla" data-tecla="^">^</button>
-      <button type="button" class="teclado-tecla" data-tecla="[">[</button>
-      <button type="button" class="teclado-tecla" data-tecla="]">]</button>
-      <button type="button" class="teclado-tecla" data-tecla="infty">inf</button>
+      <button type="button" class="teclado-tecla" data-tecla=",">,</button>
     </div>
     <div class="teclado-fila" data-capa-contenido="avanzado" hidden>
       <button type="button" class="teclado-tecla" data-tecla="<">&lt;</button>
@@ -1032,10 +1040,21 @@
       <button type="button" class="teclado-tecla" data-tecla="<=">&lt;=</button>
       <button type="button" class="teclado-tecla" data-tecla=">=">&gt;=</button>
       <button type="button" class="teclado-tecla" data-tecla="=">=</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="avanzado" hidden>
+      <button type="button" class="teclado-tecla" data-tecla="^2">x²</button>
+      <button type="button" class="teclado-tecla" data-tecla="^3">x³</button>
+      <button type="button" class="teclado-tecla" data-tecla="^">^</button>
+      <button type="button" class="teclado-tecla" data-tecla="sqrt(">√</button>
+      <button type="button" class="teclado-tecla" data-tecla="f(x)">f(x)</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="avanzado" hidden>
+      <button type="button" class="teclado-tecla" data-tecla="[">[</button>
+      <button type="button" class="teclado-tecla" data-tecla="]">]</button>
       <button type="button" class="teclado-tecla" data-tecla="{">{</button>
       <button type="button" class="teclado-tecla" data-tecla="}">}</button>
-      <button type="button" class="teclado-tecla" data-tecla="^3">x3</button>
-      <button type="button" class="teclado-tecla" data-tecla=",">,</button>
+      <button type="button" class="teclado-tecla" data-tecla="|">|</button>
+      <button type="button" class="teclado-tecla" data-tecla="infty">∞</button>
     </div>
     <div class="teclado-fila">
       <button type="button" class="teclado-tecla danger" data-accion="backspace">Borrar</button>
@@ -3422,12 +3441,11 @@
     document.getElementById('tecladoAbrir').addEventListener('click', function () {
       document.getElementById('tecladoMat').hidden = false;
       this.hidden = true;
-      document.body.classList.add('teclado-abierto');
+      if (tecladoInput) tecladoInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
     document.getElementById('tecladoCerrar').addEventListener('click', function () {
       document.getElementById('tecladoMat').hidden = true;
       document.getElementById('tecladoAbrir').hidden = false;
-      document.body.classList.remove('teclado-abierto');
     });
     document.getElementById('tecladoResolver').addEventListener('click', tecladoResolverClick);
 
@@ -3456,6 +3474,9 @@
       const el = e.target;
       if (el && el.tagName === 'INPUT' && el.type === 'text' && !el.classList.contains('search-input')) {
         tecladoInput = el;
+        if (!document.getElementById('tecladoMat').hidden) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     });
   </script>

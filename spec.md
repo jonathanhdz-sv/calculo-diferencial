@@ -57,11 +57,21 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
    - **Irracional** `√(g(x))`: dominio donde `g(x) ≥ 0`.
    - **Valor absoluto** `|g(x)|`.
 9. **Glosario / flashcards**: conceptos, reglas de oro, fórmulas y tips.
-10. **Teclado matemático global** (componente reutilizable): teclado virtual flotante que
-    inserta símbolos en la caja de texto activa de **cualquier módulo**. Incluye números,
-    operadores, `x`/`y`, `( )`, signos de relación, potencia `x²`, valor absoluto `| |`,
-    notación de intervalos `[ ] { } ∞`, `f(x)`, `√`, borrar (⌫) y botón **Resolver** que
-    dispara el motor del módulo activo.
+10. **Teclado matemático global** (componente reutilizable): teclado virtual que inserta
+    símbolos en la caja de texto activa de **cualquier módulo**. Incluye números, operadores,
+    `x`/`y`, `( )`, signos de relación, potencia `x²`, valor absoluto `| |`, notación de
+    intervalos `[ ] { } ∞`, `f(x)`, `√`, borrar (⌫) y botón **Resolver** que dispara el
+    motor del módulo activo.
+    - **Comportamiento de layout**: el teclado NO se superpone al contenido. Actúa como un
+      teclado de sistema real: la aplicación ocupa `100vh` y, al abrirse el teclado, el área
+      de contenido se reduce automáticamente a la altura restante (el contenido hace scroll
+      en su propia área, nunca queda oculto detrás del teclado).
+    - **Scroll suave**: al enfocar un campo de texto con el teclado abierto, la página hace
+      `scrollIntoView()` del campo para mantenerlo siempre visible.
+    - **Pestañas**: `Básico` contiene solo números y operadores básicos; los símbolos
+      avanzados (`< > ≤ ≥ =`, `x²`, `√`, `| |`, `[ ] { } ∞`, `f(x)`, `^`) viven de forma
+      obligatoria en la pestaña `Símbolos`.
+    - **Móvil**: los botones se reducen de tamaño en pantallas pequeñas.
 
 ## Fuera de alcance (qué NO hace)
 

@@ -104,12 +104,28 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
 
 ## Teclado matemático global (componente reutilizable)
 
-- **HTML**: panel fijo en la parte inferior (`position: fixed`), oculto por defecto, con un
-  botón de alternar (🧮/⌨). Capas/pestañas: **base** (números 0-9, `+ − × ÷`, `( )`, `x`, `y`,
-  `,`, `.`, `⌫`) y **avanzado** (`< > ≤ ≥ =`, `x²`, `^`, `| |`, `[ ] { } ∞`, `f(x)`, `√`).
+- **Layout (no cubre el contenido)**: `body` es un flex en columna con `height: 100vh`
+  (fallback `100dvh`) y `overflow: hidden`. Dos hijos en flujo:
+  1. `.container` → `flex: 1 1 auto; min-height: 0; overflow-y: auto` (el área de contenido
+     con su propio scroll) y `padding` propio (reemplaza el `padding` del `body`).
+  2. `.teclado-flotante` → hermano **estático** al pie del flujo (`flex: 0 0 auto`,
+     `width: 100%`, `max-width: 760px`, sin `position: fixed` ni `z-index`).
+  Al abrirse el teclado ocupa su altura real en el layout y el contenedor se reduce solo;
+  al cerrarse recupera el 100%. Nunca se superpone al contenido.
+- **HTML**: panel al final de `body` (dentro del flujo), oculto por defecto, con botón de
+  alternar (**TE**, flotante pequeño, `z-index: 100`). Capas/pestañas:
+  - **Básico** (solo números y operadores básicos): `0-9`, `+ − * /`, `( )`, `.`, `,`,
+    `x`, `y`.
+  - **Símbolos** (obligatorio para avanzados): `< > ≤ ≥ =`, `x² x³ ^`, `| |`, `[ ] { } ∞`,
+    `f(x)`, `√`.
 - **JS**: `inputActivo` guarda la caja de texto enfocada (`focusin`); las teclas insertan el
   símbolo en la posición del cursor (o lo reemplazan si hay selección). El botón **Resolver**
   busca el botón del módulo activo vía `inputActivo.closest('.modulo')` y hace `click()`,
   reutilizando el motor existente (`bind`/`mostrarVista`).
+- **Scroll suave**: en `focusin` (con el teclado visible) y al abrir el teclado, se ejecuta
+  `input.scrollIntoView({ behavior: 'smooth', block: 'center' })` para que el campo quede
+  visible sobre el teclado.
+- **Móvil**: media query `@media (max-width: 600px)` reduce la altura y tipografía de las
+  teclas.
 - **Validación**: al pulsar Resolver, si la caja está vacía no hace nada (cada módulo ya
   muestra su propio error). La inserción preserva el `data-fill`/`data-run` de los ejercicios.
