@@ -24,8 +24,8 @@ Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 
 ## Pendiente (backlog)
 
-- [ ] Escapar `<` y `>` en la línea "a > 0 → abre hacia arriba / a < 0 → abre hacia abajo"
-      de `resolverFuncion` (hoy van sin `escapar()`; renderiza bien, pero es frágil).
+- [x] Escapar `<` y `>` en la línea "a > 0 → abre hacia arriba / a < 0 → abre hacia abajo"
+      de `resolverFuncion` (ahora va con `escapar()`, probado con Node en ambos casos).
 
 ## En curso — Módulo Dominio y Rango
 
@@ -38,7 +38,7 @@ Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 - [x] Agregar tarjeta en el inicio (`data-modulo="dominio-rango"`) y quitar "Próximamente".
 - [x] Subpáginas por tipo: `#modulo-domrango-polinomica`, `-racional`, `-irracional`, `-abs`.
 - [x] Probar con Node: polinómicas, racionales (incl. `g(x) = (x²−3)/(25x−x³)` → `ℝ − {0, 5, -5}`), irracionales y valor absoluto — todas correctas.
-- [ ] Quitar la tarjeta "Valor absoluto básico" (duplicada de "Valor absoluto") o darle uso.
+- [x] Quitar la tarjeta "Valor absoluto básico" (duplicada de "Valor absoluto") — eliminada.
 - [ ] Commitear el avance actual del módulo "Funciones y gráficas".
 - [ ] Revisar casos borde: `D < 0`, raíz doble, coeficientes con fracciones en todos los módulos.
 

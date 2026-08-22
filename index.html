@@ -485,10 +485,6 @@
           <span class="titulo">Intersecciones entre curvas</span>
           <span class="desc">f(x) = g(x)</span>
         </button>
-        <button class="tarjeta proximamente" disabled>
-          <span class="titulo">Valor absoluto básico</span>
-          <span class="desc">Próximamente</span>
-        </button>
         <button class="tarjeta" data-modulo="funciones">
           <span class="titulo">Funciones y gráficas</span>
           <span class="desc">Constante, lineal y cuadrática</span>
@@ -2475,7 +2471,7 @@
         const k = f(h);
         const D = b * b - 4 * a * c;
         html += cuadernoLinea('Función cuadrática: y = ' + polinomio);
-        html += cuadernoLinea(a > 0 ? 'a > 0 → la parábola abre hacia arriba' : 'a < 0 → la parábola abre hacia abajo');
+        html += cuadernoLinea(escapar(a > 0 ? 'a > 0 → la parábola abre hacia arriba' : 'a < 0 → la parábola abre hacia abajo'));
         html += cuadernoLinea('Eje de simetría: x = ' + fmtRacional(h));
         html += cuadernoLinea('Vértice: (' + fmtRacional(h) + ', ' + fmtRacional(k) + ')');
         html += cuadernoLinea('Dominio: R = (−∞, ∞)');
