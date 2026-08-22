@@ -470,6 +470,110 @@
     .cuad-intro { grid-template-columns: 1fr; gap: 4px; }
     .abc-bloque { padding-top: 0; }
   }
+
+  /* ---- Teclado matemático global ---- */
+  .teclado-flotante {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: #0f172a;
+    border-top: 2px solid #334155;
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.45);
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    font-family: inherit;
+  }
+  .teclado-flotante[hidden] { display: none; }
+  .teclado-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .teclado-titulo {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .teclado-capas {
+    display: flex;
+    gap: 6px;
+  }
+  .teclado-capa-btn {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .teclado-capa-btn.activa {
+    background: #334155;
+    color: #e2e8f0;
+    border-color: #475569;
+  }
+  .teclado-cerrar {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+  }
+  .teclado-fila {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .teclado-tecla {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 42px;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #f1f5f9;
+    font-size: 1.05rem;
+    font-family: "Cambria Math", "Consolas", serif;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .teclado-tecla:active { background: #334155; }
+  .teclado-tecla.ancha { flex: 2 1 auto; }
+  .teclado-tecla.accion {
+    background: #0f766e;
+    border-color: #0d9488;
+    font-weight: 700;
+  }
+  .teclado-tecla.accion:active { background: #115e59; }
+  .teclado-tecla.danger { background: #9f1239; border-color: #be123c; }
+  .teclado-tecla.danger:active { background: #881337; }
+  .teclado-boton-abrir {
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    z-index: 1001;
+    border: none;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    background: #0f766e;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  }
+  .teclado-boton-abrir[hidden] { display: none; }
+  body.teclado-abierto { padding-bottom: 200px; }
 </style>
 </head>
 <body>
@@ -879,6 +983,67 @@
     </div>
   </div>
 
+  <button id="tecladoAbrir" class="teclado-boton-abrir" title="Abrir teclado matematico">TE</button>
+  <div id="tecladoMat" class="teclado-flotante" hidden>
+    <div class="teclado-cabecera">
+      <span class="teclado-titulo">Teclado matematico</span>
+      <div class="teclado-capas">
+        <button type="button" class="teclado-capa-btn activa" data-capa="basico">Basico</button>
+        <button type="button" class="teclado-capa-btn" data-capa="avanzado">Simbolos</button>
+      </div>
+      <button type="button" class="teclado-cerrar" id="tecladoCerrar" title="Cerrar">x</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="basico">
+      <button type="button" class="teclado-tecla" data-tecla="7">7</button>
+      <button type="button" class="teclado-tecla" data-tecla="8">8</button>
+      <button type="button" class="teclado-tecla" data-tecla="9">9</button>
+      <button type="button" class="teclado-tecla" data-tecla="+">+</button>
+      <button type="button" class="teclado-tecla" data-tecla="-">-</button>
+      <button type="button" class="teclado-tecla" data-tecla="*">*</button>
+      <button type="button" class="teclado-tecla" data-tecla="/">/</button>
+      <button type="button" class="teclado-tecla" data-tecla="(">(</button>
+      <button type="button" class="teclado-tecla" data-tecla=")">)</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="basico">
+      <button type="button" class="teclado-tecla" data-tecla="4">4</button>
+      <button type="button" class="teclado-tecla" data-tecla="5">5</button>
+      <button type="button" class="teclado-tecla" data-tecla="6">6</button>
+      <button type="button" class="teclado-tecla" data-tecla=".">.</button>
+      <button type="button" class="teclado-tecla" data-tecla="x">x</button>
+      <button type="button" class="teclado-tecla" data-tecla="y">y</button>
+      <button type="button" class="teclado-tecla" data-tecla="^2">x2</button>
+      <button type="button" class="teclado-tecla" data-tecla="sqrt(">raiz</button>
+      <button type="button" class="teclado-tecla" data-tecla="|">|</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="basico">
+      <button type="button" class="teclado-tecla" data-tecla="1">1</button>
+      <button type="button" class="teclado-tecla" data-tecla="2">2</button>
+      <button type="button" class="teclado-tecla" data-tecla="3">3</button>
+      <button type="button" class="teclado-tecla" data-tecla="0">0</button>
+      <button type="button" class="teclado-tecla" data-tecla="f(x)">f(x)</button>
+      <button type="button" class="teclado-tecla" data-tecla="^">^</button>
+      <button type="button" class="teclado-tecla" data-tecla="[">[</button>
+      <button type="button" class="teclado-tecla" data-tecla="]">]</button>
+      <button type="button" class="teclado-tecla" data-tecla="infty">inf</button>
+    </div>
+    <div class="teclado-fila" data-capa-contenido="avanzado" hidden>
+      <button type="button" class="teclado-tecla" data-tecla="<">&lt;</button>
+      <button type="button" class="teclado-tecla" data-tecla=">">&gt;</button>
+      <button type="button" class="teclado-tecla" data-tecla="<=">&lt;=</button>
+      <button type="button" class="teclado-tecla" data-tecla=">=">&gt;=</button>
+      <button type="button" class="teclado-tecla" data-tecla="=">=</button>
+      <button type="button" class="teclado-tecla" data-tecla="{">{</button>
+      <button type="button" class="teclado-tecla" data-tecla="}">}</button>
+      <button type="button" class="teclado-tecla" data-tecla="^3">x3</button>
+      <button type="button" class="teclado-tecla" data-tecla=",">,</button>
+    </div>
+    <div class="teclado-fila">
+      <button type="button" class="teclado-tecla danger" data-accion="backspace">Borrar</button>
+      <button type="button" class="teclado-tecla danger" data-accion="clear">Limpiar</button>
+      <button type="button" class="teclado-tecla accion ancha" id="tecladoResolver">Resolver</button>
+    </div>
+  </div>
+
   <script>
     const NORMALIZA = { '≤': '<=', '≥': '>=' };
     const MUESTRA = { '<': '&lt;', '>': '&gt;', '<=': '≤', '>=': '≥' };
@@ -962,6 +1127,7 @@
     }
     function fracSumar(a, b) { return fracSimplificar({ n: a.n * b.d + b.n * a.d, d: a.d * b.d }); }
     function fracRestar(a, b) { return fracSimplificar({ n: a.n * b.d - b.n * a.d, d: a.d * b.d }); }
+    function fracMul(a, b) { return fracSimplificar({ n: a.n * b.n, d: a.d * b.d }); }
     function fracDividir(a, b) { return fracSimplificar({ n: a.n * b.d, d: a.d * b.n }); }
     function parsearFrac(s) {
       const t = s.trim().replace(/−/g, '-');
@@ -1304,32 +1470,136 @@
       return [];
     }
 
-    // ---------- parser lineal (con fracciones) ----------
+    // ---------- parser lineal (con distributiva y fracciones) ----------
+    function normalizarLineal(t) {
+      return String(t).replace(/−/g, '-').replace(/–/g, '-').replace(/\s+/g, '').replace(/X/g, 'x');
+    }
+
+    function fmtTerminoX(f) {
+      if (f.n === 0) return '0';
+      if (f.d === 1) {
+        if (f.n === 1) return 'x';
+        if (f.n === -1) return '-x';
+        return f.n + 'x';
+      }
+      return f.n + '/' + f.d + 'x';
+    }
+
+    function fmtConstanteFrac(f) {
+      if (f.n === 0) return '0';
+      if (f.d === 1) return String(f.n);
+      return f.n + '/' + f.d;
+    }
+
+    // Convierte un monomio "2x", "-3", "1/2x", "-x/2", "5", "(1/2)x" a { esX, n, d }.
+    function parsearMonomioLineal(tok) {
+      let t = tok;
+      let sign = 1;
+      if (t.startsWith('-')) { sign = -1; t = t.slice(1); }
+      else if (t.startsWith('+')) { t = t.slice(1); }
+      t = t.replace(/^\(([^)]+)\)/, '$1'); // "(1/2)x" -> "1/2x"
+      if (t.includes('x')) {
+        const m = t.match(/^([+-]?\d+(?:\.\d+)?(?:\/\d+)?)?x(?:\/(\d+))?$/);
+        if (!m) return null;
+        let coef = m[1] ? parsearFrac(m[1]) : { n: 1, d: 1 };
+        if (m[2]) coef = fracDividir(coef, { n: parseInt(m[2], 10), d: 1 });
+        return { esX: true, n: coef.n * sign, d: coef.d };
+      }
+      const f = parsearFrac(t);
+      return { esX: false, n: f.n * sign, d: f.d };
+    }
+
+    // Expande un término con paréntesis (distributiva) en monomios.
+    function expandirTermino(tok) {
+      const open = tok.indexOf('(');
+      if (open === -1) {
+        const m = parsearMonomioLineal(tok);
+        return m ? [m] : [];
+      }
+      let depth = 0, close = -1;
+      for (let i = open; i < tok.length; i++) {
+        if (tok[i] === '(') depth++;
+        else if (tok[i] === ')') { depth--; if (depth === 0) { close = i; break; } }
+      }
+      if (close === -1) throw new Error('Paréntesis sin cerrar.');
+      const pre = tok.slice(0, open);
+      const inner = tok.slice(open + 1, close);
+      const post = tok.slice(close + 1);
+      let mult = { n: 1, d: 1 };
+      let preTrim = pre;
+      if (preTrim.startsWith('(') && preTrim.endsWith(')')) {
+        mult = fracMul(mult, parsearFrac(preTrim.slice(1, -1)));
+        preTrim = '';
+      }
+      if (preTrim !== '') {
+        let sign = 1;
+        let s = preTrim;
+        if (s.startsWith('-')) { sign = -1; s = s.slice(1); }
+        else if (s.startsWith('+')) { s = s.slice(1); }
+        if (s.startsWith('(') && s.endsWith(')')) s = s.slice(1, -1);
+        if (s !== '') mult = fracMul(mult, parsearFrac(s));
+        mult = fracMul(mult, { n: sign, d: 1 });
+      }
+      let innerMons = expandirExpresionLineal(inner);
+      innerMons = innerMons.map(function (m) {
+        return { esX: m.esX, n: m.n * mult.n, d: m.d * mult.d };
+      });
+      if (post.startsWith('/')) {
+        const d = parseInt(post.slice(1), 10);
+        innerMons = innerMons.map(function (m) { return { esX: m.esX, n: m.n, d: m.d * d }; });
+      } else if (post !== '') {
+        const postMons = expandirTermino(post);
+        const res = [];
+        innerMons.forEach(function (a) {
+          postMons.forEach(function (b) {
+            if (a.esX && b.esX) return; // x² queda fuera del alcance lineal
+            res.push({ esX: a.esX || b.esX, n: a.n * b.n, d: a.d * b.d });
+          });
+        });
+        innerMons = res;
+      }
+      return innerMons;
+    }
+
+    function expandirExpresionLineal(expr) {
+      const tokens = [];
+      let cur = '';
+      let depth = 0;
+      for (const c of expr) {
+        if (c === '(') depth++;
+        else if (c === ')') depth--;
+        if ((c === '+' || c === '-') && depth === 0) {
+          if (cur) tokens.push(cur);
+          cur = c;
+        } else cur += c;
+      }
+      if (cur) tokens.push(cur);
+      const mons = [];
+      tokens.forEach(function (tok) {
+        mons.push.apply(mons, expandirTermino(tok));
+      });
+      return mons;
+    }
+
     function parsearLado(texto) {
-      let t = texto.replace(/\s/g, '').replace(/−/g, '-').replace(/–/g, '-');
-      t = t.replace(/-/g, '+-');
-      const tokens = t.split('+').filter(function (x) { return x !== ''; });
+      const norm = normalizarLineal(texto);
+      const mons = expandirExpresionLineal(norm);
       let coefX = 0, constante = 0;
       let coefXFrac = { n: 0, d: 1 };
       let constanteFrac = { n: 0, d: 1 };
       const terminosX = [], terminosConst = [];
-      for (const tok of tokens) {
-        if (tok.endsWith('x')) {
-          const coefStr = tok.slice(0, -1);
-          let coef;
-          let f;
-          if (coefStr === '' || coefStr === '+') { coef = 1; f = { n: 1, d: 1 }; }
-          else if (coefStr === '-') { coef = -1; f = { n: -1, d: 1 }; }
-          else { coef = parseNum(coefStr); f = parsearFrac(coefStr); }
-          coefX += coef;
+      mons.forEach(function (m) {
+        const f = fracSimplificar({ n: m.n, d: m.d });
+        if (m.esX) {
+          coefX += m.n / m.d;
           coefXFrac = fracSumar(coefXFrac, f);
-          terminosX.push(tok);
+          terminosX.push(fmtTerminoX(f));
         } else {
-          constante += parseNum(tok);
-          constanteFrac = fracSumar(constanteFrac, parsearFrac(tok));
-          terminosConst.push(tok);
+          constante += m.n / m.d;
+          constanteFrac = fracSumar(constanteFrac, f);
+          terminosConst.push(fmtConstanteFrac(f));
         }
-      }
+      });
       return { coefX: coefX, constante: constante, coefXFrac: coefXFrac, constanteFrac: constanteFrac, terminosX: terminosX, terminosConst: terminosConst };
     }
 
@@ -1416,12 +1686,26 @@
 
     function fmtLadoEvaluado(lado, x) {
       let s = '';
-      if (lado.coefX !== 0) {
-        const coefStr = lado.coefX === 1 ? '' : (lado.coefX === -1 ? '−' : fmtNum(lado.coefX));
+      const cf = lado.coefXFrac;
+      const cstf = lado.constanteFrac;
+      if (cf.n !== 0) {
+        let coefStr;
+        if (cf.d === 1) {
+          if (cf.n === 1) coefStr = '';
+          else if (cf.n === -1) coefStr = '−';
+          else coefStr = fmtNum(cf.n);
+        } else {
+          coefStr = (cf.n < 0 ? '−' : '') + '(' + Math.abs(cf.n) + '/' + cf.d + ')';
+        }
         s += coefStr + '(' + fmtRacional(x) + ')';
       }
-      if (lado.constante !== 0) {
-        s += (lado.constante > 0 ? ' + ' : ' − ') + fmtRacional(Math.abs(lado.constante));
+      if (cstf.n !== 0) {
+        const v = cstf.d === 1 ? fmtNum(Math.abs(cstf.n)) : fmtRacional(Math.abs(cstf.n) / cstf.d);
+        if (s === '') {
+          s += (cstf.n < 0 ? '−' : '') + v;
+        } else {
+          s += (cstf.n > 0 ? ' + ' : ' − ') + v;
+        }
       }
       return s === '' ? '0' : s;
     }
@@ -1462,8 +1746,8 @@
       const li = parsearLado(izquierda);
       const ld = parsearLado(derecha);
 
-      const nuevoIzq = li.terminosX.concat(ld.terminosX.map(invertir));
-      const nuevoDer = ld.terminosConst.concat(li.terminosConst.map(invertir));
+      const nuevoIzq = li.terminosX.concat(ld.terminosX.map(invertir)).filter(function (t) { return t !== '0' && t !== '-0'; });
+      const nuevoDer = ld.terminosConst.concat(li.terminosConst.map(invertir)).filter(function (t) { return t !== '0' && t !== '-0'; });
 
       const coefFinal = li.coefX - ld.coefX;
       const constFinal = ld.constante - li.constante;
@@ -1477,9 +1761,12 @@
       const lineaAgrupada = escapar(unir(nuevoIzq)) + ' ' + signoDisp + ' ' + escapar(unir(nuevoDer));
       const lineaTachada = tachada(nuevoIzq, cancIzq) + ' ' + signoDisp + ' ' + tachada(nuevoDer, cancDer);
       const lineaSimplificada = formatoXFrac(coefFinalFrac) + ' ' + signoDisp + ' ' + fmtConstFrac(constFinalFrac);
+      const expandeDist = /[()]/.test(izquierda + derecha) || /x\//.test(normalizarLineal(izquierda + derecha));
+      const lineaExpandida = escapar(unir(li.terminosX.concat(li.terminosConst))) + ' ' + signoDisp + ' ' + escapar(unir(ld.terminosX.concat(ld.terminosConst)));
 
       let html = '<div class="desarrollo">';
       html += '<div class="linea">' + escapar(texto) + '</div>';
+      if (expandeDist) html += '<div class="linea">' + lineaExpandida + '</div>';
       html += '<div class="linea">' + lineaTachada + '</div>';
       html += '<div class="linea">' + lineaSimplificada + '</div>';
 
@@ -1503,6 +1790,15 @@
         ? fmtNum(resultado.num)
         : fraccionHtml(fmtNum(resultado.num), fmtNum(resultado.den));
 
+      let rawN = constFinalFrac.n * coefFinalFrac.d;
+      let rawD = constFinalFrac.d * coefFinalFrac.n;
+      if (rawD < 0) { rawN = -rawN; rawD = -rawD; }
+      const hayDivision = (rawN !== resultadoFrac.n || rawD !== resultadoFrac.d);
+      const valorDivision = rawD === 1
+        ? fmtNum(rawN)
+        : fraccionHtml(fmtNum(rawN), fmtNum(rawD));
+
+      if (hayDivision) html += '<div class="linea">x ' + signoFinalDisp + ' ' + valorDivision + '</div>';
       html += '<div class="linea resultado">x ' + signoFinalDisp + ' ' + valorFinal + '</div>';
       html += '</div>';
 
@@ -1524,7 +1820,7 @@
       const explicacion = (coefFinal === 1 || coefFinal === -1)
         ? (coefFinal === -1 ? 'El −x equivale a −1·x; al pasar el −1 a dividir, el signo se invierte.' : 'La x ya está despejada.')
         : (coefFinal < 0 ? 'El ' + coefTexto + ' está multiplicando a x, pasa a dividir. Como es negativo, el signo se invierte.' : 'El ' + coefTexto + ' está multiplicando a x, pasa a dividir.');
-      html += paso('Paso 3 — Despejar x', explicacion, ecuacionResultado('x ' + signoFinalDisp + ' ' + valorFinal));
+      html += paso('Paso 3 — Despejar x', explicacion, (hayDivision ? ecuacionResultado('x ' + signoFinalDisp + ' ' + valorDivision) : '') + ecuacionResultado('x ' + signoFinalDisp + ' ' + valorFinal));
       html += paso('Conclusión', 'El conjunto solución son <strong>' + c.frase + '</strong>.', ecuacionResultado('En intervalo: ' + c.intervalo));
       html += '</details>';
 
@@ -3073,6 +3369,94 @@
       document.querySelectorAll('.filtro-btn').forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       document.getElementById('glosario-contenido').innerHTML = renderGlosario(btn.dataset.filtro);
+    });
+
+    // ============ TECLADO MATEMÁTICO GLOBAL ============
+    let tecladoInput = null;
+
+    function tecladoInsertar(tecla) {
+      if (!tecladoInput) {
+        const visibles = document.querySelectorAll('.modulo:not([hidden]) input[type="text"]');
+        if (visibles.length) tecladoInput = visibles[0];
+        else return;
+      }
+      tecladoInput.focus();
+      const ini = tecladoInput.selectionStart || tecladoInput.value.length;
+      const fin = tecladoInput.selectionEnd || ini;
+      const valor = String(tecla).replace('×', '*').replace('÷', '/').replace('^2', '²').replace('^3', '³').replace('sqrt(', '√(').replace('infty', '∞').replace('f(x)', 'f(x)');
+      tecladoInput.value = tecladoInput.value.slice(0, ini) + valor + tecladoInput.value.slice(fin);
+      const pos = ini + valor.length;
+      tecladoInput.setSelectionRange(pos, pos);
+      tecladoInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function tecladoBackspace() {
+      if (!tecladoInput) return;
+      tecladoInput.focus();
+      const ini = tecladoInput.selectionStart || tecladoInput.value.length;
+      const fin = tecladoInput.selectionEnd || ini;
+      if (ini === fin) {
+        if (ini === 0) return;
+        tecladoInput.value = tecladoInput.value.slice(0, ini - 1) + tecladoInput.value.slice(fin);
+        tecladoInput.setSelectionRange(ini - 1, ini - 1);
+      } else {
+        tecladoInput.value = tecladoInput.value.slice(0, ini) + tecladoInput.value.slice(fin);
+        tecladoInput.setSelectionRange(ini, ini);
+      }
+    }
+
+    function tecladoLimpiar() {
+      if (!tecladoInput) return;
+      tecladoInput.focus();
+      tecladoInput.value = '';
+    }
+
+    function tecladoResolverClick() {
+      if (!tecladoInput) return;
+      const modulo = tecladoInput.closest('.modulo');
+      if (!modulo) return;
+      const boton = modulo.querySelector('.card button.btn') || modulo.querySelector('button.btn');
+      if (boton) boton.click();
+    }
+
+    document.getElementById('tecladoAbrir').addEventListener('click', function () {
+      document.getElementById('tecladoMat').hidden = false;
+      this.hidden = true;
+      document.body.classList.add('teclado-abierto');
+    });
+    document.getElementById('tecladoCerrar').addEventListener('click', function () {
+      document.getElementById('tecladoMat').hidden = true;
+      document.getElementById('tecladoAbrir').hidden = false;
+      document.body.classList.remove('teclado-abierto');
+    });
+    document.getElementById('tecladoResolver').addEventListener('click', tecladoResolverClick);
+
+    document.querySelectorAll('#tecladoMat .teclado-capa-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('#tecladoMat .teclado-capa-btn').forEach(function (b) { b.classList.remove('activa'); });
+        btn.classList.add('activa');
+        const capa = btn.dataset.capa;
+        document.querySelectorAll('#tecladoMat [data-capa-contenido]').forEach(function (f) {
+          f.hidden = (f.dataset.capaContenido !== capa);
+        });
+      });
+    });
+
+    document.querySelectorAll('#tecladoMat .teclado-tecla[data-tecla]').forEach(function (t) {
+      t.addEventListener('click', function () { tecladoInsertar(t.dataset.tecla); });
+    });
+    document.querySelectorAll('#tecladoMat .teclado-tecla[data-accion="backspace"]').forEach(function (t) {
+      t.addEventListener('click', tecladoBackspace);
+    });
+    document.querySelectorAll('#tecladoMat .teclado-tecla[data-accion="clear"]').forEach(function (t) {
+      t.addEventListener('click', tecladoLimpiar);
+    });
+
+    document.addEventListener('focusin', function (e) {
+      const el = e.target;
+      if (el && el.tagName === 'INPUT' && el.type === 'text' && !el.classList.contains('search-input')) {
+        tecladoInput = el;
+      }
     });
   </script>
 </body>

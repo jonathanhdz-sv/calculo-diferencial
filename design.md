@@ -38,6 +38,12 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
   (cada término cambia de signo al cruzar), simplifica, y despeja `x`. Si el coeficiente es
   negativo, se invierte el signo. Si el coeficiente queda en 0, decide "siempre verdadera"
   o "siempre falsa". Produce: desarrollo, conclusión, recta real y cuadro de pruebas.
+  - **Parser con distributiva** (`parsearLado` v2): expande `k(ax + b)`, `−(ax+b)` y
+    `(ax+b)/d` antes de tokenizar. `(X/2)` y `x/2` se interpretan como `(1/2)x`; `X`
+    mayúscula se normaliza a `x` (regex/expansión simbólica de coeficiente por término).
+  - **Despeje con división visible**: antes de la línea final `x > 3` se muestra la
+    división intermedia `x > 9/3` (coeficiente pasa a dividir), respetando el formato
+    cuaderno.
 - **Cuadrática** (`construirSolucionCuadratica`): calcula el discriminante `D`. Con `D < 0`
   decide por el signo de `a`; con `D = 0` maneja raíz doble; con `D > 0` parte la recta en
   tres zonas y prueba un valor por zona. Produce: puntos críticos, zonas, cuadro de
@@ -95,3 +101,15 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
 - Símbolos: usar `≤`, `≥`, `²`, `−`, `∞` (Unicode) en la UI; internamente `<=`, `>=`, `^2`, `-`.
 - Todo el HTML generado escapa el texto del usuario con `escapar()`.
 - Las zonas que cumplen van en verde (`#10b981`), las que no en rojo (`#f43f5e`).
+
+## Teclado matemático global (componente reutilizable)
+
+- **HTML**: panel fijo en la parte inferior (`position: fixed`), oculto por defecto, con un
+  botón de alternar (🧮/⌨). Capas/pestañas: **base** (números 0-9, `+ − × ÷`, `( )`, `x`, `y`,
+  `,`, `.`, `⌫`) y **avanzado** (`< > ≤ ≥ =`, `x²`, `^`, `| |`, `[ ] { } ∞`, `f(x)`, `√`).
+- **JS**: `inputActivo` guarda la caja de texto enfocada (`focusin`); las teclas insertan el
+  símbolo en la posición del cursor (o lo reemplazan si hay selección). El botón **Resolver**
+  busca el botón del módulo activo vía `inputActivo.closest('.modulo')` y hace `click()`,
+  reutilizando el motor existente (`bind`/`mostrarVista`).
+- **Validación**: al pulsar Resolver, si la caja está vacía no hace nada (cada módulo ya
+  muestra su propio error). La inserción preserva el `data-fill`/`data-run` de los ejercicios.

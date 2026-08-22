@@ -21,6 +21,10 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
 
 1. **Desigualdad lineal** (`ax + b < cx + d`): agrupar términos, simplificar, despejar `x`,
    invertir el signo al dividir entre negativo, cuadro de pruebas (verde/rojo) y recta real.
+   - **Propiedad distributiva**: soporta `2(x − 3)` → `2x − 6`, `−(x + 2)`, `(x−3)/2`.
+   - **Fracciones con variable**: `(X/2)`, `x/2`, `(1/2)x` equivalen a `(1/2)x`; `X` mayúscula se normaliza.
+   - **División en el despeje**: muestra la línea intermedia `x > 9/3` antes de `x > 3`
+     (formato cuaderno).
 2. **Desigualdad cuadrática** (`ax² + bx + c < 0`): puntos críticos, zonas de la recta,
    cuadro de validación (zona | x prueba | sustitución | signo | ¿cumple?), gráfica de recta.
    - Dos métodos: **fórmula general** y **factorización (tijera)**.
@@ -53,6 +57,11 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
    - **Irracional** `√(g(x))`: dominio donde `g(x) ≥ 0`.
    - **Valor absoluto** `|g(x)|`.
 9. **Glosario / flashcards**: conceptos, reglas de oro, fórmulas y tips.
+10. **Teclado matemático global** (componente reutilizable): teclado virtual flotante que
+    inserta símbolos en la caja de texto activa de **cualquier módulo**. Incluye números,
+    operadores, `x`/`y`, `( )`, signos de relación, potencia `x²`, valor absoluto `| |`,
+    notación de intervalos `[ ] { } ∞`, `f(x)`, `√`, borrar (⌫) y botón **Resolver** que
+    dispara el motor del módulo activo.
 
 ## Fuera de alcance (qué NO hace)
 

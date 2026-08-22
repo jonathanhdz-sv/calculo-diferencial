@@ -44,6 +44,18 @@ Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 - [x] Escapar `<` y `>` en la línea "a > 0 → abre hacia arriba / a < 0 → abre hacia abajo"
       de `resolverFuncion` (ahora va con `escapar()`, probado con Node en ambos casos).
 
+## En curso — Observaciones del usuario (22 ago 2026)
+
+- [x] **Distributiva en lineal**: `2(x-3) < 4x + 2` expande a `2x - 6 < 4x + 2` (probado).
+- [x] **Fracciones con variable**: `(X/2) + 3 > 5` y `0 > 5 - (X/2) - 3` → `x > 4`
+      (normalizar `X`→`x`, `x/2`→`(1/2)x`; probado).
+- [x] **División en despeje**: mostrar `x > 9/3` antes de `x > 3` (probado).
+- [x] **Cuadro de pruebas**: sustitución sin caracteres extra (`3(2) + 5 > 14`, no `+ 14`;
+      fracciones como `(1/2)(3)`, no `0.5(3)`; probado).
+- [x] **Teclado matemático global**: componente flotante reutilizable (Básico/Símbolos,
+      Resolver del módulo activo). HTML+CSS+JS integrados.
+- [x] Probar con Node cada fix y el teclado (33/33 PASS en el módulo lineal).
+
 ## En curso — Módulo Dominio y Rango
 
 - [x] Crear en `index.html` la vista `#modulo-dominio-rango` (input, botón Resolver, ejercicios).
