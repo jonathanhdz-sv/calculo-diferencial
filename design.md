@@ -104,16 +104,18 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
 
 ## Teclado matemático global (componente reutilizable)
 
-- **Layout (no cubre el contenido)**: `body` es un flex en columna con `height: 100vh`
-  (fallback `100dvh`) y `overflow: hidden`. Dos hijos en flujo:
-  1. `.container` → `flex: 1 1 auto; min-height: 0; overflow-y: auto` (el área de contenido
-     con su propio scroll) y `padding` propio (reemplaza el `padding` del `body`).
-  2. `.teclado-flotante` → hermano **estático** al pie del flujo (`flex: 0 0 auto`,
-     `width: 100%`, `max-width: 760px`, sin `position: fixed` ni `z-index`).
-  Al abrirse el teclado ocupa su altura real en el layout y el contenedor se reduce solo;
-  al cerrarse recupera el 100%. Nunca se superpone al contenido.
-- **HTML**: panel al final de `body` (dentro del flujo), oculto por defecto, con botón de
-  alternar (**TE**, flotante pequeño, `z-index: 100`). Capas/pestañas:
+- **Layout (anclado al campo, no cubre contenido)**: `body` es un flex en columna con
+  `height: 100vh` (fallback `100dvh`) y `overflow: hidden`. `.container` es el área de
+  contenido con su propio scroll (`flex: 1 1 auto; min-height: 0; overflow-y: auto`).
+  El `.teclado-flotante` ya NO es hijo fijo de `body`: **al abrirse, se mueve en el DOM para
+  quedar justo después de la `.card` del campo activo** (inserción vía `insertBefore`).
+  Como es un elemento en flujo dentro de `.container`, el contenido que sigue (ejercicios,
+  guías, resultados) se empuja hacia abajo y nunca queda tapado. Al cerrarse, vuelve al final
+  de `body` (oculto, `display: none`).
+- **Tamaño compacto**: teclas de `32px` de alto con tipografía reducida y gaps pequeños
+  (antes `42px`). El panel ocupa solo el ancho del contenedor (igual que la barra de entrada).
+- **HTML**: panel oculto por defecto, con botón de alternar (**TE**, flotante pequeño,
+  `z-index: 100`). Capas/pestañas:
   - **Básico** (solo números y operadores básicos): `0-9`, `+ − * /`, `( )`, `.`, `,`,
     `x`, `y`.
   - **Símbolos** (obligatorio para avanzados): `< > ≤ ≥ =`, `x² x³ ^`, `| |`, `[ ] { } ∞`,
@@ -122,10 +124,14 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
   símbolo en la posición del cursor (o lo reemplazan si hay selección). El botón **Resolver**
   busca el botón del módulo activo vía `inputActivo.closest('.modulo')` y hace `click()`,
   reutilizando el motor existente (`bind`/`mostrarVista`).
-- **Scroll suave**: en `focusin` (con el teclado visible) y al abrir el teclado, se ejecuta
-  `input.scrollIntoView({ behavior: 'smooth', block: 'center' })` para que el campo quede
-  visible sobre el teclado.
-- **Móvil**: media query `@media (max-width: 600px)` reduce la altura y tipografía de las
-  teclas.
+  - `tecladoAnclar()`: ubica `tecladoInput` (o el primer input visible del módulo activo) y
+    mueve `#tecladoMat` tras su `.card` (`.closest('.card')`). Devuelve `false` si no hay
+    campo al que anclarse (no abre el teclado).
+  - `tecladoOcultar()`: oculta el teclado, lo devuelve al final de `body` y vuelve a mostrar
+    el botón **TE**. Se usa al cerrar y en `mostrarVista` (navegar de módulo cierra el teclado).
+- **Scroll suave**: en `focusin` (con el teclado visible) y al abrir el teclado, se re-ancla
+  y se ejecuta `input.scrollIntoView({ behavior: 'smooth', block: 'center' })`.
+- **Móvil**: media query `@media (max-width: 600px)` reduce aún más la altura y tipografía de
+  las teclas.
 - **Validación**: al pulsar Resolver, si la caja está vacía no hace nada (cada módulo ya
   muestra su propio error). La inserción preserva el `data-fill`/`data-run` de los ejercicios.

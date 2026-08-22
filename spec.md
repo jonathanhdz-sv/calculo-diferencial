@@ -62,10 +62,10 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
     `x`/`y`, `( )`, signos de relación, potencia `x²`, valor absoluto `| |`, notación de
     intervalos `[ ] { } ∞`, `f(x)`, `√`, borrar (⌫) y botón **Resolver** que dispara el
     motor del módulo activo.
-    - **Comportamiento de layout**: el teclado NO se superpone al contenido. Actúa como un
-      teclado de sistema real: la aplicación ocupa `100vh` y, al abrirse el teclado, el área
-      de contenido se reduce automáticamente a la altura restante (el contenido hace scroll
-      en su propia área, nunca queda oculto detrás del teclado).
+    - **Comportamiento de layout**: el teclado NO se superpone al contenido. Aparece **justo
+      debajo del campo de texto activo** (anclado a la barra de entrada del módulo), con un
+      tamaño **compacto** que empuja el contenido hacia abajo en vez de taparlo. Nunca oculta
+      ejercicios, guías ni resultados.
     - **Scroll suave**: al enfocar un campo de texto con el teclado abierto, la página hace
       `scrollIntoView()` del campo para mantenerlo siempre visible.
     - **Pestañas**: `Básico` contiene solo números y operadores básicos; los símbolos

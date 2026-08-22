@@ -90,6 +90,19 @@ Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 - [ ] Verificación manual en navegador: abrir teclado en un módulo y confirmar que el
       contenido scrollea por encima del teclado y el campo enfocado queda visible.
 
+## En curso — Teclado compacto anclado debajo del campo (22 ago 2026)
+
+- [x] **Anclaje al campo**: al abrir el teclado se mueve en el DOM (`insertBefore`) para
+      quedar justo debajo de la `.card` del input activo (empuja el contenido, no lo tapa).
+- [x] **Cierre/limpieza**: `tecladoOcultar()` devuelve el teclado al final de `body` (oculto)
+      y muestra el botón TE; `mostrarVista` cierra el teclado al navegar entre módulos.
+- [x] **Compacto**: teclas de `32px` (antes `42px`), tipografía y gaps reducidos; móvil `30px`.
+- [x] Probar con Node: anclaje, abrir/cerrar, capas, inserción, Resolver, `mostrarVista`
+      cierra el teclado, y sin campo activo no abre (24/24 ancla + 24 fix + 33 lineal
+      + 15 smoke + 5 teclado previo).
+- [ ] Verificación manual en navegador: abrir teclado en un módulo y confirmar que aparece
+      debajo del campo, es compacto y el contenido de abajo scrollea.
+
 ## Cómo verificar (sdd-verify)
 
 1. Abrir `index.html` en el navegador.
