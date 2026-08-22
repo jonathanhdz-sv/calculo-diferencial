@@ -53,8 +53,16 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
   hace `y = 0` (corte X) o `x = 0` (corte Y), y grafica el punto.
 - **Intersecciones entre curvas** (`resolverCurvas`): iguala `f(x) = g(x)`, soporta sistema
   de dos rectas y curva con raíz vs recta (eleva al cuadrado y verifica candidatos).
-- **Funciones y gráficas** (`resolverFuncion`): clasifica en constante / lineal / cuadrática,
-  calcula pendiente, vértice, eje de simetría, dominio y rango, y grafica con `graficarFuncion`.
+- **Funciones y gráficas** (`resolverFuncion`): clasifica en constante / lineal / cuadrática.
+  Para la cuadrática el orden de salida es el formato oficial de la docente:
+  coeficientes → dominio → eje de simetría (fórmula + sustitución + resultado) → vértice
+  (`h`, `k = f(h)` desarrollado, `V(h,k)`) → forma canónica por método del vértice → forma
+  canónica por completar cuadrados (5 pasos: factor común `a`, completar trinomio, factorizar,
+  simplificar) → tabla tabular de 5 puntos (`x | f(x) | Punto`, centrada en `h`, con nota de
+  simetría) → gráfica con todos los puntos de la tabla → rango. Constante y lineal muestran
+  coeficientes, dominio, tabla de valores, gráfica y rango. Gráfica con `graficarFuncion`.
+  Helpers nuevos de formato: `fmtTerminoLineal`, `fmtBinomio`, `fmtCanonica`,
+  `fmtSustitucionSinIgual`.
 
 ## Módulo Dominio y Rango (nuevo)
 

@@ -178,6 +178,27 @@
   }
   .linea.resultado { color: #047857; font-weight: 700; }
   .linea del { color: var(--danger); text-decoration-thickness: 2px; }
+  .linea.titulo { font-weight: 700; color: var(--primary-dark); margin-top: 10px; }
+
+  .fila-funcion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 6px 0;
+  }
+  .fila-funcion .expr { font-family: "Cambria Math", "Consolas", serif; font-size: 1.25rem; }
+  .ref-coef {
+    font-family: "Cambria Math", "Consolas", serif;
+    font-size: 0.95rem;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 10px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
 
   .conclusion {
     margin-top: 16px;
@@ -2439,6 +2460,41 @@
       return svg;
     }
 
+    // ---- Helpers de formato para Funciones y gráficas (formato cuaderno oficial) ----
+    function fmtR(v) { return fmtRacional(v).replace(/-/g, '−'); }
+    function fmtCoefCanonico(a) {
+      if (a === 1) return '';
+      if (a === -1) return '−';
+      return fmtR(a);
+    }
+    function terminoLinealX(coef) {
+      if (coef === 0) return '';
+      const abs = Math.abs(coef);
+      const absTxt = abs === 1 ? '' : fmtR(abs);
+      return (coef < 0 ? ' − ' : ' + ') + absTxt + 'x';
+    }
+    function binomioCuadrado(h) {
+      if (h === 0) return 'x²';
+      const abs = fmtR(Math.abs(h));
+      return h > 0 ? '(x − ' + abs + ')²' : '(x + ' + abs + ')²';
+    }
+    function fmtTerminoConstante(c) {
+      if (c === 0) return '';
+      return c > 0 ? ' + ' + fmtR(c) : ' − ' + fmtR(-c);
+    }
+    function formaCanonica(a, h, k) {
+      return fmtCoefCanonico(a) + binomioCuadrado(h) + fmtTerminoConstante(k);
+    }
+    function tablaTabular(f, xs) {
+      let t = '<table class="tabla"><thead><tr><th>x</th><th>f(x)</th><th>Punto</th></tr></thead><tbody>';
+      xs.forEach(function (x) {
+        const y = f(x);
+        t += '<tr><td>' + fmtR(x) + '</td><td>' + fmtR(y) + '</td><td>(' + fmtR(x) + ', ' + fmtR(y) + ')</td></tr>';
+      });
+      t += '</tbody></table>';
+      return t;
+    }
+
     function resolverFuncion(texto) {
       const limpio = texto.trim().replace(/^([fg])\(x\)\s*=\s*/i, '').replace(/^y\s*=\s*/i, '');
       const { a, b, c } = parsearCuadratica(limpio);
@@ -2448,54 +2504,108 @@
       const puntos = [];
 
       let html = '<div class="desarrollo">';
-      html += '<div class="linea">' + escapar(texto) + '</div>';
 
       if (a === 0 && b === 0) {
-        html += cuadernoLinea('Función constante: y = ' + fmtRacional(c));
-        html += cuadernoLinea('Dominio: R = (−∞, ∞)');
-        html += cuadernoResultado('Rango: {' + fmtRacional(c) + '}');
-        anclas.push({ x: 0, y: c });
-        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
+        // ---- CONSTANTE ----
+        html += '<div class="fila-funcion"><span class="expr">' + escapar(texto) + '</span><span class="ref-coef">c = ' + fmtR(c) + '</span></div>';
+        html += '<div class="linea titulo">Dominio</div>';
+        html += cuadernoResultado('Df = R');
+        html += '<div class="linea titulo">Gráfica por método tabular</div>';
+        const xsC = [-2, -1, 0, 1, 2];
+        html += tablaTabular(f, xsC);
+        xsC.forEach(function (x) {
+          anclas.push({ x: x, y: f(x) });
+          puntos.push({ x: x, y: f(x), etiqueta: '(' + fmtR(x) + ', ' + fmtR(f(x)) + ')' });
+        });
+        html += '<div class="grafica">' + graficarFuncion(f, anclas, puntos) + '</div>';
+        html += '<div class="linea titulo">Rango</div>';
+        html += cuadernoResultado('Rf = {' + fmtR(c) + '}');
       } else if (a === 0) {
+        // ---- LINEAL ----
         const xi = -c / b;
-        html += cuadernoLinea('Función lineal: y = ' + polinomio);
-        html += cuadernoLinea('Pendiente m = ' + fmtRacional(b));
-        html += cuadernoLinea('Dominio: R = (−∞, ∞)');
-        html += cuadernoResultado('Rango: R = (−∞, ∞)');
-        anclas.push({ x: xi, y: 0 });
-        anclas.push({ x: 0, y: c });
-        puntos.push({ x: xi, y: 0, etiqueta: '(' + fmtRacional(xi) + ', 0)' });
-        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
+        html += '<div class="fila-funcion"><span class="expr">' + escapar(texto) + '</span><span class="ref-coef">m = ' + fmtR(b) + ' · b = ' + fmtR(c) + '</span></div>';
+        html += '<div class="linea titulo">Corte con el eje x</div>';
+        html += cuadernoLinea('y = 0 → x = −c/b');
+        html += cuadernoResultado('x = ' + fmtR(xi));
+        html += '<div class="linea titulo">Dominio</div>';
+        html += cuadernoResultado('Df = R');
+        html += '<div class="linea titulo">Gráfica por método tabular</div>';
+        const xsL = [-2, -1, 0, 1, 2];
+        html += tablaTabular(f, xsL);
+        xsL.forEach(function (x) {
+          anclas.push({ x: x, y: f(x) });
+          puntos.push({ x: x, y: f(x), etiqueta: '(' + fmtR(x) + ', ' + fmtR(f(x)) + ')' });
+        });
+        html += '<div class="grafica">' + graficarFuncion(f, anclas, puntos) + '</div>';
+        html += '<div class="linea titulo">Rango</div>';
+        html += cuadernoResultado('Rf = R');
       } else {
+        // ---- CUADRÁTICA (formato oficial de la docente) ----
         const h = -b / (2 * a);
         const k = f(h);
-        const D = b * b - 4 * a * c;
-        html += cuadernoLinea('Función cuadrática: y = ' + polinomio);
-        html += cuadernoLinea(escapar(a > 0 ? 'a > 0 → la parábola abre hacia arriba' : 'a < 0 → la parábola abre hacia abajo'));
-        html += cuadernoLinea('Eje de simetría: x = ' + fmtRacional(h));
-        html += cuadernoLinea('Vértice: (' + fmtRacional(h) + ', ' + fmtRacional(k) + ')');
-        html += cuadernoLinea('Dominio: R = (−∞, ∞)');
-        html += cuadernoResultado('Rango: ' + (a > 0 ? '[' + fmtRacional(k) + ', ∞)' : '(−∞, ' + fmtRacional(k) + ']'));
+        const p = b / (2 * a);
+        const p2 = p * p;
+
+        // 0. Coeficientes de referencia (a un costado)
+        html += '<div class="fila-funcion"><span class="expr">' + escapar(texto) + '</span><span class="ref-coef">a = ' + fmtR(a) + ' · b = ' + fmtR(b) + ' · c = ' + fmtR(c) + '</span></div>';
+
+        // 1. Dominio
+        html += '<div class="linea titulo">Dominio</div>';
+        html += cuadernoResultado('Df = R');
+
+        // 2. Eje de simetría (fórmula + sustitución + resultado)
+        const numEje = -b;
+        const numEjeTxt = numEje < 0 ? '−' + fmtR(-numEje) : fmtR(numEje);
+        html += '<div class="linea titulo">Eje de simetría</div>';
+        html += cuadernoLinea('x = −b/(2a)');
+        html += cuadernoLinea('x = ' + numEjeTxt + '/[2(' + fmtR(a) + ')]');
+        html += cuadernoResultado('x = ' + fmtR(h));
+
+        // 3. Vértice (h, k = f(h) desarrollado, V(h, k))
+        html += '<div class="linea titulo">Vértice</div>';
+        html += cuadernoLinea('h = ' + fmtR(h));
+        html += cuadernoLinea('k = f(' + fmtR(h) + ')');
+        html += cuadernoLinea('k = ' + fmtPolinomioSustituido(a, b, c, h).replace(/\s*=\s*[^=]*$/, ''));
+        html += cuadernoLinea('k = ' + fmtR(k));
+        html += cuadernoResultado('V(' + fmtR(h) + ', ' + fmtR(k) + ')');
+
+        // 4. Forma canónica — método del vértice
+        html += '<div class="linea titulo">Forma canónica — método del vértice</div>';
+        html += cuadernoLinea('f(x) = a(x − h)² + k');
+        html += cuadernoResultado('f(x) = ' + formaCanonica(a, h, k));
+
+        // 5. Forma canónica — método de completar cuadrados (paso a paso)
+        html += '<div class="linea titulo">Forma canónica — método de completar cuadrados</div>';
+        html += cuadernoLinea('f(x) = ' + polinomio);
+        html += cuadernoLinea('f(x) = ' + fmtCoefCanonico(a) + '(x²' + terminoLinealX(b / a) + ')' + fmtTerminoConstante(c));
+        html += cuadernoLinea('f(x) = ' + fmtCoefCanonico(a) + '[(x²' + terminoLinealX(b / a) + ' + ' + fmtR(p2) + ') − ' + fmtR(p2) + ']' + fmtTerminoConstante(c));
+        html += cuadernoLinea('f(x) = ' + fmtCoefCanonico(a) + '[' + binomioCuadrado(h) + ' − ' + fmtR(p2) + ']' + fmtTerminoConstante(c));
+        html += cuadernoResultado('f(x) = ' + formaCanonica(a, h, k));
+
+        // 6. Tabla tabular (obligatoria, mínimo 5 valores simétricos respecto a x = h)
+        const xs = [h - 2, h - 1, h, h + 1, h + 2];
+        html += '<div class="linea titulo">Gráfica por método tabular</div>';
+        html += '<p style="margin:6px 0 2px;color:var(--muted)">Tabla obligatoria, con mínimo 5 valores simétricos respecto a x = ' + fmtR(h) + ':</p>';
+        html += tablaTabular(f, xs);
+        html += cuadernoLinea('Los puntos ' + fmtR(xs[0]) + ' y ' + fmtR(xs[4]) + ', y ' + fmtR(xs[1]) + ' y ' + fmtR(xs[3]) + ', son simétricos respecto a x = ' + fmtR(h) + '.');
+        xs.forEach(function (x) {
+          anclas.push({ x: x, y: f(x) });
+          puntos.push({ x: x, y: f(x), etiqueta: '(' + fmtR(x) + ', ' + fmtR(f(x)) + ')' });
+        });
         anclas.push({ x: h, y: k });
         anclas.push({ x: 0, y: c });
-        puntos.push({ x: h, y: k, etiqueta: 'V(' + fmtRacional(h) + ', ' + fmtRacional(k) + ')' });
-        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
-        if (D >= 0) {
-          const r1 = (-b - Math.sqrt(D)) / (2 * a);
-          const r2 = (-b + Math.sqrt(D)) / (2 * a);
-          anclas.push({ x: r1, y: 0 });
-          anclas.push({ x: r2, y: 0 });
-          if (Math.abs(r1 - r2) > 1e-9) {
-            puntos.push({ x: r1, y: 0, etiqueta: '(' + fmtRacional(r1) + ', 0)' });
-            puntos.push({ x: r2, y: 0, etiqueta: '(' + fmtRacional(r2) + ', 0)' });
-          } else {
-            puntos.push({ x: r1, y: 0, etiqueta: '(' + fmtRacional(r1) + ', 0)' });
-          }
-        }
+
+        // 7. Gráfica con todos los puntos
+        html += '<div class="grafica">' + graficarFuncion(f, anclas, puntos) + '</div>';
+
+        // 8. Rango con justificación del signo de a
+        html += '<div class="linea titulo">Rango</div>';
+        html += cuadernoLinea(escapar('a = ' + fmtR(a) + ' → abre hacia ' + (a > 0 ? 'arriba' : 'abajo')));
+        html += cuadernoLinea((a > 0 ? 'El mínimo es k = ' : 'El máximo es k = ') + fmtR(k));
+        html += cuadernoResultado('Rf = ' + (a > 0 ? '[' + fmtR(k) + ', ∞)' : '(−∞, ' + fmtR(k) + ']'));
       }
 
       html += '</div>';
-      html += '<div class="grafica">' + graficarFuncion(f, anclas, puntos) + '</div>';
       return html;
     }
 

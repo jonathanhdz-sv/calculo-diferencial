@@ -29,8 +29,23 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
    `∩` (intersección), `∪` (unión), `−` (diferencia).
 5. **Intersecciones con los ejes**: corte con X (`y = 0`) y corte con Y (`x = 0`).
 6. **Intersecciones entre curvas**: `f(x) = g(x)`, con curvas lineales y con raíz.
-7. **Funciones y gráficas**: función constante, lineal y cuadrática (pendiente, vértice,
-   eje de simetría, dominio y rango, gráfica). — *probado y funcional*
+7. **Funciones y gráficas**: función constante, lineal y cuadrática. Para la **cuadrática**
+   la resolución sigue **exactamente** el flujo que exige la docente, con el procedimiento
+   paso a paso visible (nada de solo dar la respuesta):
+   - **Coeficientes**: `a`, `b`, `c`.
+   - **Dominio**: `Df = R`.
+   - **Eje de simetría**: fórmula `x = −b/(2a)`, sustitución con valores y resultado.
+   - **Vértice**: `h = −b/(2a)`, `k = f(h)` con la sustitución desarrollada y `V(h, k)`.
+   - **Forma canónica por dos métodos**: (a) método del vértice `f(x) = a(x − h)² + k`;
+     (b) método de completar cuadrados paso a paso (factor común → completar el trinomio →
+     factorizar → simplificar).
+   - **Gráfica por método tabular**: tabla obligatoria con **mínimo 5 valores** (`x | f(x) |
+     Punto`) simétricos respecto a `x = h`, con la nota de simetría entre pares de puntos.
+   - **Gráfica**: plano cartesiano con la parábola y **todos los puntos** de la tabla.
+   - **Rango**: `a > 0 → abre hacia arriba` / `a < 0 → abre hacia abajo`, el extremo es `k`,
+     y `Rf` según el signo de `a`.
+   Las funciones constante y lineal también muestran su desarrollo (coeficientes, dominio,
+   tabla de valores, gráfica y rango). — *en reescritura para cumplir el formato oficial*
 8. **Dominio y rango** (módulo independiente): acepta **cualquier tipo de función algebraica**
    de la Unidad 1 y calcula dominio (siempre) y rango (cuando es determinable en el nivel):
    - **Polinómica**: constante, lineal, cuadrática y grado ≥ 3.

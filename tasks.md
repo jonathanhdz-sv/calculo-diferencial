@@ -17,6 +17,23 @@ Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
       **probado** con Node (constante, lineal y cuadrática producen dominio/rango, vértice,
       eje de simetría y gráfica SVG correctos, sin NaN).
 
+## En progreso — Reescribir Funciones y gráficas al formato oficial
+
+- [x] Anotar el flujo exacto que exige la docente (coeficientes → dominio → eje → vértice →
+      dos formas canónicas → tabla de 5 puntos → gráfica → rango).
+- [x] Reescribir `resolverFuncion` cuadrática: coeficientes, dominio, eje con sustitución,
+      vértice desarrollado, dos métodos de forma canónica, tabla tabular de 5 puntos, gráfica
+      con los 5 puntos y rango con la justificación de `a`.
+- [x] Reescribir constante y lineal con desarrollo completo (coeficientes, dominio, tabla,
+      gráfica, rango).
+- [x] Probar con Node el ejemplo exacto de la docente `f(x) = −4x² + 8x + 1` y verificar cada
+      sección del flujo (29/29 PASS).
+- [x] Probar casos adicionales: a > 0, h negativo, lineal, constante y fracciones — OK.
+- [x] Actualizar `spec.md` y `design.md` (ya hechos).
+- [x] Coeficientes `a`, `b`, `c` como **referencia lateral** (`.fila-funcion` + `.ref-coef`) junto
+      a la expresión, no como sección aparte. Aplicado a cuadrática, lineal (`m`, `b`) y
+      constante (`c`). Probado con Node.
+
 ## En progreso
 
 - [x] Probar el módulo **Funciones y gráficas** con los 3 ejemplos cargados.
