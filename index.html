@@ -489,13 +489,13 @@
           <span class="titulo">Valor absoluto básico</span>
           <span class="desc">Próximamente</span>
         </button>
-        <button class="tarjeta proximamente" disabled>
+        <button class="tarjeta" data-modulo="funciones">
           <span class="titulo">Funciones y gráficas</span>
-          <span class="desc">Próximamente</span>
+          <span class="desc">Constante, lineal y cuadrática</span>
         </button>
-        <button class="tarjeta proximamente" disabled>
+        <button class="tarjeta" data-modulo="dominio-rango">
           <span class="titulo">Dominio y rango</span>
-          <span class="desc">Próximamente</span>
+          <span class="desc">Cualquier función algebraica</span>
         </button>
       </div>
       <button class="btn-glosario" data-modulo="glosario">Glosario</button>
@@ -732,6 +732,133 @@
       </div>
       <div id="errorCurvas" class="error" hidden></div>
       <div id="resCurvas"></div>
+    </div>
+
+    <div id="modulo-funciones" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Funciones y gráficas</h2>
+      <div class="card">
+        <input id="entradaFunc" type="text" placeholder="Ej: y = 3, y = x − 4, y = −4x² + 8x + 1" autocomplete="off">
+      </div>
+      <div class="card">
+        <button id="botonFunc" class="btn">Resolver</button>
+        <button id="botonFuncX" class="btn">Corte con X</button>
+        <button id="botonFuncY" class="btn">Corte con Y</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaFunc" data-valor="y = 3">y = 3</button>
+        <button type="button" class="ejercicio" data-fill="entradaFunc" data-valor="y = x - 4">y = x − 4</button>
+        <button type="button" class="ejercicio" data-fill="entradaFunc" data-valor="y = -4x² + 8x + 1">y = −4x² + 8x + 1</button>
+      </div>
+      <div id="errorFunc" class="error" hidden></div>
+      <div id="resFunc"></div>
+    </div>
+
+    <div id="modulo-dominio-rango" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Dominio y rango</h2>
+      <div class="card">
+        <input id="entradaDomRango" type="text" placeholder="Ej: f(x) = (x²-3)/(25x-x³)" autocomplete="off">
+        <button id="botonDomRango" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaDomRango" data-valor="f(x) = -4x² + 8x + 1" data-run="botonDomRango">f(x) = −4x² + 8x + 1</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomRango" data-valor="g(x) = (x²-3)/(25x-x³)" data-run="botonDomRango">g(x) = (x² − 3)/(25x − x³)</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomRango" data-valor="f(x) = √(x-2)" data-run="botonDomRango">f(x) = √(x − 2)</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomRango" data-valor="f(x) = |x - 3|" data-run="botonDomRango">f(x) = |x − 3|</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomRango" data-valor="f(x) = x³ - 2x" data-run="botonDomRango">f(x) = x³ − 2x</button>
+      </div>
+      <div id="errorDomRango" class="error" hidden></div>
+      <div id="resDomRango"></div>
+      <div class="etiqueta">Tipos de función</div>
+      <div class="grid">
+        <button class="tarjeta" data-modulo="domrango-polinomica">
+          <span class="titulo">Polinómica</span>
+          <span class="desc">Constante, lineal, cuadrática y grado ≥ 3</span>
+        </button>
+        <button class="tarjeta" data-modulo="domrango-racional">
+          <span class="titulo">Racional</span>
+          <span class="desc">f(x) = P(x)/Q(x)</span>
+        </button>
+        <button class="tarjeta" data-modulo="domrango-irracional">
+          <span class="titulo">Irracional</span>
+          <span class="desc">f(x) = √(g(x))</span>
+        </button>
+        <button class="tarjeta" data-modulo="domrango-abs">
+          <span class="titulo">Valor absoluto</span>
+          <span class="desc">f(x) = |g(x)|</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="modulo-domrango-polinomica" class="modulo" hidden>
+      <button class="volver" data-volver="dominio-rango">← Volver a Dominio y rango</button>
+      <h2>Dominio y rango · Polinómica</h2>
+      <div class="card">
+        <input id="entradaDomPol" type="text" placeholder="Ej: f(x) = x³ - 2x" autocomplete="off">
+        <button id="botonDomPol" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaDomPol" data-valor="f(x) = 3" data-run="botonDomPol">f(x) = 3</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomPol" data-valor="f(x) = 2x + 1" data-run="botonDomPol">f(x) = 2x + 1</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomPol" data-valor="f(x) = -4x² + 8x + 1" data-run="botonDomPol">f(x) = −4x² + 8x + 1</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomPol" data-valor="f(x) = x³ - 2x" data-run="botonDomPol">f(x) = x³ − 2x</button>
+      </div>
+      <div id="errorDomPol" class="error" hidden></div>
+      <div id="resDomPol"></div>
+    </div>
+
+    <div id="modulo-domrango-racional" class="modulo" hidden>
+      <button class="volver" data-volver="dominio-rango">← Volver a Dominio y rango</button>
+      <h2>Dominio y rango · Racional</h2>
+      <div class="card">
+        <input id="entradaDomRac" type="text" placeholder="Ej: f(x) = (x²-3)/(25x-x³)" autocomplete="off">
+        <button id="botonDomRac" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaDomRac" data-valor="g(x) = (x²-3)/(25x-x³)" data-run="botonDomRac">g(x) = (x² − 3)/(25x − x³)</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomRac" data-valor="f(x) = 1/x" data-run="botonDomRac">f(x) = 1/x</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomRac" data-valor="f(x) = (x+1)/(x-2)" data-run="botonDomRac">f(x) = (x+1)/(x−2)</button>
+      </div>
+      <div id="errorDomRac" class="error" hidden></div>
+      <div id="resDomRac"></div>
+    </div>
+
+    <div id="modulo-domrango-irracional" class="modulo" hidden>
+      <button class="volver" data-volver="dominio-rango">← Volver a Dominio y rango</button>
+      <h2>Dominio y rango · Irracional</h2>
+      <div class="card">
+        <input id="entradaDomIrr" type="text" placeholder="Ej: f(x) = √(x - 2)" autocomplete="off">
+        <button id="botonDomIrr" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaDomIrr" data-valor="f(x) = √(x-2)" data-run="botonDomIrr">f(x) = √(x − 2)</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomIrr" data-valor="f(x) = √(x+3)" data-run="botonDomIrr">f(x) = √(x + 3)</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomIrr" data-valor="f(x) = √(4-x²)" data-run="botonDomIrr">f(x) = √(4 − x²)</button>
+      </div>
+      <div id="errorDomIrr" class="error" hidden></div>
+      <div id="resDomIrr"></div>
+    </div>
+
+    <div id="modulo-domrango-abs" class="modulo" hidden>
+      <button class="volver" data-volver="dominio-rango">← Volver a Dominio y rango</button>
+      <h2>Dominio y rango · Valor absoluto</h2>
+      <div class="card">
+        <input id="entradaDomAbs" type="text" placeholder="Ej: f(x) = |x - 3|" autocomplete="off">
+        <button id="botonDomAbs" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Clase · ejemplos</span>
+        <button type="button" class="ejercicio" data-fill="entradaDomAbs" data-valor="f(x) = |x - 3|" data-run="botonDomAbs">f(x) = |x − 3|</button>
+        <button type="button" class="ejercicio" data-fill="entradaDomAbs" data-valor="f(x) = |2x + 1|" data-run="botonDomAbs">f(x) = |2x + 1|</button>
+      </div>
+      <div id="errorDomAbs" class="error" hidden></div>
+      <div id="resDomAbs"></div>
     </div>
   </div>
 
@@ -2263,6 +2390,410 @@
       }
     }
 
+    function graficarFuncion(f, anclas, puntos) {
+      const xs = anclas.map(function (p) { return p.x; }).filter(isFinite);
+      const ys = anclas.map(function (p) { return p.y; }).filter(isFinite);
+      let xMin = Math.min.apply(null, xs.concat([0]));
+      let xMax = Math.max.apply(null, xs.concat([0]));
+      let yMin = Math.min.apply(null, ys.concat([0]));
+      let yMax = Math.max.apply(null, ys.concat([0]));
+      const padX = Math.max(1.5, (xMax - xMin) * 0.4);
+      const padY = Math.max(1.5, (yMax - yMin) * 0.4);
+      xMin -= padX; xMax += padX;
+      yMin -= padY; yMax += padY;
+
+      const W = 430, H = 330, m = 48;
+      const sx = (W - 2 * m) / (xMax - xMin);
+      const sy = (H - 2 * m) / (yMax - yMin);
+      const X = function (x) { return m + (x - xMin) * sx; };
+      const Y = function (y) { return H - m - (y - yMin) * sy; };
+
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+      for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+        svg += '<line x1="' + X(i) + '" y1="' + Y(yMin) + '" x2="' + X(i) + '" y2="' + Y(yMax) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+        svg += '<line x1="' + X(xMin) + '" y1="' + Y(j) + '" x2="' + X(xMax) + '" y2="' + Y(j) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      svg += '<line x1="' + X(xMin) + '" y1="' + Y(0) + '" x2="' + X(xMax) + '" y2="' + Y(0) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<polygon points="' + X(xMax) + ',' + Y(0) + ' ' + (X(xMax) - 9) + ',' + (Y(0) - 4) + ' ' + (X(xMax) - 9) + ',' + (Y(0) + 4) + '" fill="#475569"/>';
+      svg += '<polygon points="' + X(0) + ',' + Y(yMax) + ' ' + (X(0) - 4) + ',' + (Y(yMax) + 9) + ' ' + (X(0) + 4) + ',' + (Y(yMax) + 9) + '" fill="#475569"/>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
+      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="12" fill="#64748b">0</text>';
+
+      const paso = (xMax - xMin) / 280;
+      let path = '';
+      let penUp = true;
+      for (let x = xMin; x <= xMax; x += paso) {
+        const y = f(x);
+        if (!isFinite(y) || y < yMin - 8 || y > yMax + 8) { penUp = true; continue; }
+        path += (penUp ? 'M' : 'L') + X(x).toFixed(1) + ',' + Y(y).toFixed(1) + ' ';
+        penUp = false;
+      }
+      if (path) svg += '<path d="' + path + '" fill="none" stroke="#6366f1" stroke-width="2.5"/>';
+
+      puntos.forEach(function (p) {
+        if (!isFinite(p.x) || !isFinite(p.y)) return;
+        svg += '<circle cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="5" fill="#e11d48"/>';
+        svg += '<text x="' + (X(p.x) + 8) + '" y="' + (Y(p.y) - 8) + '" font-size="12" font-weight="600" fill="#e11d48">' + p.etiqueta + '</text>';
+      });
+      svg += '</svg>';
+      return svg;
+    }
+
+    function resolverFuncion(texto) {
+      const limpio = texto.trim().replace(/^([fg])\(x\)\s*=\s*/i, '').replace(/^y\s*=\s*/i, '');
+      const { a, b, c } = parsearCuadratica(limpio);
+      const f = function (x) { return a * x * x + b * x + c; };
+      const polinomio = fmtPolinomio(a, b, c);
+      const anclas = [];
+      const puntos = [];
+
+      let html = '<div class="desarrollo">';
+      html += '<div class="linea">' + escapar(texto) + '</div>';
+
+      if (a === 0 && b === 0) {
+        html += cuadernoLinea('Función constante: y = ' + fmtRacional(c));
+        html += cuadernoLinea('Dominio: R = (−∞, ∞)');
+        html += cuadernoResultado('Rango: {' + fmtRacional(c) + '}');
+        anclas.push({ x: 0, y: c });
+        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
+      } else if (a === 0) {
+        const xi = -c / b;
+        html += cuadernoLinea('Función lineal: y = ' + polinomio);
+        html += cuadernoLinea('Pendiente m = ' + fmtRacional(b));
+        html += cuadernoLinea('Dominio: R = (−∞, ∞)');
+        html += cuadernoResultado('Rango: R = (−∞, ∞)');
+        anclas.push({ x: xi, y: 0 });
+        anclas.push({ x: 0, y: c });
+        puntos.push({ x: xi, y: 0, etiqueta: '(' + fmtRacional(xi) + ', 0)' });
+        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
+      } else {
+        const h = -b / (2 * a);
+        const k = f(h);
+        const D = b * b - 4 * a * c;
+        html += cuadernoLinea('Función cuadrática: y = ' + polinomio);
+        html += cuadernoLinea(a > 0 ? 'a > 0 → la parábola abre hacia arriba' : 'a < 0 → la parábola abre hacia abajo');
+        html += cuadernoLinea('Eje de simetría: x = ' + fmtRacional(h));
+        html += cuadernoLinea('Vértice: (' + fmtRacional(h) + ', ' + fmtRacional(k) + ')');
+        html += cuadernoLinea('Dominio: R = (−∞, ∞)');
+        html += cuadernoResultado('Rango: ' + (a > 0 ? '[' + fmtRacional(k) + ', ∞)' : '(−∞, ' + fmtRacional(k) + ']'));
+        anclas.push({ x: h, y: k });
+        anclas.push({ x: 0, y: c });
+        puntos.push({ x: h, y: k, etiqueta: 'V(' + fmtRacional(h) + ', ' + fmtRacional(k) + ')' });
+        puntos.push({ x: 0, y: c, etiqueta: '(0, ' + fmtRacional(c) + ')' });
+        if (D >= 0) {
+          const r1 = (-b - Math.sqrt(D)) / (2 * a);
+          const r2 = (-b + Math.sqrt(D)) / (2 * a);
+          anclas.push({ x: r1, y: 0 });
+          anclas.push({ x: r2, y: 0 });
+          if (Math.abs(r1 - r2) > 1e-9) {
+            puntos.push({ x: r1, y: 0, etiqueta: '(' + fmtRacional(r1) + ', 0)' });
+            puntos.push({ x: r2, y: 0, etiqueta: '(' + fmtRacional(r2) + ', 0)' });
+          } else {
+            puntos.push({ x: r1, y: 0, etiqueta: '(' + fmtRacional(r1) + ', 0)' });
+          }
+        }
+      }
+
+      html += '</div>';
+      html += '<div class="grafica">' + graficarFuncion(f, anclas, puntos) + '</div>';
+      return html;
+    }
+
+    // ============ MÓDULO DOMINIO Y RANGO ============
+    function limpiarFuncionExp(texto) {
+      return texto.trim().replace(/^([fg])\(x\)\s*=\s*/i, '').replace(/^y\s*=\s*/i, '').replace(/\s/g, '').replace(/−/g, '-');
+    }
+
+    function detectarTipoFuncion(expr) {
+      const t = expr;
+      if (t.indexOf('/') !== -1) return 'racional';
+      if (t.indexOf('√') !== -1 || /sqrt\(/i.test(t)) return 'irracional';
+      if (t.indexOf('|') !== -1) return 'abs';
+      return 'polinomica';
+    }
+
+    function parsearPolinomioGeneral(expr) {
+      let t = expr.replace(/\s/g, '').replace(/−/g, '-');
+      t = t.replace(/²/g, '^2').replace(/³/g, '^3').replace(/⁴/g, '^4').replace(/⁵/g, '^5').replace(/⁶/g, '^6');
+      t = t.replace(/-/g, '+-');
+      const tokens = t.split('+').filter(function (x) { return x !== ''; });
+      const grados = {};
+      tokens.forEach(function (tok) {
+        const m = tok.match(/^(-?\d*\.?\d*)x\^(\d+)$/);
+        if (m) {
+          const g = parseInt(m[2], 10);
+          const cs = m[1];
+          const c = (cs === '' || cs === '+') ? 1 : (cs === '-' ? -1 : parseFloat(cs));
+          grados[g] = (grados[g] || 0) + c;
+          return;
+        }
+        const m1 = tok.match(/^(-?\d*\.?\d*)x$/);
+        if (m1) {
+          const cs = m1[1];
+          const c = (cs === '' || cs === '+') ? 1 : (cs === '-' ? -1 : parseFloat(cs));
+          grados[1] = (grados[1] || 0) + c;
+          return;
+        }
+        const c = parseNum(tok);
+        if (c !== 0) grados[0] = (grados[0] || 0) + c;
+      });
+      return grados;
+    }
+
+    function gradoPolinomio(expr) {
+      const grados = parsearPolinomioGeneral(expr);
+      let max = 0;
+      Object.keys(grados).forEach(function (k) { if (Number(k) > max) max = Number(k); });
+      return max;
+    }
+
+    function obtenerRaicesRacional(expr) {
+      const idx = expr.indexOf('/');
+      if (idx === -1) throw new Error('Formato racional: f(x) = P(x)/Q(x).');
+      let num = expr.slice(0, idx).trim();
+      let den = expr.slice(idx + 1).trim();
+      const quitar = function (s) {
+        s = s.trim();
+        if (s.charAt(0) === '(' && s.charAt(s.length - 1) === ')') s = s.slice(1, -1);
+        return s;
+      };
+      num = quitar(num); den = quitar(den);
+      return { num: num, den: den };
+    }
+
+    function resolverDominioRacional(expr) {
+      const { num, den } = obtenerRaicesRacional(expr);
+      const denGrado = gradoPolinomio(den);
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('f(x) = ' + escapar(expr));
+      html += cuadernoLinea('P(x) = ' + escapar(num));
+      html += cuadernoLinea('Q(x) = ' + escapar(den));
+      html += cuadernoLinea('Dominio: los x donde Q(x) ≠ 0');
+      html += cuadernoLinea('Q(x) = 0  →  ' + escapar(den) + ' = 0');
+
+      let raices = [];
+      if (denGrado === 0) {
+        html += cuadernoResultado('El denominador es constante → nunca se anula');
+      } else if (denGrado === 1) {
+        const g = parsearPolinomioGeneral(den);
+        const r = -(g[0] || 0) / g[1];
+        raices.push(r);
+        html += cuadernoResultado('x = ' + fmtRacional(r));
+      } else if (denGrado === 2) {
+        const g = parsearPolinomioGeneral(den);
+        const A = g[2], B = g[1], C = g[0] || 0;
+        const D = B * B - 4 * A * C;
+        if (D < 0) {
+          html += cuadernoLinea('D = ' + fmtRacional(D) + ' < 0 → Q(x) no se anula');
+        } else if (Math.abs(D) < 1e-9) {
+          const r = -B / (2 * A);
+          raices.push(r);
+          html += cuadernoResultado('x = ' + fmtRacional(r) + ' (raíz doble)');
+        } else {
+          const r1 = (-B - Math.sqrt(D)) / (2 * A);
+          const r2 = (-B + Math.sqrt(D)) / (2 * A);
+          raices.push(r1, r2);
+          html += cuadernoResultado('x₁ = ' + fmtRacional(r1) + '  ·  x₂ = ' + fmtRacional(r2));
+        }
+      } else if (denGrado === 3) {
+        html += '<details class="detalle"><summary>Factorizar el denominador</summary>';
+        html += factorizarCubicoHtml(den, raices);
+        html += '</details>';
+      } else {
+        html += cuadernoLinea('Grado ' + denGrado + ': se requiere factorización (Ruffini); por ahora nota.');
+      }
+
+      if (raices.length === 0) {
+        html += '</div>';
+        html += '<div class="conclusion">Dominio: <strong>todos los reales</strong> <span class="intervalo">(−∞, ∞)</span></div>';
+        html += '<div class="conclusion">Rango: depende del numerador; requiere análisis fino (asíntotas).</div>';
+        return html;
+      }
+
+      const segs = segmentosExcluyendo(raices);
+      html += '</div>';
+      html += '<div class="conclusion">Dominio: <strong>ℝ − {' + raices.map(fmtRacional).join(', ') + '}</strong></div>';
+      html += '<div class="conclusion">Rango: depende del numerador; requiere análisis fino (asíntotas).</div>';
+      html += '<div class="grafica">' + renderNumberLine(segs) + '</div>';
+      return html;
+    }
+
+    function factorizarCubicoHtml(den, raices) {
+      let html = '';
+      const grados = parsearPolinomioGeneral(den);
+      const a3 = grados[3] || 0;
+      const a2 = grados[2] || 0;
+      const a1 = grados[1] || 0;
+      const a0 = grados[0] || 0;
+      if (a2 === 0 && a0 === 0) {
+        const A = a3, B = a1;
+        html += cuadernoLinea('Factor común: x(' + fmtPolinomio(A, 0, B) + ') = 0');
+        raices.push(0);
+        html += cuadernoLinea('x = 0');
+        const D = -4 * A * B;
+        if (D > 0) {
+          const r = Math.sqrt(-B / A);
+          raices.push(r, -r);
+          html += cuadernoResultado('x² = ' + fmtRacional(-B / A) + '  →  x = ±' + fmtRacional(r));
+        } else if (Math.abs(D) < 1e-9) {
+          html += cuadernoLinea('raíz doble en x = 0');
+        } else {
+          html += cuadernoLinea('El factor cuadrático no tiene raíces reales');
+        }
+      } else {
+        html += cuadernoLinea('Cúbico no trivial: usar Ruffini / divisores del término independiente');
+      }
+      return html;
+    }
+
+    function segmentosExcluyendo(raices) {
+      const sorted = raices.slice().filter(isFinite).sort(function (a, b) { return a - b; });
+      const segs = [];
+      const color = '#10b981';
+      let prev = -Infinity;
+      sorted.forEach(function (r) {
+        if (r !== prev) {
+          segs.push({ from: prev, to: r, fromClosed: false, toClosed: false, color: color });
+          prev = r;
+        }
+      });
+      segs.push({ from: prev, to: Infinity, fromClosed: false, toClosed: false, color: color });
+      return segs;
+    }
+
+    function resolverDominioIrracional(expr) {
+      const m = expr.match(/(?:√|sqrt)\((.+)\)/i);
+      if (!m) throw new Error('Formato irracional: f(x) = √(g(x)).');
+      const g = m[1].trim().replace(/−/g, '-').replace(/\s/g, '');
+      const gGrado = gradoPolinomio(g);
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('f(x) = ' + escapar(expr));
+      html += cuadernoLinea('Dominio: lo que está dentro de la raíz debe ser ≥ 0');
+      html += cuadernoLinea('g(x) = ' + escapar(g));
+      html += cuadernoLinea('g(x) ≥ 0  →  ' + escapar(g) + ' ≥ 0');
+
+      let segs = null;
+      if (gGrado === 0) {
+        const c = parsearPolinomioGeneral(g)[0] || 0;
+        if (c >= 0) {
+          html += cuadernoResultado('Constante ' + fmtRacional(c) + ' ≥ 0 → todos los reales');
+          segs = [{ from: -Infinity, to: Infinity, fromClosed: true, toClosed: true, color: '#10b981' }];
+        } else {
+          html += cuadernoResultado('Constante negativa → sin dominio real');
+          html += '</div>';
+          html += '<div class="conclusion">Dominio: <strong>∅ (vacío)</strong></div>';
+          return html;
+        }
+      } else if (gGrado === 1) {
+        const g1 = parsearPolinomioGeneral(g);
+        const r = -(g1[0] || 0) / g1[1];
+        if (g1[1] > 0) {
+          html += cuadernoResultado('x ≥ ' + fmtRacional(r));
+          segs = [{ from: r, to: Infinity, fromClosed: true, toClosed: false, color: '#10b981' }];
+        } else {
+          html += cuadernoResultado('x ≤ ' + fmtRacional(r));
+          segs = [{ from: -Infinity, to: r, fromClosed: false, toClosed: true, color: '#10b981' }];
+        }
+      } else if (gGrado === 2) {
+        const g2 = parsearPolinomioGeneral(g);
+        const sol = construirSolucionCuadratica(g2[2], g2[1] || 0, g2[0] || 0, '>=');
+        if (sol.segs.length === 0) {
+          html += cuadernoResultado('No hay x que cumplan g(x) ≥ 0');
+          html += '</div>';
+          html += '<div class="conclusion">Dominio: <strong>∅ (vacío)</strong></div>';
+          return html;
+        }
+        if (sol.segs.length === 1 && sol.segs[0].from === -Infinity && sol.segs[0].to === Infinity) {
+          html += cuadernoResultado('Siempre ≥ 0 → todos los reales');
+          segs = [{ from: -Infinity, to: Infinity, fromClosed: true, toClosed: true, color: '#10b981' }];
+        } else {
+          html += cuadernoResultado(segsToString(sol.segs));
+          segs = sol.segs.map(function (s) { return { from: s.from, to: s.to, fromClosed: s.fromClosed, toClosed: s.toClosed, color: '#10b981' }; });
+        }
+      }
+
+      html += '</div>';
+      html += '<div class="conclusion">Dominio: <span class="intervalo">' + (segs ? segsToString(segs) : '') + '</span></div>';
+      html += '<div class="conclusion">Rango: <strong>[0, ∞)</strong> (la raíz cuadrada nunca da negativo)</div>';
+      if (segs && !(segs.length === 1 && segs[0].from === -Infinity && segs[0].to === Infinity)) {
+        html += '<div class="grafica">' + renderNumberLine(segs) + '</div>';
+      }
+      return html;
+    }
+
+    function resolverDominioAbs(expr) {
+      const m = expr.match(/^\|(.+)\|$/);
+      if (!m) throw new Error('Formato: f(x) = |g(x)|.');
+      const g = m[1].trim().replace(/−/g, '-').replace(/\s/g, '');
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('f(x) = ' + escapar(expr));
+      html += cuadernoLinea('Dominio: el valor absoluto admite cualquier x');
+      html += cuadernoResultado('D = ℝ = (−∞, ∞)');
+      html += cuadernoLinea('Rango: el valor absoluto nunca da negativo');
+      html += cuadernoResultado('R = [0, ∞)');
+      html += '</div>';
+      html += '<div class="conclusion">Dominio: <span class="intervalo">(−∞, ∞)</span></div>';
+      html += '<div class="conclusion">Rango: <span class="intervalo">[0, ∞)</span></div>';
+      return html;
+    }
+
+    function resolverDominioPolinomica(expr) {
+      const grados = parsearPolinomioGeneral(expr);
+      const maxGrado = gradoPolinomio(expr);
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('f(x) = ' + escapar(expr));
+      html += cuadernoLinea('Es un polinomio: se puede evaluar en cualquier x');
+      html += cuadernoResultado('D = ℝ = (−∞, ∞)');
+      const c = grados[0] || 0;
+
+      if (maxGrado === 0) {
+        html += cuadernoResultado('Rango: {' + fmtRacional(c) + '} (constante)');
+        html += '</div>';
+        html += '<div class="conclusion">Dominio: <span class="intervalo">(−∞, ∞)</span> · Rango: <strong>{' + fmtRacional(c) + '}</strong></div>';
+        return html;
+      }
+      if (maxGrado === 1) {
+        html += cuadernoResultado('Rango: ℝ = (−∞, ∞) (lineal)');
+        html += '</div>';
+        html += '<div class="conclusion">Dominio: <span class="intervalo">(−∞, ∞)</span> · Rango: <span class="intervalo">(−∞, ∞)</span></div>';
+        return html;
+      }
+      if (maxGrado === 2) {
+        const a = grados[2], b = grados[1] || 0;
+        const h = -b / (2 * a);
+        const k = a * h * h + b * h + c;
+        html += cuadernoLinea('Vértice: (' + fmtRacional(h) + ', ' + fmtRacional(k) + ')');
+        html += cuadernoResultado('Rango: ' + (a > 0 ? '[' + fmtRacional(k) + ', ∞)' : '(−∞, ' + fmtRacional(k) + ']'));
+        html += '</div>';
+        html += '<div class="conclusion">Dominio: <span class="intervalo">(−∞, ∞)</span> · Rango: <strong>' + (a > 0 ? '[' + fmtRacional(k) + ', ∞)' : '(−∞, ' + fmtRacional(k) + ']') + '</strong></div>';
+        return html;
+      }
+      if (maxGrado % 2 === 1) {
+        html += cuadernoResultado('Rango: ℝ = (−∞, ∞) (grado impar)');
+        html += '</div>';
+        html += '<div class="conclusion">Dominio: <span class="intervalo">(−∞, ∞)</span> · Rango: <span class="intervalo">(−∞, ∞)</span></div>';
+        return html;
+      }
+      html += cuadernoResultado('Rango: grado par ≥ 4 → requiere análisis fino (límites/derivadas)');
+      html += '</div>';
+      html += '<div class="conclusion">Dominio: <span class="intervalo">(−∞, ∞)</span> · Rango: análisis fino requerido</div>';
+      return html;
+    }
+
+    function resolverDominioRango(texto) {
+      const expr = limpiarFuncionExp(texto);
+      if (!expr) throw new Error('Escriba una función.');
+      const tipo = detectarTipoFuncion(expr);
+      if (tipo === 'racional') return resolverDominioRacional(expr);
+      if (tipo === 'irracional') return resolverDominioIrracional(expr);
+      if (tipo === 'abs') return resolverDominioAbs(expr);
+      return resolverDominioPolinomica(expr);
+    }
+
     // ============ WIRING ============
     function mostrarVista(id) {
       document.getElementById('home').hidden = true;
@@ -2294,6 +2825,14 @@
     bind('botonAbs', 'entradaAbs', 'errorAbs', 'resAbs', resolverAbs);
     bind('botonIntercX', 'entradaInterc', 'errorInterc', 'resInterc', resolverIntercepcionX);
     bind('botonIntercY', 'entradaInterc', 'errorInterc', 'resInterc', resolverIntercepcionY);
+    bind('botonFunc', 'entradaFunc', 'errorFunc', 'resFunc', resolverFuncion);
+    bind('botonFuncX', 'entradaFunc', 'errorFunc', 'resFunc', resolverIntercepcionX);
+    bind('botonFuncY', 'entradaFunc', 'errorFunc', 'resFunc', resolverIntercepcionY);
+    bind('botonDomRango', 'entradaDomRango', 'errorDomRango', 'resDomRango', resolverDominioRango);
+    bind('botonDomPol', 'entradaDomPol', 'errorDomPol', 'resDomPol', resolverDominioRango);
+    bind('botonDomRac', 'entradaDomRac', 'errorDomRac', 'resDomRac', resolverDominioRango);
+    bind('botonDomIrr', 'entradaDomIrr', 'errorDomIrr', 'resDomIrr', resolverDominioRango);
+    bind('botonDomAbs', 'entradaDomAbs', 'errorDomAbs', 'resDomAbs', resolverDominioRango);
     document.getElementById('botonCurvas').addEventListener('click', resolverCurvas);
     document.getElementById('entradaCurvas').addEventListener('keydown', function (e) { if (e.key === 'Enter') resolverCurvas(); });
 
