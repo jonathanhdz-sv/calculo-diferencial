@@ -20,10 +20,12 @@ desigualdad con valor absoluto.
 - [x] Gráfica en la **recta numérica** y en el **plano cartesiano** (`graficarAbs`: V de
       `y = |ax+b|`, líneas `y = ±k`, zona de solución sombreada y puntos de corte).
 - [x] Caso trivial (`a = 1`, `b = 0`): la línea compuesta es `|x| < k ⇔ −k < x < k` (sin duplicar).
+- [x] Etiquetar con números (ticks) el eje x y el eje y en `graficarAbs` y `graficarFuncion`
+      para identificar valores fácilmente.
 - [x] Quitar helpers sin uso (`resolverLinealAbs`, `intervaloDesdeSol`, `escFormat`);
       agregar `sumaSignada`.
 - [x] Probar con Node: `|x| < 3`, `|x| < 5`, `|2x − 1| < 5`, puntas, `a < 0`, casos especiales,
-      plano cartesiano. **36/36 PASS** (`test-abs.js`).
+      plano cartesiano y ticks en ejes. **38/38 PASS** (`test-abs.js`).
 - [ ] RDD: receipt final con evidencia.
 
 ## Funciones avanzadas — Nuevos módulos (en curso, 23 ago 2026)

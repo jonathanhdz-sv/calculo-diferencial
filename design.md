@@ -62,7 +62,8 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
   - La **gráfica** incluye la **recta numérica** (con `renderNumberLine`) y el **plano
     cartesiano** (`graficarAbs`): traza `y = |ax + b|`, las líneas `y = ±k` punteadas y
     sombrea la franja `[−k, k]` sobre el/los intervalo(s) de solución, con los puntos de
-    corte `(lo, k)` y `(hi, k)` marcados.
+    corte `(lo, k)` y `(hi, k)` marcados. **Etiqueta con números (ticks) el eje x y el eje y**
+    para que se identifiquen los valores con claridad (misma mejora en `graficarFuncion`).
   - La **explicación conceptual** va en `<details class="detalle">` **al final** del
     resultado, no al inicio.
   - Helpers: `parsearLinealAbs` (coef/c) y `sumaSignada` (escribe `a + b` con signo, p. ej.

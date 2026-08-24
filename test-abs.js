@@ -198,6 +198,17 @@ t('|2x − 1| > 5: plano cartesiano después de recta numérica', function () {
   const h = resolverAbs('|2x − 1| > 5');
   return h.indexOf('Recta numérica') < h.indexOf('Plano cartesiano');
 });
+t('plano cartesiano etiqueta números en ambos ejes', function () {
+  const h = resolverAbs('|x| < 5');
+  const graf = h.split('Plano cartesiano')[1].split('<details')[0];
+  const m = graf.match(/<text[^>]*>(-?\d+)<\/text>/g) || [];
+  return m.length >= 6;
+});
+t('el número 2 aparece como tick en el plano cartesiano', function () {
+  const h = resolverAbs('|x| < 5');
+  const graf = h.split('Plano cartesiano')[1].split('<details')[0];
+  return /<text[^>]*>2<\/text>/.test(graf) && /<text[^>]*>−?2<\/text>/.test(graf);
+});
 
 console.log('\nResultado: ' + pass + ' PASS, ' + fail + ' FAIL');
 process.exit(fail ? 1 : 0);
