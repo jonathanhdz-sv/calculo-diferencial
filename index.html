@@ -2393,19 +2393,10 @@
       return { coef: p.coefX / den, c: p.constante / den };
     }
 
-    function resolverLinealAbs(coef, c, op, k) {
-      const rhs = k - c;
-      let finalOp = op;
-      if (coef < 0) finalOp = INVERSO[op];
-      return { op: finalOp, val: rhs / coef };
-    }
-
-    function intervaloDesdeSol(op, val) {
-      if (op === '>') return { from: val, to: Infinity, fromClosed: false, toClosed: false };
-      if (op === '>=') return { from: val, to: Infinity, fromClosed: true, toClosed: false };
-      if (op === '<') return { from: -Infinity, to: val, fromClosed: false, toClosed: false };
-      if (op === '<=') return { from: -Infinity, to: val, fromClosed: false, toClosed: true };
-      return null;
+    function sumaSignada(x, y) {
+      if (y === 0) return fmtRacional(x);
+      if (y > 0) return fmtRacional(x) + ' + ' + fmtRacional(y);
+      return fmtRacional(x) + ' − ' + fmtRacional(-y);
     }
 
     function resolverAbs(texto) {
@@ -2416,63 +2407,117 @@
       const op = m[2];
       const k = parseNum(m[3]);
       const { coef, c } = parsearLinealAbs(expr);
+      const a = coef, b = c;
+      const num = fmtRacional;
+      const sig = mostrarSigno;
 
       let html = '<div class="desarrollo">';
-      html += '<div class="linea">' + escapar('|' + expr + '| ' + mostrarSigno(op) + ' ' + fmtRacional(k)) + '</div>';
+      html += '<div class="linea">' + escapar('|' + expr + '| ' + sig(op) + ' ' + num(k)) + '</div>';
 
       const esCentro = (op === '<' || op === '<=');
       const esPuntas = (op === '>' || op === '>=');
 
-      if (esCentro) {
-        if (k <= 0) {
-          html += '</div>';
-          html += '<div class="conclusion">No hay solución: el valor absoluto nunca es ' + (op === '<' ? 'menor' : 'menor o igual') + ' a un número ' + (k < 0 ? 'negativo' : 'igual a cero') + '.</div>';
-          return html;
-        }
-        const izquierdaIneq = expr + ' > ' + fmtRacional(-k);
-        const derechaIneq = expr + ' ' + mostrarSigno(op) + ' ' + fmtRacional(k);
+      // Expresión constante (no depende de x): |b| op k
+      if (a === 0) {
+        const absB = Math.abs(b);
+        const cumple = esCentro ? (op === '<' ? absB < k : absB <= k) : (op === '>' ? absB > k : absB >= k);
         html += '</div>';
-        html += paso('Paso 1 — Regla del centro', '|x| < k  ⇔  −k < x < k. Separamos en dos desigualdades.', ecuacion('−' + fmtRacional(k) + ' < ' + expr + ' ' + mostrarSigno(op) + ' ' + fmtRacional(k)));
-        html += paso('Paso 2 — Resolver lado izquierdo', escapar(izquierdaIneq), ecuacionResultado(escFormat(resolverLinealAbs(coef, c, '>', -k))));
-        html += paso('Paso 3 — Resolver lado derecho', escapar(derechaIneq), ecuacionResultado(escFormat(resolverLinealAbs(coef, c, op, k))));
-        const segIzq = intervaloDesdeSol(resolverLinealAbs(coef, c, '>', -k).op, resolverLinealAbs(coef, c, '>', -k).val);
-        const segDer = intervaloDesdeSol(resolverLinealAbs(coef, c, op, k).op, resolverLinealAbs(coef, c, op, k).val);
-        const resultado = interseccion(segIzq, segDer);
-        html += '<div class="conclusion">Conjunto solución: <span class="intervalo">' + segsToString(resultado) + '</span></div>';
-        html += '<div class="grafica">' + renderNumberLine(resultado) + '</div>';
+        if (cumple) html += '<div class="conclusion">Todos los reales la cumplen (expresión constante).<span class="intervalo">(−∞, ∞)</span></div>';
+        else html += '<div class="conclusion">Ningún valor la cumple (expresión constante).</div>';
         return html;
       }
 
+      // ---------- REGLA DEL CENTRO ( < , <= ) ----------
+      if (esCentro) {
+        if (k < 0) {
+          html += '</div>';
+          html += '<div class="conclusion">No hay solución: el valor absoluto nunca es menor o igual a un número negativo.</div>';
+          return html;
+        }
+        if (k === 0) {
+          if (op === '<') {
+            html += '</div>';
+            html += '<div class="conclusion">No hay solución: el valor absoluto nunca es menor que 0.</div>';
+            return html;
+          }
+          const cero = -b / a;
+          html += cuadernoLinea('|u| <= a  ⇔  −a <= u <= a');
+          html += ecuacion('0 <= ' + escapar(expr) + ' <= 0  ⇔  ' + escapar(expr) + ' = 0');
+          html += cuadernoLinea(escapar(expr) + ' = 0  →  x = ' + num(cero));
+          html += '</div>';
+          html += '<div class="conclusion">x ∈ <span class="intervalo">{' + num(cero) + '}</span></div>';
+          html += '<div class="grafica">' + renderNumberLine([{ from: cero, to: cero, fromClosed: true, toClosed: true }]) + '</div>';
+          return html;
+        }
+        // k > 0
+        const axTerm = formatoX(a);
+        const lo = (-k - b) / a, hi = (k - b) / a;
+        const loMenor = Math.min(lo, hi), hiMayor = Math.max(lo, hi);
+        const asc = (op === '<') ? '<' : '<=';
+        const divOp = (a > 0) ? asc : INVERSO[asc];
+
+        html += cuadernoLinea('|u| ' + sig(op) + ' a  ⇔  −a ' + sig(op) + ' u ' + sig(op) + ' a');
+        html += ecuacion('−' + num(k) + ' ' + sig(op) + ' ' + escapar(expr) + ' ' + sig(op) + ' ' + num(k));
+        if (b !== 0) {
+          html += cuadernoLinea(sumaSignada(-k, -b) + ' ' + sig(op) + ' ' + axTerm + ' ' + sig(op) + ' ' + sumaSignada(k, -b));
+          html += cuadernoLinea(num(-k - b) + ' ' + sig(op) + ' ' + axTerm + ' ' + sig(op) + ' ' + num(k - b));
+        }
+        if (a !== 1) {
+          html += cuadernoLinea(num(-k - b) + '/' + num(a) + ' ' + sig(divOp) + ' x ' + sig(divOp) + ' ' + num(k - b) + '/' + num(a));
+        }
+        html += cuadernoResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor));
+        html += '</div>';
+        html += '<div class="conclusion">x ∈ <span class="intervalo">' + intervalToString({ from: loMenor, fromClosed: op === '<=', to: hiMayor, toClosed: op === '<=' }) + '</span></div>';
+        html += '<div class="grafica">' + renderNumberLine([{ from: loMenor, fromClosed: op === '<=', to: hiMayor, toClosed: op === '<=' }]) + '</div>';
+        html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>';
+        html += paso('Paso 1 — Regla del centro', escapar('|x| < k  ⇔  −k < x < k: una desigualdad "menor que" se traduce en una triple desigualdad entre −k y k.'), ecuacion('−' + num(k) + ' ' + sig('<') + ' ' + escapar(expr) + ' ' + sig('<') + ' ' + num(k)));
+        html += paso('Paso 2 — Despejar x', 'Se resuelve la triple desigualdad restando la constante y dividiendo entre el coeficiente de x (invirtiendo los signos si el coeficiente es negativo).', ecuacionResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor)));
+        html += '</details>';
+        return html;
+      }
+
+      // ---------- REGLA DE LAS PUNTAS ( > , >= ) ----------
       if (esPuntas) {
         if (k < 0) {
           html += '</div>';
           html += '<div class="conclusion">Solución: <strong>todos los números reales</strong> (el valor absoluto siempre es ≥ 0).<span class="intervalo">(−∞, ∞)</span></div>';
           return html;
         }
-        const ramaIzq = expr + ' < ' + fmtRacional(-k);
-        const ramaDer = expr + ' > ' + fmtRacional(k);
+        const axTerm = formatoX(a);
+        const opIzq = (op === '>') ? '<' : '<=';
+        const opDer = op;
+        let opIzqF = opIzq, opDerF = opDer;
+        if (a < 0) { opIzqF = INVERSO[opIzqF]; opDerF = INVERSO[opDerF]; }
+        const valIzq = (-k - b) / a, valDer = (k - b) / a;
+
+        html += cuadernoLinea('|u| ' + sig(op) + ' a  ⇔  u ' + sig(opIzq) + ' −a  o  u ' + sig(opDer) + ' a');
+        html += ecuacion(escapar(expr) + ' ' + sig(opIzq) + ' −' + num(k) + '   o   ' + escapar(expr) + ' ' + sig(opDer) + ' ' + num(k));
+        if (b !== 0) {
+          html += cuadernoLinea(axTerm + ' ' + sig(opIzq) + ' ' + num(-k - b) + '   o   ' + axTerm + ' ' + sig(opDer) + ' ' + num(k - b));
+        }
+        if (a !== 1) {
+          html += cuadernoLinea('x ' + sig(opIzqF) + ' ' + num(-k - b) + '/' + num(a) + '   o   x ' + sig(opDerF) + ' ' + num(k - b) + '/' + num(a));
+        }
+        html += cuadernoResultado('x ' + sig(opIzqF) + ' ' + num(valIzq) + '   o   x ' + sig(opDerF) + ' ' + num(valDer));
         html += '</div>';
-        html += paso('Paso 1 — Regla de las puntas', '|x| > k  ⇔  x < −k  o  x > k. Se resuelven dos casos.', ecuacion(expr + ' ' + mostrarSigno(op === '>' ? '<' : '<=') + ' −' + fmtRacional(k) + '   o   ' + expr + ' ' + mostrarSigno(op) + ' ' + fmtRacional(k)));
-        const opRamaIzq = (op === '>') ? '<' : '<=';
-        const sIzq = resolverLinealAbs(coef, c, opRamaIzq, -k);
-        const sDer = resolverLinealAbs(coef, c, op, k);
-        html += paso('Paso 2 — Rama izquierda', escapar(ramaIzq), ecuacionResultado(escFormat(sIzq)));
-        html += paso('Paso 3 — Rama derecha', escapar(ramaDer), ecuacionResultado(escFormat(sDer)));
-        const segIzq = intervaloDesdeSol(sIzq.op, sIzq.val);
-        const segDer = intervaloDesdeSol(sDer.op, sDer.val);
-        const resultado = union(segIzq, segDer);
-        html += '<div class="conclusion">Conjunto solución: <span class="intervalo">' + segsToString(resultado) + '</span></div>';
-        html += '<div class="grafica">' + renderNumberLine(resultado) + '</div>';
+        const segPunta = function (opF, val) {
+          if (opF === '>' || opF === '>=') return { from: val, to: Infinity, fromClosed: opF === '>=', toClosed: false };
+          return { from: -Infinity, to: val, fromClosed: false, toClosed: opF === '<=' };
+        };
+        const segIzq = segPunta(opIzqF, valIzq);
+        const segDer = segPunta(opDerF, valDer);
+        const segs = [segIzq, segDer].sort(function (a, b) { return a.from - b.from; });
+        html += '<div class="conclusion">x ∈ <span class="intervalo">' + segsToString(segs) + '</span></div>';
+        html += '<div class="grafica">' + renderNumberLine(segs) + '</div>';
+        html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>';
+        html += paso('Paso 1 — Regla de las puntas', escapar('|x| > k  ⇔  x < −k  o  x > k: una desigualdad "mayor que" se resuelve en dos casos fuera del intervalo.'), ecuacion(escapar(expr) + ' ' + sig(opIzq) + ' −' + num(k) + '   o   ' + escapar(expr) + ' ' + sig(opDer) + ' ' + num(k)));
+        html += paso('Paso 2 — Resolver cada caso', 'Se despeja x en cada rama y se unen los resultados (∪).', ecuacionResultado('x ' + sig(opIzqF) + ' ' + num(valIzq) + '   o   x ' + sig(opDerF) + ' ' + num(valDer)));
+        html += '</details>';
         return html;
       }
 
       html += '</div>';
       return html;
-    }
-
-    function escFormat(sol) {
-      const v = fmtRacional(sol.val);
-      return 'x ' + mostrarSigno(sol.op) + ' ' + v;
     }
 
     // ============ MÓDULO INTERSECCIONES ============

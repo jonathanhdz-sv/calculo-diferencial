@@ -28,7 +28,16 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
 2. **Desigualdad cuadrática** (`ax² + bx + c < 0`): puntos críticos, zonas de la recta,
    cuadro de validación (zona | x prueba | sustitución | signo | ¿cumple?), gráfica de recta.
    - Dos métodos: **fórmula general** y **factorización (tijera)**.
-3. **Valor absoluto** (`|x − a| < k`): regla del centro (`<`) y regla de las puntas (`>`).
+3. **Valor absoluto** (`|ax + b| < k` y `|ax + b| > k`): regla del centro (`<`) y regla de
+   las puntas (`>`), con **formato cuaderno**:
+   - Muestra la desigualdad original y la **regla** (`|u| < a ⇔ −a < u < a`).
+   - Traduce a la desigualdad compuesta y la despeja en **cadena paso a paso** (mover la
+     constante, simplificar, dividir entre el coeficiente mostrando la división
+     intermedia, simplificar), igual que en el cuaderno de clase.
+   - Concluye con `x ∈ (intervalo)`.
+   - **Gráfica lineal** (recta real) de la solución. No aplican gráficas cuadráticas.
+   - La **explicación conceptual** de los pasos (regla del centro / de las puntas y por qué)
+     aparece **al final** en un desplegable, no al inicio del resultado.
 4. **Intervalos**: desigualdad → intervalo, intervalo → desigualdad, y operaciones
    `∩` (intersección), `∪` (unión), `−` (diferencia).
 5. **Intersecciones con los ejes**: corte con X (`y = 0`) y corte con Y (`x = 0`).

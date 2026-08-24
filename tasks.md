@@ -2,6 +2,28 @@
 
 Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 
+## Valor absoluto — Formato cuaderno (23 ago 2026)
+
+Reescribir `resolverAbs` para que muestre el **formato cuaderno** del módulo de
+desigualdad con valor absoluto.
+
+### Cambios
+- [x] Actualizar spec.md (ítem 3) y design.md (descripción de `resolverAbs`).
+- [x] Reescribir `resolverAbs`: cadena de pasos en formato cuaderno (regla → desigualdad
+      compuesta → mover constante → simplificar → dividir → simplificar → `x ∈ (...)`).
+- [x] Centro (`<`, `<=`): resolver la triple desigualdad en cadena; manejar `k < 0`,
+      `k = 0` (`<=` → punto `x = −b/a`) y `a = 0` (constante).
+- [x] Puntas (`>`, `>=`): resolver las dos ramas en paralelo → `x ∈ (−∞, lo) ∪ (hi, ∞)`.
+- [x] Con `a < 0`: invertir los signos al dividir.
+- [x] Explicación conceptual de los pasos al **final** en `<details class="detalle">`,
+      no al inicio.
+- [x] Gráfica lineal (recta real) únicamente; sin gráficas cuadráticas.
+- [x] Quitar helpers sin uso (`resolverLinealAbs`, `intervaloDesdeSol`, `escFormat`);
+      agregar `sumaSignada`.
+- [x] Probar con Node: `|x| < 3`, `|2x − 1| < 5`, puntas, `a < 0`, casos especiales.
+      **29/29 PASS** (`test-abs.js`).
+- [ ] RDD: receipt final con evidencia.
+
 ## Funciones avanzadas — Nuevos módulos (en curso, 23 ago 2026)
 
 Backlog acordado: cubrir los temas de la Guía 1 que faltan (bloque de funciones avanzadas).

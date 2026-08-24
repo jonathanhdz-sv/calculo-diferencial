@@ -51,8 +51,20 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
   - **Fórmula general** (`resolverFormulaGeneral`): pasos de sustitución y resolución.
   - **Factorización** (`resolverFactorizacion`): busca `(px+q)(rx+s)` por divisores y lo
     muestra con el diagrama de **tijera** (SVG).
-- **Valor absoluto** (`resolverAbs`): si `<` usa la regla del centro (intersección de dos
-  desigualdades); si `>` usa la regla de las puntas (unión de dos ramas).
+- **Valor absoluto** (`resolverAbs`): formato cuaderno. Si `<`/`<=` usa la regla del centro
+  (`|u| < a ⇔ −a < u < a`) y resuelve la desigualdad compuesta en cadena (`−k < ax+b < k` →
+  mover constante con `sumaSignada` → simplificar → dividir por `a` mostrando la división
+  intermedia → simplificar → `x ∈ (lo, hi)`). Si `>`/`>=` usa la regla de las puntas
+  (`u < −a  o  u > a`) y resuelve las dos ramas en paralelo hasta `x ∈ (−∞, lo) ∪ (hi, ∞)`.
+  - Con `a < 0` los signos de la división se invierten (lado izquierdo y derecho).
+  - Casos especiales: `k < 0` (ninguna en centro / todas en puntas), `k = 0` en centro
+    (`<` → ninguna; `<=` → punto único `x = −b/a`), `a = 0` (constante → todas/ninguna).
+  - La **gráfica es lineal** (recta real con `renderNumberLine`).
+  - La **explicación conceptual** va en `<details class="detalle">` **al final** del
+    resultado, no al inicio.
+  - Helpers: `parsearLinealAbs` (coef/c) y `sumaSignada` (escribe `a + b` con signo, p. ej.
+    `−5 + 1`). Se retiraron `resolverLinealAbs`, `intervaloDesdeSol` y `escFormat`
+    (quedaron sin uso).
 - **Intervalos**: `desigualdadAIntervalo`, `parseIntervaloNotacion`, `intervaloAInecuacion`
   y `operarIntervalos` para `∩`, `∪`, `−`.
 - **Intersecciones con ejes** (`resolverIntercepcionX/Y`): parsea `y = ...` o forma general,
