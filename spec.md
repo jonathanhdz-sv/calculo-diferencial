@@ -35,7 +35,9 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
      constante, simplificar, dividir entre el coeficiente mostrando la división
      intermedia, simplificar), igual que en el cuaderno de clase.
    - Concluye con `x ∈ (intervalo)`.
-   - **Gráfica lineal** (recta real) de la solución. No aplican gráficas cuadráticas.
+   - **Gráfica en la recta numérica** (solución en la recta real) **y plano cartesiano** con la
+     gráfica de `y = |ax + b|`, las líneas `y = ±k` y la zona de solución sombreada.
+     No aplican gráficas cuadráticas.
    - La **explicación conceptual** de los pasos (regla del centro / de las puntas y por qué)
      aparece **al final** en un desplegable, no al inicio del resultado.
 4. **Intervalos**: desigualdad → intervalo, intervalo → desigualdad, y operaciones

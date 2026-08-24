@@ -166,5 +166,38 @@ t('no hay < sin escapar en el resultado (render seguro)', function () {
   return crudo.indexOf('<') === -1 && crudo.indexOf('>') === -1;
 });
 
+// ---- CASO TRIVIAL (a=1, b=0) sin duplicación ----
+t('|x| < 5: la cadena no duplica −5 < x < 5', function () {
+  const h = resolverAbs('|x| < 5');
+  const dec = txt(h.split('Recta numérica')[0]);
+  return (dec.split('−5 < x < 5').length - 1) === 1;
+});
+t('|x| < 5: línea compuesta "|x| < 5 ⇔ −5 < x < 5"', function () {
+  return txt(resolverAbs('|x| < 5')).indexOf('|x| < 5 ⇔ −5 < x < 5') !== -1;
+});
+
+// ---- PLANO CARTESIANO ----
+t('|x| < 5 muestra Recta numérica y Plano cartesiano', function () {
+  const h = resolverAbs('|x| < 5');
+  return h.indexOf('Recta numérica') !== -1 && h.indexOf('Plano cartesiano') !== -1;
+});
+t('|x| < 5: plano cartesiano con V, sombreado y y=±5', function () {
+  const h = resolverAbs('|x| < 5');
+  const graf = h.split('Plano cartesiano')[1].split('<details')[0];
+  return graf.indexOf('<path') !== -1 && graf.indexOf('<rect') !== -1 && graf.indexOf('y = 5') !== -1 && graf.indexOf('y = −5') !== -1;
+});
+t('|2x − 1| < 5: plano cartesiano presente', function () {
+  return resolverAbs('|2x − 1| < 5').indexOf('Plano cartesiano') !== -1;
+});
+t('|2x − 1| > 5: plano cartesiano con V, sombreado y y=±5', function () {
+  const h = resolverAbs('|2x − 1| > 5');
+  const graf = h.split('Plano cartesiano')[1].split('<details')[0];
+  return graf.indexOf('<path') !== -1 && graf.indexOf('<rect') !== -1 && graf.indexOf('y = 5') !== -1;
+});
+t('|2x − 1| > 5: plano cartesiano después de recta numérica', function () {
+  const h = resolverAbs('|2x − 1| > 5');
+  return h.indexOf('Recta numérica') < h.indexOf('Plano cartesiano');
+});
+
 console.log('\nResultado: ' + pass + ' PASS, ' + fail + ' FAIL');
 process.exit(fail ? 1 : 0);

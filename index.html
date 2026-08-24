@@ -2456,19 +2456,31 @@
         const asc = (op === '<') ? '<' : '<=';
         const divOp = (a > 0) ? asc : INVERSO[asc];
 
+        const trivial = (a === 1 && b === 0);
         html += cuadernoLinea('|u| ' + sig(op) + ' a  ⇔  −a ' + sig(op) + ' u ' + sig(op) + ' a');
-        html += ecuacion('−' + num(k) + ' ' + sig(op) + ' ' + escapar(expr) + ' ' + sig(op) + ' ' + num(k));
-        if (b !== 0) {
-          html += cuadernoLinea(sumaSignada(-k, -b) + ' ' + sig(op) + ' ' + axTerm + ' ' + sig(op) + ' ' + sumaSignada(k, -b));
-          html += cuadernoLinea(num(-k - b) + ' ' + sig(op) + ' ' + axTerm + ' ' + sig(op) + ' ' + num(k - b));
+        if (trivial) {
+          html += ecuacion('|' + expr + '| ' + sig(op) + ' ' + num(k) + '  ⇔  −' + num(k) + ' ' + sig(op) + ' x ' + sig(op) + ' ' + num(k));
+        } else {
+          html += ecuacion('−' + num(k) + ' ' + sig(op) + ' ' + escapar(expr) + ' ' + sig(op) + ' ' + num(k));
+          if (b !== 0) {
+            html += cuadernoLinea(sumaSignada(-k, -b) + ' ' + sig(op) + ' ' + axTerm + ' ' + sig(op) + ' ' + sumaSignada(k, -b));
+            html += cuadernoLinea(num(-k - b) + ' ' + sig(op) + ' ' + axTerm + ' ' + sig(op) + ' ' + num(k - b));
+          }
+          if (a !== 1) {
+            html += cuadernoLinea(num(-k - b) + '/' + num(a) + ' ' + sig(divOp) + ' x ' + sig(divOp) + ' ' + num(k - b) + '/' + num(a));
+          }
+          html += cuadernoResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor));
         }
-        if (a !== 1) {
-          html += cuadernoLinea(num(-k - b) + '/' + num(a) + ' ' + sig(divOp) + ' x ' + sig(divOp) + ' ' + num(k - b) + '/' + num(a));
-        }
-        html += cuadernoResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor));
         html += '</div>';
         html += '<div class="conclusion">x ∈ <span class="intervalo">' + intervalToString({ from: loMenor, fromClosed: op === '<=', to: hiMayor, toClosed: op === '<=' }) + '</span></div>';
+        html += '<div class="linea titulo">Recta numérica</div>';
         html += '<div class="grafica">' + renderNumberLine([{ from: loMenor, fromClosed: op === '<=', to: hiMayor, toClosed: op === '<=' }]) + '</div>';
+        html += '<div class="linea titulo">Plano cartesiano · y = |' + escapar(expr) + '|</div>';
+        html += '<div class="grafica">' + graficarAbs(
+          function (x) { return Math.abs(a * x + b); },
+          [[loMenor, hiMayor]], k,
+          [{ x: loMenor, y: k, label: '(' + num(loMenor) + ', ' + num(k) + ')' }, { x: hiMayor, y: k, label: '(' + num(hiMayor) + ', ' + num(k) + ')' }]
+        ) + '</div>';
         html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>';
         html += paso('Paso 1 — Regla del centro', escapar('|x| < k  ⇔  −k < x < k: una desigualdad "menor que" se traduce en una triple desigualdad entre −k y k.'), ecuacion('−' + num(k) + ' ' + sig('<') + ' ' + escapar(expr) + ' ' + sig('<') + ' ' + num(k)));
         html += paso('Paso 2 — Despejar x', 'Se resuelve la triple desigualdad restando la constante y dividiendo entre el coeficiente de x (invirtiendo los signos si el coeficiente es negativo).', ecuacionResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor)));
@@ -2508,7 +2520,17 @@
         const segDer = segPunta(opDerF, valDer);
         const segs = [segIzq, segDer].sort(function (a, b) { return a.from - b.from; });
         html += '<div class="conclusion">x ∈ <span class="intervalo">' + segsToString(segs) + '</span></div>';
+        html += '<div class="linea titulo">Recta numérica</div>';
         html += '<div class="grafica">' + renderNumberLine(segs) + '</div>';
+        html += '<div class="linea titulo">Plano cartesiano · y = |' + escapar(expr) + '|</div>';
+        const loB = Math.min((-k - b) / a, (k - b) / a);
+        const hiB = Math.max((-k - b) / a, (k - b) / a);
+        html += '<div class="grafica">' + graficarAbs(
+          function (x) { return Math.abs(a * x + b); },
+          segs.map(function (s) { return [s.from, s.to]; }),
+          k,
+          [{ x: loB, y: k, label: '(' + num(loB) + ', ' + num(k) + ')' }, { x: hiB, y: k, label: '(' + num(hiB) + ', ' + num(k) + ')' }]
+        ) + '</div>';
         html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>';
         html += paso('Paso 1 — Regla de las puntas', escapar('|x| > k  ⇔  x < −k  o  x > k: una desigualdad "mayor que" se resuelve en dos casos fuera del intervalo.'), ecuacion(escapar(expr) + ' ' + sig(opIzq) + ' −' + num(k) + '   o   ' + escapar(expr) + ' ' + sig(opDer) + ' ' + num(k)));
         html += paso('Paso 2 — Resolver cada caso', 'Se despeja x en cada rama y se unen los resultados (∪).', ecuacionResultado('x ' + sig(opIzqF) + ' ' + num(valIzq) + '   o   x ' + sig(opDerF) + ' ' + num(valDer)));
@@ -2948,8 +2970,80 @@
       svg += '</svg>';
       return svg;
     }
+function graficarAbs(f, intervalos, k, puntos) {
+      const ptsX = [];
+      intervalos.forEach(function (it) { if (isFinite(it[0])) ptsX.push(it[0]); if (isFinite(it[1])) ptsX.push(it[1]); });
+      if (puntos) puntos.forEach(function (p) { ptsX.push(p.x); });
+      ptsX.push(0);
+      let xMin = Math.min.apply(null, ptsX);
+      let xMax = Math.max.apply(null, ptsX);
+      let padX = Math.max(1.5, (xMax - xMin) * 0.5);
+      if (xMax - xMin < 2) padX = 2;
+      xMin -= padX; xMax += padX;
+
+      let yMin = Math.min(-k, 0) - 1;
+      let yMax = Math.max(k * 1.25, 2);
+      const paso = (xMax - xMin) / 300;
+      for (let x = xMin; x <= xMax; x += paso) {
+        const y = f(x);
+        if (isFinite(y) && y > yMax) yMax = y + 1;
+      }
+
+      const W = 430, H = 330, m = 48;
+      const sx = (W - 2 * m) / (xMax - xMin);
+      const sy = (H - 2 * m) / (yMax - yMin);
+      const X = function (x) { return m + (x - xMin) * sx; };
+      const Y = function (y) { return H - m - (y - yMin) * sy; };
+
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+      for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+        svg += '<line x1="' + X(i) + '" y1="' + Y(yMin) + '" x2="' + X(i) + '" y2="' + Y(yMax) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+        svg += '<line x1="' + X(xMin) + '" y1="' + Y(j) + '" x2="' + X(xMax) + '" y2="' + Y(j) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      svg += '<line x1="' + X(xMin) + '" y1="' + Y(0) + '" x2="' + X(xMax) + '" y2="' + Y(0) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<polygon points="' + X(xMax) + ',' + Y(0) + ' ' + (X(xMax) - 9) + ',' + (Y(0) - 4) + ' ' + (X(xMax) - 9) + ',' + (Y(0) + 4) + '" fill="#475569"/>';
+      svg += '<polygon points="' + X(0) + ',' + Y(yMax) + ' ' + (X(0) - 4) + ',' + (Y(yMax) + 9) + ' ' + (X(0) + 4) + ',' + (Y(yMax) + 9) + '" fill="#475569"/>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
+      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="12" fill="#64748b">0</text>';
+
+      svg += '<line x1="' + X(xMin) + '" y1="' + Y(k) + '" x2="' + X(xMax) + '" y2="' + Y(k) + '" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"/>';
+      svg += '<line x1="' + X(xMin) + '" y1="' + Y(-k) + '" x2="' + X(xMax) + '" y2="' + Y(-k) + '" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"/>';
+      svg += '<text x="' + (X(xMax) - 6) + '" y="' + (Y(k) - 8) + '" text-anchor="end" font-size="12" fill="#f59e0b">y = ' + fmtRacional(k) + '</text>';
+      svg += '<text x="' + (X(xMax) - 6) + '" y="' + (Y(-k) + 18) + '" text-anchor="end" font-size="12" fill="#f59e0b">y = −' + fmtRacional(k) + '</text>';
+
+      intervalos.forEach(function (it) {
+        const x0 = isFinite(it[0]) ? it[0] : xMin;
+        const x1 = isFinite(it[1]) ? it[1] : xMax;
+        const left = X(Math.min(x0, x1)), right = X(Math.max(x0, x1));
+        svg += '<rect x="' + left + '" y="' + Y(k) + '" width="' + (right - left) + '" height="' + Math.abs(Y(-k) - Y(k)) + '" fill="#4f46e5" opacity="0.13"/>';
+      });
+
+      let path = '', penUp = true;
+      for (let x = xMin; x <= xMax; x += paso) {
+        const y = f(x);
+        if (!isFinite(y) || y < yMin - 8 || y > yMax + 8) { penUp = true; continue; }
+        path += (penUp ? 'M' : 'L') + X(x).toFixed(1) + ',' + Y(y).toFixed(1) + ' ';
+        penUp = false;
+      }
+      if (path) svg += '<path d="' + path + '" fill="none" stroke="#6366f1" stroke-width="2.5"/>';
+
+      if (puntos) {
+        puntos.forEach(function (p) {
+          if (!isFinite(p.x) || !isFinite(p.y)) return;
+          svg += '<circle cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="5" fill="#e11d48"/>';
+          if (p.label) svg += '<text x="' + (X(p.x) + 8) + '" y="' + (Y(p.y) - 8) + '" font-size="12" font-weight="600" fill="#e11d48">' + p.label + '</text>';
+        });
+      }
+      svg += '</svg>';
+      return svg;
+    }
 
     // ---- Helpers de formato para Funciones y gráficas (formato cuaderno oficial) ----
+
     function fmtR(v) { return fmtRacional(v).replace(/-/g, '−'); }
     function fmtCoefCanonico(a) {
       if (a === 1) return '';
