@@ -95,6 +95,51 @@ Monolito de **un solo archivo** `index.html` con tres capas en el mismo document
 - **Salida**: formato cuaderno con pasos (`cuadernoLinea`/`cuadernoResultado`), recta real
   con `renderNumberLine` cuando el dominio sea restringido, y detalles expandibles.
 
+## Módulos nuevos — Funciones avanzadas (Guía 1 #6, #9, #11–#18)
+
+Todos los módulos reutilizan la capa de utilidades existente (`limpiarFuncionExp`,
+`detectarTipoFuncion`, `parsearPolinomioGeneral`, `resolverDominio*`, `graficarFuncion`,
+`renderPlano`, plantillas `paso`/`cuadernoLinea`/`cuadernoResultado`). Se crea un helper
+nuevo de sustitución simbólica `sustituirEn(expr, gExpr, nomG)` para componer funciones
+(cuando no se puede simplificar la expresión resultante, se muestra la sustitución
+literal — formato cuaderno — en vez de un "error").
+
+### A. Operaciones con funciones (resolverOpFunciones)
+- **Entrada**: `f(x)` y `g(x)` (dos campos).
+- **Salida**: para cada operación `f+g`, `f−g`, `fg`, `f/g`: la expresión resultante
+  (suma/resta algebraica de polinomios; producto; cociente con restricción `g(x) ≠ 0`),
+  su dominio y su rango cuando es determinable en el nivel (reutiliza `resolverDominio*`).
+
+### B. Composición de funciones (resolverComposicion)
+- **Entrada**: `f(x)` y `g(x)`, más un valor opcional de `x`.
+- **Salida**: `f∘g` y `g∘f` con la sustitución literal y simplificada si aplica; dominio y
+  rango; evaluación en `x` si se dio.
+- **Parámetros en composición** (#14): modo con `g(x) = ax + b` donde se plantea
+  `(f∘g)(x) = x`, se igualan coeficientes y se despeja `a` y `b`.
+
+### C. Función inversa (resolverInversa)
+- **Entrada**: `f(x)`.
+- **Salida**: pasos para despejar `x` → `f⁻¹(y)` y luego renombrar a `f⁻¹(x)`; dominio y
+  rango de `f` y `f⁻¹` (el rango de `f` = dominio de `f⁻¹` y viceversa); gráfica de `f`,
+  `f⁻¹` y `y = x` en un plano; verificación `(f∘f⁻¹)(x) = x` y `(f⁻¹∘f)(x) = x`.
+- **Alcance**: funciones lineales, cuadráticas invertibles (dominio restringido) y racionales
+  simples de la Unidad 1.
+
+### D. Pares/impares y simetría (resolverSimetria)
+- **Entrada**: `y = f(x)`.
+- **Salida**: calcula `f(−x)` sustituyendo `−x` por `x`; compara con `f(x)`:
+  - `f(−x) = f(x)` → **par**, simétrica al **eje y**.
+  - `f(−x) = −f(x)` → **impar**, simétrica al **origen**.
+  - si ninguna → determina simetría respecto a eje x, eje y y origen.
+- Nota didáctica: ejes de simetría mostrados antes del veredicto.
+
+### E. Funciones seccionadas (resolverSeccionada)
+- **Entrada**: texto tipo `f(x) = { 3-x, x <= 1; 2x, x > 1 }`.
+- **Parser** (`parsearSeccionada`): separa en pares `(expresión, condición)` por `;`/`,`.
+- **Salida**: clasificación de cada tramo, dominio total (unión de condiciones), rango total,
+  y **gráfica por tramos** (cada tramo dibujado en su dominio, con punto lleno/vacío según
+  la condición sea `≤`/`<`).
+
 ## Convenciones
 
 - Resultados en **fracción** cuando son exactos; decimal solo si no hay fracción limpia.

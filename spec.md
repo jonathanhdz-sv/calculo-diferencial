@@ -73,13 +73,30 @@ o dispositivo (celular, tablet, otro equipo), sin instalar nada.
       obligatoria en la pestaña `Símbolos`.
     - **Móvil**: los botones se reducen de tamaño en pantallas pequeñas.
 
+10. **Operaciones con funciones** (Guía 1 #12): dados `f(x)` y `g(x)`, calcula `f+g`, `f−g`,
+    `fg`, `f/g` y muestra el dominio y rango de cada una. Soporta polinómicas, raíces y
+    racionales simples del nivel de la Unidad 1.
+11. **Composición de funciones** (Guía 1 #13 y #14): dados `f(x)` y `g(x)`, calcula `f∘g`
+    y `g∘f` (sustituyendo `g(x)` dentro de `f(x)` y viceversa), con dominio, rango y
+    evaluación en un punto opcional. Resuelve **parámetros en composición**
+    (`f(x) = 2x + 3`, `g(x) = ax + b`, `(f∘g)(x) = x` → hallar `a`, `b`).
+12. **Función inversa** (Guía 1 #15, #17 y #18): dado `f(x)`, calcula `f⁻¹` (despejar `x`),
+    dominio y rango de `f` y `f⁻¹`, grafica `f`, `f⁻¹` y `y = x`, y verifica la propiedad
+    `(f∘f⁻¹)(x) = x` y `(f⁻¹∘f)(x) = x` para demostrar que son inversas.
+13. **Funciones pares/impares y simetría** (Guía 1 #6 y #9): evalúa `f(−x)` y clasifica en
+    **par** (simétrica al eje y), **impar** (simétrica al origen) o **ninguna**; determina la
+    simetría respecto al eje x, eje y y origen.
+14. **Funciones seccionadas** (Guía 1 #11): dado `f(x)` definida por tramos
+    (`f(x) = { 3−x, x ≤ 1; 2x, x > 1 }`), grafica los tramos, y calcula dominio y rango.
+
 ## Fuera de alcance (qué NO hace)
 
 - **Dominio y rango** de funciones trascendentes (exponenciales, logarítmicas,
   trigonométricas) — son Unidad 2.
 - Rango de casos donde se necesite análisis fino (asíntotas/derivadas de racionales
   complejas): se da dominio y se indica la limitación.
-- Funciones definidas por tramos.
+- Rango exacto de funciones seccionadas y de compuestas no polinómicas: se grafica y se
+  da el dominio; el rango queda como análisis visual por tramo.
 - Límites, derivadas (unidades 3–5 de la materia).
 - Resolver sistemas con más de 2 ecuaciones, o curvas que no sean lineal/raíz/cuadrática.
 - Persistencia de datos (no guarda historial; es 100% cliente y estático).

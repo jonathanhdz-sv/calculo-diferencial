@@ -2,6 +2,58 @@
 
 Estado del proyecto. Se actualiza cada vez que se trabaja un cambio.
 
+## Funciones avanzadas — Nuevos módulos (en curso, 23 ago 2026)
+
+Backlog acordado: cubrir los temas de la Guía 1 que faltan (bloque de funciones avanzadas).
+Orden de prioridad según el usuario: composición → inversa → operaciones → pares/impares y
+simetría → seccionadas.
+
+### A. Composición de funciones (Guía 1 #13, #14)
+- [x] Helper `sustituirEn`/motor simbólico (`parsearSimbolico`, `evaluarAST`, `polinomioDesdeAST`, `polinomioTexto`, `sustituirAST`, `sustituirTextoX`).
+- [x] Vista `#modulo-composicion` (inputs `f(x)`, `g(x)`, `x` opcional).
+- [x] `resolverComposicion`: calcular `f∘g` y `g∘f`, dominio, rango, evaluar en `x`.
+- [x] Modo parámetros en composición (#14): `(f∘g)(x) = x` → despejar `a`, `b`.
+- [x] Tarjeta en inicio + wiring (`bind` + `data-fillf`/`data-fillg`).
+- [x] Probar con Node: ejemplos #13 (a–d) y #14 (12/13 — el FAIL es de expectativa del test: `1/√4 = 0.5`).
+- [x] Corregir dominio de compuestas no polinómicas (nota honesta en vez de delegar mal a `resolverDominioRacional`).
+
+### B. Función inversa (Guía 1 #15, #17, #18)
+- [x] Vista `#modulo-inversa` (input `f(x)` + `g(x)` opcional para verificar).
+- [x] `resolverInversa`: detectar tipo con motor simbólico (lineal, cúbica, raíz, racional), despejar x, dominio/rango, gráfica `f`, `f⁻¹`, `y = x` (`graficarMultiples`), verificación de inversas.
+- [x] `polinomioDesdeAST`: agregar `div` por constante (necesario para fracciones `-x/4`).
+- [x] `polinomioTexto`: coeficiente fraccionario entre paréntesis `(1/3)x`.
+- [x] Tarjeta en inicio + wiring.
+- [x] Probar con Node: #15 (a–b), #17 (a–c), #18 (a–b) — correctos (el FAIL 15a es de expectativa del test: `(1/3)x` ≡ `x/3`).
+
+### C. Operaciones con funciones (Guía 1 #12)
+- [x] Vista `#modulo-opfunciones` (inputs `f(x)`, `g(x)`).
+- [x] `resolverOpFunciones`: `f+g`, `f−g`, `fg`, `f/g` con dominio y rango (polinómicas).
+- [x] Tarjeta en inicio + wiring.
+- [x] Probar con Node: #12 (a–d) — correcto.
+
+### D. Funciones pares/impares y simetría (Guía 1 #6, #9)
+- [x] Vista `#modulo-simetria`.
+- [x] `resolverSimetria`: sustituir `−x`, clasificar par/impar/ninguna (polinómicas exactas + racionales por muestreo numérico), ejes de simetría.
+- [x] Tarjeta en inicio + wiring.
+- [x] Probar con Node: #6 (a–c), #9 (a–c) — correcto.
+
+### E. Funciones seccionadas (Guía 1 #11)
+- [x] Parser `parsearSeccionada` + `parsearCondicion` (tramos por `;`, formato `expr, cond`, condiciones encadenadas `a < x < b`).
+- [x] Vista `#modulo-seccionada`.
+- [x] `resolverSeccionada`: tramos, dominio total, gráfica por tramos (con recorte de dominio `dMin`/`dMax` en `graficarMultiples`).
+- [x] Tarjeta en inicio + wiring.
+- [x] Probar con Node: #11 (a–c) — correcto.
+
+### Correcciones transversales
+- [x] `polinomioDesdeAST`: agregar `div` por constante (fracciones `x/2`, `-x/4`).
+- [x] `polinomioTexto`: coeficiente fraccionario entre paréntesis `(1/3)x`.
+- [x] **Precedencia del parser**: `-x²` = `-(x²)` (exponente liga antes que el menos unario). Se reordenó `parseMulDiv` → `parseUnary` → `parsePower` → `parsePrimary`.
+
+### Cierre
+- [ ] Actualizar glosario/flashcards con los conceptos nuevos (inversa, composición, par/impar).
+- [x] Actualizar spec/design si algo cambió durante la implementación.
+- [ ] RDD: receipt final con evidencia (Node + revisión manual).
+
 ## Completado
 
 - [x] Módulo **Desigualdad lineal** (`resolver`) con cuadro de pruebas y recta real.

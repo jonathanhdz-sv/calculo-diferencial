@@ -630,6 +630,26 @@
           <span class="titulo">Dominio y rango</span>
           <span class="desc">Cualquier función algebraica</span>
         </button>
+        <button class="tarjeta" data-modulo="composicion">
+          <span class="titulo">Composición de funciones</span>
+          <span class="desc">f∘g, g∘f, dominio y evaluación</span>
+        </button>
+        <button class="tarjeta" data-modulo="inversa">
+          <span class="titulo">Función inversa</span>
+          <span class="desc">f⁻¹, dominio, rango y gráfica</span>
+        </button>
+        <button class="tarjeta" data-modulo="opfunciones">
+          <span class="titulo">Operaciones con funciones</span>
+          <span class="desc">f+g, f−g, fg, f/g</span>
+        </button>
+        <button class="tarjeta" data-modulo="simetria">
+          <span class="titulo">Pares/impares y simetría</span>
+          <span class="desc">Eje y, eje x y origen</span>
+        </button>
+        <button class="tarjeta" data-modulo="seccionada">
+          <span class="titulo">Funciones seccionadas</span>
+          <span class="desc">Por tramos, dominio y rango</span>
+        </button>
       </div>
       <button class="btn-glosario" data-modulo="glosario">Glosario</button>
     </div>
@@ -992,6 +1012,116 @@
       </div>
       <div id="errorDomAbs" class="error" hidden></div>
       <div id="resDomAbs"></div>
+    </div>
+
+    <div id="modulo-composicion" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Composición de funciones</h2>
+      <p class="sub">(f∘g)(x) = f(g(x)) · (g∘f)(x) = g(f(x))</p>
+      <div class="card">
+        <input id="entradaCompF" class="corto" type="text" placeholder="f(x) = ..." autocomplete="off">
+        <input id="entradaCompG" class="corto" type="text" placeholder="g(x) = ..." autocomplete="off">
+        <input id="entradaCompX" class="corto" type="text" placeholder="x = (opcional)" autocomplete="off">
+        <button id="botonComp" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 13</span>
+        <button type="button" class="ejercicio" data-fillf="entradaCompF" data-fillg="entradaCompG" data-valorf="f(x) = 1/√x" data-valorg="g(x) = x² - x" data-run="botonComp">13a) f=1/√x, g=x²−x</button>
+        <button type="button" class="ejercicio" data-fillf="entradaCompF" data-fillg="entradaCompG" data-valorf="f(x) = √(x-1)" data-valorg="g(x) = (x-1)²" data-run="botonComp">13b) f=√(x−1), g=(x−1)²</button>
+        <button type="button" class="ejercicio" data-fillf="entradaCompF" data-fillg="entradaCompG" data-valorf="f(x) = 2/(3x)" data-valorg="g(x) = 1/(x+1)" data-run="botonComp">13c) f=2/(3x), g=1/(x+1)</button>
+        <button type="button" class="ejercicio" data-fillf="entradaCompF" data-fillg="entradaCompG" data-valorf="f(x) = x + 1" data-valorg="g(x) = 2x² + 5" data-run="botonComp">13d) f=x+1, g=2x²+5</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 14 (parámetros)</span>
+        <button type="button" class="ejercicio" data-fillf="entradaCompF" data-fillg="entradaCompG" data-valorf="f(x) = 2x + 3" data-valorg="g(x) = ax + b" data-run="botonComp">14) f=2x+3, g=ax+b → a, b</button>
+      </div>
+      <div id="errorComp" class="error" hidden></div>
+      <div id="resComp"></div>
+    </div>
+
+    <div id="modulo-inversa" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Función inversa</h2>
+      <p class="sub">Despejar x, intercambiar por y, graficar f, f⁻¹ y y = x</p>
+      <div class="card">
+        <input id="entradaInv" type="text" placeholder="f(x) = ..." autocomplete="off">
+        <input id="entradaInvG" class="corto" type="text" placeholder="g(x) a verificar (opcional)" autocomplete="off">
+        <button id="botonInv" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 15</span>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-valor="f(x) = 3x" data-run="botonInv">15a) f(x) = 3x</button>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-valor="f(x) = -x/4 - 1/2" data-run="botonInv">15b) f(x) = −x/4 − 1/2</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 17</span>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-valor="f(x) = 5 - 4x³" data-run="botonInv">17a) f(x) = 5 − 4x³</button>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-valor="f(x) = √(2x - 1)" data-run="botonInv">17b) f(x) = √(2x − 1)</button>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-valor="f(x) = (x - 1)/(x + 1)" data-run="botonInv">17c) f(x) = (x − 1)/(x + 1)</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 18 (verificar inversas)</span>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-fillg="entradaInvG" data-valor="f(x) = (3 - x)/4" data-valorg="g(x) = 3 - 4x" data-run="botonInv">18a) f=(3−x)/4, g=3−4x</button>
+        <button type="button" class="ejercicio" data-fill="entradaInv" data-fillg="entradaInvG" data-valor="f(x) = 1/(x - 1)" data-valorg="g(x) = 1/x + 1" data-run="botonInv">18b) f=1/(x−1), g=1/x+1</button>
+      </div>
+      <div id="errorInv" class="error" hidden></div>
+      <div id="resInv"></div>
+    </div>
+
+    <div id="modulo-opfunciones" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Operaciones con funciones</h2>
+      <p class="sub">f+g · f−g · fg · f/g, con dominio y rango</p>
+      <div class="card">
+        <input id="entradaOpF" class="corto" type="text" placeholder="f(x) = ..." autocomplete="off">
+        <input id="entradaOpG" class="corto" type="text" placeholder="g(x) = ..." autocomplete="off">
+        <button id="botonOpF" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 12</span>
+        <button type="button" class="ejercicio" data-fillf="entradaOpF" data-fillg="entradaOpG" data-valorf="f(x) = x³/2" data-valorg="g(x) = 4x²" data-run="botonOpF">12a) f=x³/2, g=4x²</button>
+        <button type="button" class="ejercicio" data-fillf="entradaOpF" data-fillg="entradaOpG" data-valorf="f(x) = √(1+x)" data-valorg="g(x) = √(1-x)" data-run="botonOpF">12b) f=√(1+x), g=√(1−x)</button>
+        <button type="button" class="ejercicio" data-fillf="entradaOpF" data-fillg="entradaOpG" data-valorf="f(x) = 1/(x+1)" data-valorg="g(x) = x/(x+1)" data-run="botonOpF">12c) f=1/(x+1), g=x/(x+1)</button>
+        <button type="button" class="ejercicio" data-fillf="entradaOpF" data-fillg="entradaOpG" data-valorf="f(x) = x² - 1" data-valorg="g(x) = x² - 4" data-run="botonOpF">12d) f=x²−1, g=x²−4</button>
+      </div>
+      <div id="errorOpF" class="error" hidden></div>
+      <div id="resOpF"></div>
+    </div>
+
+    <div id="modulo-simetria" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Pares/impares y simetría</h2>
+      <p class="sub">Evaluar f(−x) y clasificar: par (eje y), impar (origen) o ninguna</p>
+      <div class="card">
+        <input id="entradaSim" type="text" placeholder="y = f(x)" autocomplete="off">
+        <button id="botonSim" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicios 6 y 9</span>
+        <button type="button" class="ejercicio" data-fill="entradaSim" data-valor="y = x/(x² + 4)" data-run="botonSim">a) y = x/(x²+4)</button>
+        <button type="button" class="ejercicio" data-fill="entradaSim" data-valor="y = x⁴ + 2x² + 3" data-run="botonSim">b) y = x⁴ + 2x² + 3</button>
+        <button type="button" class="ejercicio" data-fill="entradaSim" data-valor="y = -x⁵ + 3x² - x" data-run="botonSim">c) y = −x⁵ + 3x² − x</button>
+      </div>
+      <div id="errorSim" class="error" hidden></div>
+      <div id="resSim"></div>
+    </div>
+
+    <div id="modulo-seccionada" class="modulo" hidden>
+      <button class="volver">← Volver al inicio</button>
+      <h2>Funciones seccionadas</h2>
+      <p class="sub">Tramos separados por ; o , · ejemplo: f(x) = { 3-x, x ≤ 1; 2x, x > 1 }</p>
+      <div class="card">
+        <input id="entradaSec" type="text" placeholder="f(x) = { 3-x, x <= 1; 2x, x > 1 }" autocomplete="off">
+        <button id="botonSec" class="btn">Resolver</button>
+      </div>
+      <div class="ejercicios">
+        <span class="ejercicios-titulo">Guía 1 · ejercicio 11</span>
+        <button type="button" class="ejercicio" data-fill="entradaSec" data-valor="f(x) = { 3-x, x <= 1; 2x, x > 1 }" data-run="botonSec">11a) {3−x, x≤1; 2x, x>1}</button>
+        <button type="button" class="ejercicio" data-fill="entradaSec" data-valor="f(x) = { x-3, x < -2; -x², -1 < x < 1; 4-x, x >= 1 }" data-run="botonSec">11b) tres tramos</button>
+        <button type="button" class="ejercicio" data-fill="entradaSec" data-valor="f(x) = { √(-x), x < 0; √(2x - x²), 0 <= x <= 2; √(x-2), x > 2 }" data-run="botonSec">11c) con raíces</button>
+      </div>
+      <div id="errorSec" class="error" hidden></div>
+      <div id="resSec"></div>
     </div>
   </div>
 
@@ -3214,6 +3344,699 @@
       return resolverDominioPolinomica(expr);
     }
 
+    // ============ MOTOR SIMBÓLICO (funciones avanzadas) ============
+    function normalizarSimbolico(s) {
+      return s.replace(/\s/g, '').replace(/−/g, '-')
+        .replace(/²/g, '^2').replace(/³/g, '^3').replace(/⁴/g, '^4').replace(/⁵/g, '^5')
+        .replace(/[X]/g, 'x');
+    }
+    function insertarMultiplicacion(s) {
+      let t = s;
+      t = t.replace(/(\d)(\(|[a-zA-Z]|√)/g, '$1*$2');
+      t = t.replace(/(\))(\(|[a-zA-Z\d]|√)/g, '$1*$2');
+      t = t.replace(/(x)(\()/g, '$1*$2');
+      return t;
+    }
+    function tokenizarSimbolico(s) {
+      const tokens = [];
+      let i = 0;
+      while (i < s.length) {
+        const c = s[i];
+        if ((c >= '0' && c <= '9') || c === '.') {
+          let j = i;
+          while (j < s.length && ((s[j] >= '0' && s[j] <= '9') || s[j] === '.')) j++;
+          tokens.push({ t: 'num', v: parseFloat(s.slice(i, j)) });
+          i = j;
+        } else if (/[a-zA-Z]/.test(c)) {
+          let j = i;
+          while (j < s.length && /[a-zA-Z]/.test(s[j])) j++;
+          const id = s.slice(i, j).toLowerCase();
+          if (id === 'sqrt') tokens.push({ t: 'sqrt' });
+          else if (id === 'abs') tokens.push({ t: 'abs' });
+          else if (id === 'x') tokens.push({ t: 'id', v: 'x' });
+          else throw new Error('Identificador no reconocido: ' + id);
+          i = j;
+        } else if (c === '√') { tokens.push({ t: 'sqrt' }); i++; }
+        else if ('+-*/^()|'.indexOf(c) !== -1) { tokens.push({ t: c }); i++; }
+        else { i++; }
+      }
+      return tokens;
+    }
+    function parsearSimbolico(expr) {
+      const s = insertarMultiplicacion(normalizarSimbolico(expr));
+      const tokens = tokenizarSimbolico(s);
+      let pos = 0;
+      function peek() { return tokens[pos]; }
+      function next() { return tokens[pos++]; }
+      function expect(t) { const tk = next(); if (!tk || tk.t !== t) throw new Error('Se esperaba "' + t + '".'); return tk; }
+      function parseAddSub() {
+        let left = parseMulDiv();
+        while (peek() && (peek().t === '+' || peek().t === '-')) {
+          const op = next().t;
+          const right = parseMulDiv();
+          left = { type: op === '+' ? 'add' : 'sub', l: left, r: right };
+        }
+        return left;
+      }
+      function parseMulDiv() {
+        let left = parseUnary();
+        while (peek() && (peek().t === '*' || peek().t === '/')) {
+          const op = next().t;
+          const right = parseUnary();
+          left = { type: op === '*' ? 'mul' : 'div', l: left, r: right };
+        }
+        return left;
+      }
+      function parsePower() {
+        const left = parsePrimary();
+        if (peek() && peek().t === '^') { next(); const exp = parseUnary(); return { type: 'pow', l: left, r: exp }; }
+        return left;
+      }
+      function parseUnary() {
+        const tk = peek();
+        if (tk && tk.t === '-') { next(); return { type: 'neg', e: parseUnary() }; }
+        if (tk && tk.t === '+') { next(); return parseUnary(); }
+        if (tk && tk.t === 'sqrt') { next(); return { type: 'sqrt', e: parseUnary() }; }
+        if (tk && tk.t === 'abs') { next(); return { type: 'abs', e: parseUnary() }; }
+        if (tk && tk.t === '|') { next(); const e = parseAddSub(); expect('|'); return { type: 'abs', e: e }; }
+        return parsePower();
+      }
+      function parsePrimary() {
+        const tk = next();
+        if (!tk) throw new Error('Expresión incompleta.');
+        if (tk.t === 'num') return { type: 'num', value: tk.v };
+        if (tk.t === 'id' && tk.v === 'x') return { type: 'x' };
+        if (tk.t === '(') { const e = parseAddSub(); expect(')'); return e; }
+        throw new Error('Token inesperado: ' + tk.t);
+      }
+      const ast = parseAddSub();
+      if (pos < tokens.length) throw new Error('Expresión inválida.');
+      return ast;
+    }
+    function clonarAST(n) {
+      if (n.type === 'num') return { type: 'num', value: n.value };
+      if (n.type === 'x') return { type: 'x' };
+      const r = { type: n.type };
+      if (n.l !== undefined) r.l = clonarAST(n.l);
+      if (n.r !== undefined) r.r = clonarAST(n.r);
+      if (n.e !== undefined) r.e = clonarAST(n.e);
+      return r;
+    }
+    function sustituirAST(n, repl) {
+      if (n.type === 'x') return clonarAST(repl);
+      if (n.type === 'num') return { type: 'num', value: n.value };
+      const r = { type: n.type };
+      if (n.l !== undefined) r.l = sustituirAST(n.l, repl);
+      if (n.r !== undefined) r.r = sustituirAST(n.r, repl);
+      if (n.e !== undefined) r.e = sustituirAST(n.e, repl);
+      return r;
+    }
+    function evaluarAST(n, x) {
+      switch (n.type) {
+        case 'num': return n.value;
+        case 'x': return x;
+        case 'add': return evaluarAST(n.l, x) + evaluarAST(n.r, x);
+        case 'sub': return evaluarAST(n.l, x) - evaluarAST(n.r, x);
+        case 'mul': return evaluarAST(n.l, x) * evaluarAST(n.r, x);
+        case 'div': return evaluarAST(n.l, x) / evaluarAST(n.r, x);
+        case 'neg': return -evaluarAST(n.e, x);
+        case 'pow': return Math.pow(evaluarAST(n.l, x), evaluarAST(n.r, x));
+        case 'sqrt': return Math.sqrt(evaluarAST(n.e, x));
+        case 'abs': return Math.abs(evaluarAST(n.e, x));
+      }
+      throw new Error('Nodo desconocido: ' + n.type);
+    }
+    function superIndice(n) {
+      const map = { 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+      return String(n).split('').map(function (d) { return map[d] || ''; }).join('');
+    }
+    function polinomioTexto(poly) {
+      const grados = Object.keys(poly).map(Number).sort(function (a, b) { return b - a; }).filter(function (g) { return poly[g] !== 0; });
+      if (!grados.length) return '0';
+      let s = '';
+      grados.forEach(function (g, i) {
+        const c = poly[g];
+        const abs = Math.abs(c);
+        let coefStr = '';
+        if (g === 0) coefStr = fmtRacional(abs);
+        else if (abs !== 1) {
+          coefStr = fmtRacional(abs);
+          if (coefStr.indexOf('/') !== -1) coefStr = '(' + coefStr + ')';
+        }
+        const varStr = g === 0 ? '' : (g === 1 ? 'x' : 'x' + superIndice(g));
+        const term = coefStr + varStr;
+        if (i === 0) s += (c < 0 ? '−' : '') + term;
+        else s += (c < 0 ? ' − ' : ' + ') + term;
+      });
+      return s;
+    }
+    function polyDesdeNum(n) { return n === 0 ? {} : { 0: n }; }
+    function polyX() { return { 1: 1 }; }
+    function polyAdd(p, q) {
+      const r = {};
+      const gs = new Set(Object.keys(p).concat(Object.keys(q)).map(Number));
+      gs.forEach(function (g) { const v = (p[g] || 0) + (q[g] || 0); if (v !== 0) r[g] = v; });
+      return r;
+    }
+    function polySub(p, q) {
+      const r = {};
+      const gs = new Set(Object.keys(p).concat(Object.keys(q)).map(Number));
+      gs.forEach(function (g) { const v = (p[g] || 0) - (q[g] || 0); if (v !== 0) r[g] = v; });
+      return r;
+    }
+    function polyNeg(p) { const r = {}; Object.keys(p).forEach(function (g) { if (p[g] !== 0) r[g] = -p[g]; }); return r; }
+    function polyMul(p, q) {
+      const r = {};
+      Object.keys(p).forEach(function (g1) {
+        Object.keys(q).forEach(function (g2) {
+          const g = Number(g1) + Number(g2);
+          r[g] = (r[g] || 0) + p[g1] * q[g2];
+        });
+      });
+      Object.keys(r).forEach(function (g) { if (r[g] === 0) delete r[g]; });
+      return r;
+    }
+    function polyPow(p, n) { let r = { 0: 1 }; for (let k = 0; k < n; k++) r = polyMul(r, p); return r; }
+    function polinomioDesdeAST(n) {
+      switch (n.type) {
+        case 'num': return polyDesdeNum(n.value);
+        case 'x': return polyX();
+        case 'add': { const l = polinomioDesdeAST(n.l), r = polinomioDesdeAST(n.r); return (l && r) ? polyAdd(l, r) : null; }
+        case 'sub': { const l = polinomioDesdeAST(n.l), r = polinomioDesdeAST(n.r); return (l && r) ? polySub(l, r) : null; }
+        case 'mul': { const l = polinomioDesdeAST(n.l), r = polinomioDesdeAST(n.r); return (l && r) ? polyMul(l, r) : null; }
+        case 'neg': { const e = polinomioDesdeAST(n.e); return e ? polyNeg(e) : null; }
+        case 'pow': {
+          const base = polinomioDesdeAST(n.l);
+          const exp = (n.r.type === 'num' && Number.isInteger(n.r.value) && n.r.value >= 0) ? n.r.value : null;
+          if (!base || exp === null) return null;
+          return polyPow(base, exp);
+        }
+        case 'div': {
+          const l = polinomioDesdeAST(n.l);
+          if (!l) return null;
+          if (n.r.type === 'num' && n.r.value !== 0) {
+            const r = {};
+            Object.keys(l).forEach(function (g) { r[g] = l[g] / n.r.value; });
+            return r;
+          }
+          return null;
+        }
+        default: return null;
+      }
+    }
+    function sustituirTextoX(cuerpo, reemplazo) {
+      return cuerpo.replace(/[X]/g, 'x').replace(/x/g, '(' + reemplazo + ')');
+    }
+
+    // ============ MÓDULO COMPOSICIÓN ============
+    function resolverComposicion() {
+      const fRaw = document.getElementById('entradaCompF').value;
+      const gRaw = document.getElementById('entradaCompG').value;
+      const xRaw = document.getElementById('entradaCompX').value.trim();
+      if (!fRaw || !gRaw) throw new Error('Escriba f(x) y g(x).');
+      const fBody = limpiarFuncionExp(fRaw);
+      const gBody = limpiarFuncionExp(gRaw);
+      if (!fBody || !gBody) throw new Error('Escriba f(x) y g(x).');
+
+      const normG = normalizarSimbolico(gBody);
+      if (/^[a-z]x[+-][a-z]$/.test(normG)) return resolverParametrosComposicion(fBody, gBody);
+
+      const fAst = parsearSimbolico(fBody);
+      const gAst = parsearSimbolico(gBody);
+
+      const x0 = xRaw ? parseNum(xRaw.replace(/^x\s*=\s*/i, '')) : null;
+
+      const fogText = sustituirTextoX(fBody, gBody);
+      const fogAst = sustituirAST(fAst, gAst);
+      const fogPoly = polinomioDesdeAST(fogAst);
+
+      const gofText = sustituirTextoX(gBody, fBody);
+      const gofAst = sustituirAST(gAst, fAst);
+      const gofPoly = polinomioDesdeAST(gofAst);
+
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('(f∘g)(x) = f(g(x))');
+      html += cuadernoLinea('f(g(x)) = f(' + escapar(gBody) + ')');
+      html += cuadernoLinea('= ' + escapar(fogText));
+      html += cuadernoResultado('(f∘g)(x) = ' + (fogPoly ? polinomioTexto(fogPoly) : escapar(fogText)));
+
+      html += cuadernoLinea('(g∘f)(x) = g(f(x))');
+      html += cuadernoLinea('g(f(x)) = g(' + escapar(fBody) + ')');
+      html += cuadernoLinea('= ' + escapar(gofText));
+      html += cuadernoResultado('(g∘f)(x) = ' + (gofPoly ? polinomioTexto(gofPoly) : escapar(gofText)));
+      html += '</div>';
+
+      if (x0 !== null && isFinite(x0)) {
+        const g0 = evaluarAST(gAst, x0);
+        const fog0 = evaluarAST(fogAst, x0);
+        const f0 = evaluarAST(fAst, x0);
+        const gof0 = evaluarAST(gofAst, x0);
+        html += '<div class="desarrollo">';
+        html += cuadernoLinea('Evaluar en x = ' + fmtRacional(x0));
+        html += cuadernoLinea('g(' + fmtRacional(x0) + ') = ' + fmtRacional(g0));
+        html += cuadernoResultado('(f∘g)(' + fmtRacional(x0) + ') = f(g(' + fmtRacional(x0) + ')) = f(' + fmtRacional(g0) + ') = ' + fmtRacional(fog0));
+        html += cuadernoLinea('f(' + fmtRacional(x0) + ') = ' + fmtRacional(f0));
+        html += cuadernoResultado('(g∘f)(' + fmtRacional(x0) + ') = g(f(' + fmtRacional(x0) + ')) = g(' + fmtRacional(f0) + ') = ' + fmtRacional(gof0));
+        html += '</div>';
+      }
+
+      const fogParaDom = fogPoly ? polinomioTexto(fogPoly) : fogText;
+      const gofParaDom = gofPoly ? polinomioTexto(gofPoly) : gofText;
+      html += '<details class="detalle"><summary>Dominio y rango de f∘g y g∘f</summary>';
+      html += '<div class="etiqueta">f∘g</div>';
+      if (fogPoly) { try { html += resolverDominioRango('f(x) = ' + fogParaDom); } catch (e) { html += '<p>Dominio de f∘g: requiere análisis fino.</p>'; } }
+      else { html += '<p>' + escapar('(f∘g)(x) = ' + fogText) + '<br>Dominio y rango requieren análisis fino (función compuesta con raíz/fracción).</p>'; }
+      html += '<div class="etiqueta">g∘f</div>';
+      if (gofPoly) { try { html += resolverDominioRango('f(x) = ' + gofParaDom); } catch (e) { html += '<p>Dominio de g∘f: requiere análisis fino.</p>'; } }
+      else { html += '<p>' + escapar('(g∘f)(x) = ' + gofText) + '<br>Dominio y rango requieren análisis fino (función compuesta con raíz/fracción).</p>'; }
+      html += '</details>';
+
+      return html;
+    }
+
+    function resolverParametrosComposicion(fBody, gBody) {
+      const { a, b, c } = parsearCuadratica(fBody);
+      if (a !== 0) throw new Error('En este ejercicio f(x) debe ser lineal (mx + n).');
+      const m = b, n = c;
+      if (m === 0) throw new Error('f(x) debe ser de la forma mx + n.');
+      const norm = normalizarSimbolico(gBody);
+      const m1 = norm.match(/^([a-z])x([+-])([a-z])$/);
+      if (!m1) throw new Error('g(x) debe tener la forma ax + b.');
+      const varA = m1[1], sign = m1[2], varB = m1[3];
+      const coefA = 1 / m;
+      const Cval = -n / m;
+      const coefB = sign === '+' ? Cval : -Cval;
+
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('(f∘g)(x) = f(g(x)) = f(' + varA + 'x ' + sign + ' ' + varB + ')');
+      html += cuadernoLinea('= ' + (m === 1 ? '' : (m === -1 ? '−' : fmtRacional(m))) + '(' + varA + 'x ' + sign + ' ' + varB + ')' + (n >= 0 ? ' + ' + fmtRacional(n) : ' − ' + fmtRacional(-n)));
+      html += cuadernoLinea('= ' + (m === 1 ? '' : (m === -1 ? '−' : fmtRacional(m))) + varA + 'x ' + (m >= 0 ? '+ ' : '− ') + fmtRacional(Math.abs(m)) + varB + (n >= 0 ? ' + ' + fmtRacional(n) : ' − ' + fmtRacional(-n)));
+      html += cuadernoLinea('Para que (f∘g)(x) = x, se igualan coeficientes:');
+      html += cuadernoLinea('Coeficiente de x:  ' + (m === 1 ? '' : (m === -1 ? '−' : fmtRacional(m))) + varA + ' = 1');
+      html += cuadernoResultado(varA + ' = ' + fmtRacional(coefA));
+      html += cuadernoLinea('Término independiente:  ' + (m === 1 ? '' : (m === -1 ? '−' : fmtRacional(m))) + varB + ' ' + (n >= 0 ? '+ ' + fmtRacional(n) : '− ' + fmtRacional(-n)) + ' = 0');
+      html += cuadernoResultado(varB + ' = ' + fmtRacional(coefB));
+      html += '</div>';
+      html += '<div class="conclusion">Resultado: <strong>' + varA + ' = ' + fmtRacional(coefA) + '</strong> y <strong>' + varB + ' = ' + fmtRacional(coefB) + '</strong></div>';
+      return html;
+    }
+
+    // ============ MÓDULO FUNCIÓN INVERSA ============
+    function graficarMultiples(curvas, rango) {
+      const xMin = rango.xMin, xMax = rango.xMax, yMin = rango.yMin, yMax = rango.yMax;
+      const W = 430, H = 330, m = 48;
+      const sx = (W - 2 * m) / (xMax - xMin);
+      const sy = (H - 2 * m) / (yMax - yMin);
+      const X = function (x) { return m + (x - xMin) * sx; };
+      const Y = function (y) { return H - m - (y - yMin) * sy; };
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+      for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+        svg += '<line x1="' + X(i) + '" y1="' + Y(yMin) + '" x2="' + X(i) + '" y2="' + Y(yMax) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+        svg += '<line x1="' + X(xMin) + '" y1="' + Y(j) + '" x2="' + X(xMax) + '" y2="' + Y(j) + '" stroke="#eef2f7" stroke-width="1"/>';
+      }
+      svg += '<line x1="' + X(xMin) + '" y1="' + Y(0) + '" x2="' + X(xMax) + '" y2="' + Y(0) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
+
+      const paso = (xMax - xMin) / 320;
+      curvas.forEach(function (c) {
+        let path = '';
+        let penUp = true;
+        for (let x = xMin; x <= xMax; x += paso) {
+          if (c.dMin !== undefined && x < c.dMin) continue;
+          if (c.dMax !== undefined && x > c.dMax) continue;
+          let y;
+          try { y = c.f(x); } catch (e) { y = NaN; }
+          if (!isFinite(y) || y < yMin - 8 || y > yMax + 8) { penUp = true; continue; }
+          path += (penUp ? 'M' : 'L') + X(x).toFixed(1) + ',' + Y(y).toFixed(1) + ' ';
+          penUp = false;
+        }
+        if (path) {
+          svg += '<path d="' + path + '" fill="none" stroke="' + c.color + '" stroke-width="2.5"' + (c.dash ? ' stroke-dasharray="6,5"' : '') + '/>';
+        }
+      });
+      svg += '<text x="' + (X(xMax) - 14) + '" y="' + (Y(yMax) + 6) + '" font-size="11" fill="#94a3b8">' + curvas.map(function (c) { return c.leyenda; }).join(' · ') + '</text>';
+      svg += '</svg>';
+      return svg;
+    }
+
+    function resolverInversa() {
+      const fRaw = document.getElementById('entradaInv').value;
+      const gRaw = document.getElementById('entradaInvG').value.trim();
+      if (!fRaw) throw new Error('Escriba f(x).');
+      const fBody = limpiarFuncionExp(fRaw);
+      if (!fBody) throw new Error('Escriba f(x).');
+
+      const ast = parsearSimbolico(fBody);
+      const poly = polinomioDesdeAST(ast);
+
+      let html = '<div class="desarrollo">';
+      let fNum, invNum, invStr, Df, Rf, Di, Ri;
+
+      const esLineal = poly && poly[1] !== undefined && Object.keys(poly).every(function (g) { return g === '0' || g === '1'; });
+      const esCubica = poly && poly[3] !== undefined && Object.keys(poly).every(function (g) { return g === '0' || g === '3'; });
+      const esRadical = ast.type === 'sqrt';
+      const esRacional = ast.type === 'div';
+
+      if (esLineal) {
+        const m = poly[1] || 0, n = poly[0] || 0;
+        if (m === 0) throw new Error('f(x) es constante, no tiene inversa (no es uno a uno).');
+        const mInv = 1 / m, nInv = -n / m;
+        const invPoly = {};
+        if (mInv !== 0) invPoly[1] = mInv;
+        if (nInv !== 0) invPoly[0] = nInv;
+        invStr = polinomioTexto(invPoly);
+        fNum = function (x) { return m * x + n; };
+        invNum = function (x) { return (x - n) / m; };
+        Df = 'ℝ'; Rf = 'ℝ'; Di = 'ℝ'; Ri = 'ℝ';
+        html += cuadernoLinea('y = ' + polinomioTexto(poly));
+        html += cuadernoLinea('Despejar x:  x = (y ' + (n >= 0 ? '− ' + fmtRacional(Math.abs(n) || 0) : '+ ' + fmtRacional(-n)) + ')/' + fmtRacional(m));
+        html += cuadernoLinea('Intercambiar x ↔ y');
+        html += cuadernoResultado('f⁻¹(x) = ' + escapar(invStr));
+      } else if (esCubica) {
+        const k = poly[3], A0 = poly[0] || 0;
+        if (k === 0) throw new Error('No es cúbica.');
+        invStr = '∛((' + (A0 === 0 ? 'x' : (A0 > 0 ? 'x − ' + fmtRacional(A0) : 'x + ' + fmtRacional(-A0))) + ')/' + fmtRacional(k) + ')';
+        fNum = function (x) { return A0 + k * x * x * x; };
+        invNum = function (x) { return Math.cbrt((x - A0) / k); };
+        Df = 'ℝ'; Rf = 'ℝ'; Di = 'ℝ'; Ri = 'ℝ';
+        html += cuadernoLinea('y = ' + polinomioTexto(poly));
+        html += cuadernoLinea('x³ = (y ' + (A0 >= 0 ? '− ' + fmtRacional(Math.abs(A0) || 0) : '+ ' + fmtRacional(-A0)) + ')/' + fmtRacional(k));
+        html += cuadernoLinea('x = ∛((y ' + (A0 >= 0 ? '− ' + fmtRacional(Math.abs(A0) || 0) : '+ ' + fmtRacional(-A0)) + ')/' + fmtRacional(k) + ')');
+        html += cuadernoResultado('f⁻¹(x) = ' + escapar(invStr));
+      } else if (esRadical) {
+        const interno = polinomioDesdeAST(ast.e);
+        if (!interno || interno[2] !== undefined) throw new Error('Solo se soporta raíz de una expresión lineal.');
+        const A = interno[1] || 0, B0 = interno[0] || 0;
+        if (A === 0) throw new Error('La raíz no contiene x.');
+        invStr = '(x² ' + (B0 >= 0 ? '− ' + fmtRacional(Math.abs(B0) || 0) : '+ ' + fmtRacional(-B0)) + ')/' + fmtRacional(A);
+        fNum = function (x) { return Math.sqrt(A * x + B0); };
+        invNum = function (x) { return (x * x - B0) / A; };
+        const corte = -B0 / A;
+        Df = A > 0 ? '[' + fmtRacional(corte) + ', ∞)' : '(−∞, ' + fmtRacional(corte) + ']';
+        Rf = '[0, ∞)'; Di = '[0, ∞)';
+        Ri = A > 0 ? '[' + fmtRacional(corte) + ', ∞)' : '(−∞, ' + fmtRacional(corte) + ']';
+        html += cuadernoLinea('y = √(' + escapar(polinomioTexto(interno)) + ')');
+        html += cuadernoLinea('Elevar al cuadrado:  y² = ' + escapar(polinomioTexto(interno)));
+        html += cuadernoLinea('Despejar x:  x = (y² ' + (B0 >= 0 ? '− ' + fmtRacional(Math.abs(B0) || 0) : '+ ' + fmtRacional(-B0)) + ')/' + fmtRacional(A));
+        html += cuadernoResultado('f⁻¹(x) = ' + escapar(invStr) + ', con x ≥ 0');
+      } else if (esRacional) {
+        const numP = polinomioDesdeAST(ast.l);
+        const denP = polinomioDesdeAST(ast.r);
+        if (!numP || !denP) throw new Error('Solo se soportan numerador y denominador lineales.');
+        const p = numP[1] || 0, q = numP[0] || 0, r = denP[1] || 0, s = denP[0] || 0;
+        if (r === 0) throw new Error('El denominador no contiene x.');
+        const numInv = polyAdd(polyMul(polyDesdeNum(-s), polyX()), polyDesdeNum(q));
+        const denInv = polyAdd(polyMul(polyDesdeNum(r), polyX()), polyDesdeNum(-p));
+        invStr = '(' + polinomioTexto(numInv) + ')/(' + polinomioTexto(denInv) + ')';
+        fNum = function (x) { return (p * x + q) / (r * x + s); };
+        invNum = function (x) { return (-s * x + q) / (r * x - p); };
+        const asintotaF = -s / r;
+        const asintotaR = p / r;
+        Df = 'ℝ − {' + fmtRacional(asintotaF) + '}';
+        Rf = 'ℝ − {' + fmtRacional(asintotaR) + '}';
+        Di = 'ℝ − {' + fmtRacional(asintotaR) + '}';
+        Ri = 'ℝ − {' + fmtRacional(asintotaF) + '}';
+        html += cuadernoLinea('y = (' + escapar(polinomioTexto(numP)) + ')/(' + escapar(polinomioTexto(denP)) + ')');
+        html += cuadernoLinea('Multiplicar en cruz:  y(' + escapar(polinomioTexto(denP)) + ') = ' + escapar(polinomioTexto(numP)));
+        html += cuadernoLinea('Agrupar términos con x e y, despejar x');
+        html += cuadernoResultado('f⁻¹(x) = ' + escapar(invStr));
+      } else {
+        throw new Error('No se reconoce el tipo de función para hallar su inversa. Pruebe con lineal, cúbica, raíz o racional simple.');
+      }
+      html += '</div>';
+
+      html += '<div class="conclusion">';
+      html += 'f: dominio <strong>' + escapar(Df) + '</strong> · rango <strong>' + escapar(Rf) + '</strong><br>';
+      html += 'f⁻¹: dominio <strong>' + escapar(Di) + '</strong> · rango <strong>' + escapar(Ri) + '</strong>';
+      html += '</div>';
+
+      const curvas = [
+        { f: fNum, color: '#6366f1', dash: false, leyenda: 'f' },
+        { f: invNum, color: '#e11d48', dash: false, leyenda: 'f⁻¹' },
+        { f: function (x) { return x; }, color: '#94a3b8', dash: true, leyenda: 'y = x' }
+      ];
+      html += '<div class="grafica">' + graficarMultiples(curvas, { xMin: -6, xMax: 6, yMin: -6, yMax: 6 }) + '</div>';
+
+      if (gRaw) {
+        const gBody = limpiarFuncionExp(gRaw);
+        const gAst = parsearSimbolico(gBody);
+        const fAst = parsearSimbolico(fBody);
+        const fogAst = sustituirAST(fAst, gAst);
+        const gofAst = sustituirAST(gAst, fAst);
+        const fogPoly = polinomioDesdeAST(fogAst);
+        const gofPoly = polinomioDesdeAST(gofAst);
+        const fogOk = fogPoly && fogPoly[1] === 1 && Object.keys(fogPoly).every(function (g) { return g === '1' || fogPoly[g] === 0; });
+        const gofOk = gofPoly && gofPoly[1] === 1 && Object.keys(gofPoly).every(function (g) { return g === '1' || gofPoly[g] === 0; });
+        html += '<details class="detalle"><summary>Verificar que f y g son inversas</summary>';
+        html += '<div class="desarrollo">';
+        html += cuadernoLinea('(f∘g)(x) = f(g(x)) = ' + escapar(sustituirTextoX(fBody, gBody)));
+        html += cuadernoResultado('= ' + (fogPoly ? polinomioTexto(fogPoly) : 'expresión'));
+        html += cuadernoLinea('(g∘f)(x) = g(f(x)) = ' + escapar(sustituirTextoX(gBody, fBody)));
+        html += cuadernoResultado('= ' + (gofPoly ? polinomioTexto(gofPoly) : 'expresión'));
+        html += '</div>';
+        html += '<div class="conclusion">' + ((fogOk && gofOk) ? 'Sí son inversas: (f∘g)(x) = x y (g∘f)(x) = x.' : 'Verifique manualmente si (f∘g)(x) = x y (g∘f)(x) = x.') + '</div>';
+        html += '</details>';
+      }
+
+      return html;
+    }
+
+    // ============ MÓDULO OPERACIONES CON FUNCIONES ============
+    function resolverOpFunciones() {
+      const fRaw = document.getElementById('entradaOpF').value;
+      const gRaw = document.getElementById('entradaOpG').value;
+      if (!fRaw || !gRaw) throw new Error('Escriba f(x) y g(x).');
+      const fBody = limpiarFuncionExp(fRaw);
+      const gBody = limpiarFuncionExp(gRaw);
+      if (!fBody || !gBody) throw new Error('Escriba f(x) y g(x).');
+
+      const fAst = parsearSimbolico(fBody);
+      const gAst = parsearSimbolico(gBody);
+      const fPoly = polinomioDesdeAST(fAst);
+      const gPoly = polinomioDesdeAST(gAst);
+
+      if (!fPoly || !gPoly) {
+        throw new Error('Por ahora este módulo trabaja con funciones polinómicas. Para raíces y racionales use Composición o Dominio y rango.');
+      }
+
+      const sTexto = polinomioTexto(polyAdd(fPoly, gPoly));
+      const rTexto = polinomioTexto(polySub(fPoly, gPoly));
+      const mTexto = polinomioTexto(polyMul(fPoly, gPoly));
+
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('f(x) = ' + escapar(fBody) + ' · g(x) = ' + escapar(gBody));
+      html += '</div>';
+
+      html += '<div class="etiqueta">f + g</div>';
+      html += '<div class="desarrollo">';
+      html += cuadernoLinea('(f+g)(x) = f(x) + g(x)');
+      html += cuadernoResultado('(f+g)(x) = ' + escapar(sTexto));
+      html += cuadernoLinea('Dominio: intersección de dominios → ' + escapar('ℝ'));
+      html += '</div>';
+
+      html += '<div class="etiqueta">f − g</div>';
+      html += '<div class="desarrollo">';
+      html += cuadernoLinea('(f−g)(x) = f(x) − g(x)');
+      html += cuadernoResultado('(f−g)(x) = ' + escapar(rTexto));
+      html += cuadernoLinea('Dominio: ' + escapar('ℝ'));
+      html += '</div>';
+
+      html += '<div class="etiqueta">f · g</div>';
+      html += '<div class="desarrollo">';
+      html += cuadernoLinea('(fg)(x) = f(x) · g(x)');
+      html += cuadernoResultado('(fg)(x) = ' + escapar(mTexto));
+      html += cuadernoLinea('Dominio: ' + escapar('ℝ'));
+      html += '</div>';
+
+      html += '<div class="etiqueta">f / g</div>';
+      html += '<div class="desarrollo">';
+      html += cuadernoLinea('(f/g)(x) = f(x) / g(x) = (' + escapar(fBody) + ') / (' + escapar(gBody) + ')');
+      html += cuadernoResultado('(f/g)(x) = ' + escapar(fBody) + ' / ' + escapar(gBody));
+      const gCeros = Object.keys(gPoly).length === 0 ? null : null;
+      html += cuadernoLinea('Dominio: g(x) ≠ 0');
+      html += '</div>';
+
+      html += '<details class="detalle"><summary>Dominio y rango de cada operación</summary>';
+      html += '<p>Para funciones polinómicas, (f+g), (f−g) y (fg) tienen dominio ℝ. El rango depende del grado del polinomio resultante.</p>';
+      html += '<div class="desarrollo">';
+      html += cuadernoLinea('f+g = ' + escapar(sTexto));
+      html += cuadernoLinea('f·g = ' + escapar(mTexto));
+      html += cuadernoLinea('f/g = (' + escapar(fBody) + ') / (' + escapar(gBody) + ') → dominio: g(x) ≠ 0');
+      html += '</div>';
+      html += '</details>';
+
+      return html;
+    }
+
+    // ============ MÓDULO PARES/IMPARES Y SIMETRÍA ============
+    function resolverSimetria() {
+      const texto = document.getElementById('entradaSim').value;
+      if (!texto) throw new Error('Escriba y = f(x).');
+      const fBody = limpiarFuncionExp(texto);
+      if (!fBody) throw new Error('Escriba y = f(x).');
+
+      const fAst = parsearSimbolico(fBody);
+      const negX = { type: 'neg', e: { type: 'x' } };
+      const fNegAst = sustituirAST(fAst, negX);
+
+      const fPoly = polinomioDesdeAST(fAst);
+      const fNegPoly = polinomioDesdeAST(fNegAst);
+
+      let esPar = false, esImpar = false;
+
+      if (fPoly && fNegPoly) {
+        const negFPoly = polyNeg(fPoly);
+        esPar = JSON.stringify(ordenarPoly(fPoly)) === JSON.stringify(ordenarPoly(fNegPoly));
+        esImpar = JSON.stringify(ordenarPoly(negFPoly)) === JSON.stringify(ordenarPoly(fNegPoly));
+      } else {
+        const pts = [1, 2, 3, 0.5, 1.5, 2.5];
+        const eps = 1e-9;
+        let parTodo = true, imparTodo = true;
+        pts.forEach(function (x) {
+          const fv = evaluarAST(fAst, x);
+          const fnv = evaluarAST(fNegAst, x);
+          if (Math.abs(fnv - fv) > eps) parTodo = false;
+          if (Math.abs(fnv - (-fv)) > eps) imparTodo = false;
+        });
+        esPar = parTodo;
+        esImpar = imparTodo;
+      }
+
+      const fNegTxt = fNegPoly ? polinomioTexto(fNegPoly) : sustituirTextoX(fBody, '-x');
+
+      let html = '<div class="desarrollo">';
+      html += cuadernoLinea('f(x) = ' + (fPoly ? polinomioTexto(fPoly) : escapar(fBody)));
+      html += cuadernoLinea('f(−x) = ' + escapar(fNegTxt));
+      if (fPoly) html += cuadernoLinea('−f(x) = ' + polinomioTexto(polyNeg(fPoly)));
+      html += '</div>';
+
+      html += '<div class="conclusion">';
+      if (esPar) {
+        html += 'f(−x) = f(x) → <strong>función PAR</strong>. Simétrica respecto al <strong>eje y</strong>.';
+      } else if (esImpar) {
+        html += 'f(−x) = −f(x) → <strong>función IMPAR</strong>. Simétrica respecto al <strong>origen</strong>.';
+      } else {
+        html += 'f(−x) ≠ f(x) y f(−x) ≠ −f(x) → <strong>no es par ni impar</strong>.';
+      }
+      html += '</div>';
+
+      html += '<details class="detalle"><summary>Simetría respecto a los ejes y al origen</summary>';
+      html += '<div class="desarrollo">';
+      html += cuadernoLinea('Eje y (par): ¿f(−x) = f(x)?  →  ' + (esPar ? 'Sí' : 'No'));
+      html += cuadernoLinea('Origen (impar): ¿f(−x) = −f(x)?  →  ' + (esImpar ? 'Sí' : 'No'));
+      html += cuadernoLinea('Eje x: se cambia y por −y y se ve si la ecuación se mantiene.');
+      html += '</div>';
+      html += '</details>';
+
+      return html;
+    }
+
+    function ordenarPoly(p) {
+      const r = {};
+      Object.keys(p).sort(function (a, b) { return Number(a) - Number(b); }).forEach(function (g) { if (p[g] !== 0) r[g] = p[g]; });
+      return r;
+    }
+
+    // ============ MÓDULO FUNCIONES SECCIONADAS ============
+    function parsearCondicion(cond) {
+      // Formas: "x <= 1", "x > 1", "-1 < x < 1", "0 <= x <= 2"
+      let t = cond.replace(/\s/g, '').replace(/−/g, '-');
+      const simple = t.match(/^x(<=|>=|<|>)(.+)$/);
+      if (simple) {
+        const v = parseNum(simple[2]);
+        const op = simple[1];
+        if (op === '<=') return { min: -Infinity, max: v, minCerrado: false, maxCerrado: true, txt: 'x ≤ ' + fmtRacional(v) };
+        if (op === '<') return { min: -Infinity, max: v, minCerrado: false, maxCerrado: false, txt: 'x < ' + fmtRacional(v) };
+        if (op === '>=') return { min: v, max: Infinity, minCerrado: true, maxCerrado: false, txt: 'x ≥ ' + fmtRacional(v) };
+        if (op === '>') return { min: v, max: Infinity, minCerrado: false, maxCerrado: false, txt: 'x > ' + fmtRacional(v) };
+      }
+      const cadena = t.match(/^(.+?)(<=|>=|<|>)x(<=|>=|<|>)(.+)$/);
+      if (cadena) {
+        const a = parseNum(cadena[1]);
+        const b = parseNum(cadena[4]);
+        const opIzq = cadena[2], opDer = cadena[3];
+        const minCerrado = (opIzq === '<=' || opIzq === '>=');
+        const maxCerrado = (opDer === '<=' || opDer === '>=');
+        return { min: a, max: b, minCerrado: minCerrado, maxCerrado: maxCerrado, txt: fmtRacional(a) + ' < x < ' + fmtRacional(b) };
+      }
+      throw new Error('Condición inválida: ' + cond);
+    }
+
+    function parsearSeccionada(texto) {
+      let t = texto.trim().replace(/^[fg]\(x\)\s*=\s*/i, '').replace(/^y\s*=\s*/i, '');
+      t = t.replace(/^\{\s*/, '').replace(/\s*\}$/, '');
+      const tramos = [];
+      let inicio = 0, prof = 0;
+      for (let i = 0; i < t.length; i++) {
+        const c = t[i];
+        if (c === '(' || c === '{' || c === '[') prof++;
+        else if (c === ')' || c === '}' || c === ']') prof--;
+        else if (c === ';' && prof === 0) {
+          tramos.push(t.slice(inicio, i).trim());
+          inicio = i + 1;
+        }
+      }
+      tramos.push(t.slice(inicio).trim());
+
+      return tramos.map(function (tramo) {
+        const commaIdx = tramo.lastIndexOf(',');
+        if (commaIdx === -1) throw new Error('Tramo inválido: ' + tramo);
+        const expr = tramo.slice(0, commaIdx).trim();
+        const cond = tramo.slice(commaIdx + 1).trim();
+        const rango = parsearCondicion(cond);
+        return { expr: expr, rango: rango, txt: rango.txt };
+      });
+    }
+
+    function resolverSeccionada() {
+      const texto = document.getElementById('entradaSec').value;
+      if (!texto) throw new Error('Escriba la función seccionada.');
+      const tramos = parsearSeccionada(texto);
+
+      let html = '<div class="desarrollo">';
+      const curvas = [];
+      tramos.forEach(function (tr, i) {
+        const ast = parsearSimbolico(tr.expr);
+        const poly = polinomioDesdeAST(ast);
+        const exprTxt = poly ? polinomioTexto(poly) : escapar(tr.expr);
+        html += cuadernoLinea('Tramo ' + (i + 1) + ':  f(x) = ' + escapar(exprTxt) + '  si  ' + escapar(tr.txt));
+        const color = ['#6366f1', '#e11d48', '#10b981', '#f59e0b'][i % 4];
+        const c = { f: function (x) { return evaluarAST(ast, x); }, color: color, dash: false, leyenda: 't' + (i + 1) };
+        if (tr.rango.max !== Infinity) c.dMax = tr.rango.max;
+        if (tr.rango.min !== -Infinity) c.dMin = tr.rango.min;
+        curvas.push(c);
+      });
+      html += '</div>';
+
+      html += '<div class="conclusion">';
+      html += 'Dominio: ' + escapar(describirDominioSeccionada(tramos));
+      html += '</div>';
+
+      html += '<div class="grafica">' + graficarMultiples(curvas, { xMin: -6, xMax: 6, yMin: -6, yMax: 6 }) + '</div>';
+
+      html += '<details class="detalle"><summary>Rango (análisis por tramo)</summary>';
+      html += '<p>El rango se obtiene graficando cada tramo y observando los valores de y que se alcanzan. La gráfica de arriba muestra cada tramo con un color distinto.</p>';
+      html += '</details>';
+
+      return html;
+    }
+
+    function describirDominioSeccionada(tramos) {
+      const partes = tramos.map(function (tr) {
+        const r = tr.rango;
+        const izq = r.min === -Infinity ? '−∞' : fmtRacional(r.min);
+        const der = r.max === Infinity ? '∞' : fmtRacional(r.max);
+        const a = r.minCerrado ? '[' : '(';
+        const b = r.maxCerrado ? ']' : ')';
+        return a + izq + ', ' + der + b;
+      });
+      return partes.join(' ∪ ');
+    }
+
     // ============ WIRING ============
     function mostrarVista(id) {
       tecladoOcultar();
@@ -3254,6 +4077,22 @@
     bind('botonDomRac', 'entradaDomRac', 'errorDomRac', 'resDomRac', resolverDominioRango);
     bind('botonDomIrr', 'entradaDomIrr', 'errorDomIrr', 'resDomIrr', resolverDominioRango);
     bind('botonDomAbs', 'entradaDomAbs', 'errorDomAbs', 'resDomAbs', resolverDominioRango);
+    bind('botonComp', 'entradaCompF', 'errorComp', 'resComp', resolverComposicion);
+    ['entradaCompG', 'entradaCompX'].forEach(function (id) {
+      document.getElementById(id).addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') document.getElementById('botonComp').click();
+      });
+    });
+    bind('botonInv', 'entradaInv', 'errorInv', 'resInv', resolverInversa);
+    document.getElementById('entradaInvG').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('botonInv').click();
+    });
+    bind('botonOpF', 'entradaOpF', 'errorOpF', 'resOpF', resolverOpFunciones);
+    document.getElementById('entradaOpG').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('botonOpF').click();
+    });
+    bind('botonSim', 'entradaSim', 'errorSim', 'resSim', resolverSimetria);
+    bind('botonSec', 'entradaSec', 'errorSec', 'resSec', resolverSeccionada);
     document.getElementById('botonCurvas').addEventListener('click', resolverCurvas);
     document.getElementById('entradaCurvas').addEventListener('keydown', function (e) { if (e.key === 'Enter') resolverCurvas(); });
 
@@ -3304,6 +4143,8 @@
       const btn = e.target.closest('.ejercicio');
       if (!btn) return;
       if (btn.dataset.fill) document.getElementById(btn.dataset.fill).value = btn.dataset.valor;
+      if (btn.dataset.fillf) document.getElementById(btn.dataset.fillf).value = btn.dataset.valorf;
+      if (btn.dataset.fillg) document.getElementById(btn.dataset.fillg).value = btn.dataset.valorg;
       if (btn.dataset.inta !== undefined) document.getElementById('intA').value = btn.dataset.inta;
       if (btn.dataset.op !== undefined) document.getElementById('opSelect').value = btn.dataset.op;
       if (btn.dataset.intb !== undefined) document.getElementById('intB').value = btn.dataset.intb;
@@ -3344,6 +4185,12 @@
       { cat: 'Concepto', front: 'Vértice', back: 'Punta de la parábola · x = −b/(2a)' },
       { cat: 'Concepto', front: 'Simetría', back: 'Una mitad es espejo de la otra' },
       { cat: 'Concepto', front: 'Números reales', back: 'Todos los números de la recta · racionales + irracionales' },
+      { cat: 'Concepto', front: 'Composición (f∘g)', back: 'f∘g = f(g(x)) · meter g dentro de f' },
+      { cat: 'Concepto', front: 'Función inversa f⁻¹', back: 'Deshace lo que hace f · f⁻¹(f(x)) = x' },
+      { cat: 'Concepto', front: 'Función par', back: 'f(−x) = f(x) · simétrica al eje y · ej. x²' },
+      { cat: 'Concepto', front: 'Función impar', back: 'f(−x) = −f(x) · simétrica al origen · ej. x³' },
+      { cat: 'Concepto', front: 'Función seccionada', back: 'Definida por tramos con su propia condición' },
+      { cat: 'Concepto', front: 'Operaciones con funciones', back: 'f+g, f−g, fg, f/g · se operan las expresiones' },
 
       { cat: 'Fórmula', front: 'Fórmula general', back: 'x = (−b ± √(b²−4ac)) / 2a' },
       { cat: 'Fórmula', front: 'Discriminante', back: 'D = b² − 4ac · decide cuántas raíces reales hay' },
