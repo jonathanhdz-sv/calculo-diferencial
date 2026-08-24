@@ -2482,8 +2482,10 @@
           [{ x: loMenor, y: k, label: '(' + num(loMenor) + ', ' + num(k) + ')' }, { x: hiMayor, y: k, label: '(' + num(hiMayor) + ', ' + num(k) + ')' }]
         ) + '</div>';
         html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>';
-        html += paso('Paso 1 — Regla del centro', escapar('|x| < k  ⇔  −k < x < k: una desigualdad "menor que" se traduce en una triple desigualdad entre −k y k.'), ecuacion('−' + num(k) + ' ' + sig('<') + ' ' + escapar(expr) + ' ' + sig('<') + ' ' + num(k)));
-        html += paso('Paso 2 — Despejar x', 'Se resuelve la triple desigualdad restando la constante y dividiendo entre el coeficiente de x (invirtiendo los signos si el coeficiente es negativo).', ecuacionResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor)));
+        html += paso('Paso 1 — ¿Qué significa |u| < k?', 'El valor absoluto |u| mide la distancia de la expresión u al número 0 en la recta real. Pedir que |u| sea menor que k significa que u debe estar a MENOS de k unidades del 0, es decir, dentro de la franja que va de −k a k. Por eso la desigualdad "menor que" se convierte en una triple desigualdad.', ecuacion('|u| ' + sig('<') + ' k   ⇔   −k ' + sig('<') + ' u ' + sig('<') + ' k'));
+        html += paso('Paso 2 — Aplicar la regla a nuestra expresión', 'Sustituimos u por nuestra expresión ' + escapar(expr) + ' y k por ' + num(k) + '. El valor absoluto desaparece y queda una desigualdad sin | |, más fácil de resolver:', ecuacion('−' + num(k) + ' ' + sig('<') + ' ' + escapar(expr) + ' ' + sig('<') + ' ' + num(k)));
+        html += paso('Paso 3 — Despejar x', 'Una triple desigualdad se resuelve haciendo la MISMA operación a los tres lados: (a) se resta la constante para dejar solo el término con x en el centro; (b) se divide entre el coeficiente de x. Si ese coeficiente es negativo, hay que invertir los signos. Al final x queda entre dos números:', ecuacionResultado(num(loMenor) + ' ' + sig(asc) + ' x ' + sig(asc) + ' ' + num(hiMayor)));
+        html += paso('Paso 4 — Leer la solución', 'La solución son todos los x que están entre ' + num(loMenor) + ' y ' + num(hiMayor) + '. En la recta numérica se sombrea ese intervalo, y en el plano cartesiano es la parte de la V de y = |' + escapar(expr) + '| que queda por DEBAJO de la línea y = ' + num(k) + ' (entre los dos puntos de corte).', '<div class="linea resultado">x ∈ ' + intervalToString({ from: loMenor, fromClosed: op === '<=', to: hiMayor, toClosed: op === '<=' }) + '</div>');
         html += '</details>';
         return html;
       }
@@ -2532,8 +2534,10 @@
           [{ x: loB, y: k, label: '(' + num(loB) + ', ' + num(k) + ')' }, { x: hiB, y: k, label: '(' + num(hiB) + ', ' + num(k) + ')' }]
         ) + '</div>';
         html += '<details class="detalle"><summary>Ver explicación de los pasos</summary>';
-        html += paso('Paso 1 — Regla de las puntas', escapar('|x| > k  ⇔  x < −k  o  x > k: una desigualdad "mayor que" se resuelve en dos casos fuera del intervalo.'), ecuacion(escapar(expr) + ' ' + sig(opIzq) + ' −' + num(k) + '   o   ' + escapar(expr) + ' ' + sig(opDer) + ' ' + num(k)));
-        html += paso('Paso 2 — Resolver cada caso', 'Se despeja x en cada rama y se unen los resultados (∪).', ecuacionResultado('x ' + sig(opIzqF) + ' ' + num(valIzq) + '   o   x ' + sig(opDerF) + ' ' + num(valDer)));
+        html += paso('Paso 1 — ¿Qué significa |u| > k?', 'El valor absoluto |u| es la distancia de u al 0. Pedir que |u| sea mayor que k significa que u debe estar a MÁS de k unidades del 0: o se encuentra por debajo de −k (a la izquierda de la franja) o por encima de k (a la derecha). Por eso se resuelven dos casos por separado.', ecuacion('|u| ' + sig('>') + ' k   ⇔   u ' + sig('<') + ' −k   o   u ' + sig('>') + ' k'));
+        html += paso('Paso 2 — Aplicar la regla a nuestra expresión', 'Sustituimos u por ' + escapar(expr) + ' y k por ' + num(k) + '. Quedan dos desigualdades independientes (cualquiera de las dos vale):', ecuacion(escapar(expr) + ' ' + sig(opIzq) + ' −' + num(k) + '   o   ' + escapar(expr) + ' ' + sig(opDer) + ' ' + num(k)));
+        html += paso('Paso 3 — Resolver cada caso', 'Se despeja x en cada rama por separado: restar la constante y dividir entre el coeficiente (invirtiendo el signo si es negativo). Cada rama da una parte de la solución:', ecuacionResultado('x ' + sig(opIzqF) + ' ' + num(valIzq) + '   o   x ' + sig(opDerF) + ' ' + num(valDer)));
+        html += paso('Paso 4 — Leer la solución', 'Como cualquiera de las dos ramas sirve, la solución es la UNIÓN (∪) de ambos resultados. En la recta numérica se sombrean los dos extremos, y en el plano cartesiano es la parte de la V de y = |' + escapar(expr) + '| que queda por ENCIMA de la línea y = ' + num(k) + ' (fuera de los dos puntos de corte).', '<div class="linea resultado">x ∈ ' + segsToString(segs) + '</div>');
         html += '</details>';
         return html;
       }
@@ -2607,9 +2611,9 @@
       svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
       svg += '<polygon points="' + X(xMax) + ',' + Y(0) + ' ' + (X(xMax) - 9) + ',' + (Y(0) - 4) + ' ' + (X(xMax) - 9) + ',' + (Y(0) + 4) + '" fill="#475569"/>';
       svg += '<polygon points="' + X(0) + ',' + Y(yMax) + ' ' + (X(0) - 4) + ',' + (Y(yMax) + 9) + ' ' + (X(0) + 4) + ',' + (Y(yMax) + 9) + '" fill="#475569"/>';
-      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
-      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
-      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="12" fill="#64748b">0</text>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="12" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="12" fill="#334155">y</text>';
+      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="10" fill="#64748b">0</text>';
 
       puntos.forEach(function (p) {
         svg += '<circle cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="5" fill="#e11d48"/>';
@@ -2947,16 +2951,16 @@
       svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
       svg += '<polygon points="' + X(xMax) + ',' + Y(0) + ' ' + (X(xMax) - 9) + ',' + (Y(0) - 4) + ' ' + (X(xMax) - 9) + ',' + (Y(0) + 4) + '" fill="#475569"/>';
       svg += '<polygon points="' + X(0) + ',' + Y(yMax) + ' ' + (X(0) - 4) + ',' + (Y(yMax) + 9) + ' ' + (X(0) + 4) + ',' + (Y(yMax) + 9) + '" fill="#475569"/>';
-      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
-      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
-      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="12" fill="#64748b">0</text>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="12" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="12" fill="#334155">y</text>';
+      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="10" fill="#64748b">0</text>';
       for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
         if (i === 0) continue;
-        svg += '<text x="' + X(i) + '" y="' + (Y(0) + 16) + '" text-anchor="middle" font-size="11" fill="#64748b">' + i + '</text>';
+        svg += '<text x="' + X(i) + '" y="' + (Y(0) + 16) + '" text-anchor="middle" font-size="9" fill="#64748b">' + i + '</text>';
       }
       for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
         if (j === 0) continue;
-        svg += '<text x="' + (X(0) - 6) + '" y="' + (Y(j) + 4) + '" text-anchor="end" font-size="11" fill="#64748b">' + j + '</text>';
+        svg += '<text x="' + (X(0) - 6) + '" y="' + (Y(j) + 4) + '" text-anchor="end" font-size="9" fill="#64748b">' + j + '</text>';
       }
 
       const paso = (xMax - xMin) / 280;
@@ -3014,22 +3018,22 @@ function graficarAbs(f, intervalos, k, puntos) {
       svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
       svg += '<polygon points="' + X(xMax) + ',' + Y(0) + ' ' + (X(xMax) - 9) + ',' + (Y(0) - 4) + ' ' + (X(xMax) - 9) + ',' + (Y(0) + 4) + '" fill="#475569"/>';
       svg += '<polygon points="' + X(0) + ',' + Y(yMax) + ' ' + (X(0) - 4) + ',' + (Y(yMax) + 9) + ' ' + (X(0) + 4) + ',' + (Y(yMax) + 9) + '" fill="#475569"/>';
-      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
-      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
-      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="12" fill="#64748b">0</text>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="12" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="12" fill="#334155">y</text>';
+      svg += '<text x="' + (X(0) - 4) + '" y="' + (Y(0) + 16) + '" text-anchor="end" font-size="10" fill="#64748b">0</text>';
       for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
         if (i === 0) continue;
-        svg += '<text x="' + X(i) + '" y="' + (Y(0) + 16) + '" text-anchor="middle" font-size="11" fill="#64748b">' + i + '</text>';
+        svg += '<text x="' + X(i) + '" y="' + (Y(0) + 16) + '" text-anchor="middle" font-size="9" fill="#64748b">' + i + '</text>';
       }
       for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
         if (j === 0) continue;
-        svg += '<text x="' + (X(0) - 6) + '" y="' + (Y(j) + 4) + '" text-anchor="end" font-size="11" fill="#64748b">' + j + '</text>';
+        svg += '<text x="' + (X(0) - 6) + '" y="' + (Y(j) + 4) + '" text-anchor="end" font-size="9" fill="#64748b">' + j + '</text>';
       }
 
       svg += '<line x1="' + X(xMin) + '" y1="' + Y(k) + '" x2="' + X(xMax) + '" y2="' + Y(k) + '" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"/>';
       svg += '<line x1="' + X(xMin) + '" y1="' + Y(-k) + '" x2="' + X(xMax) + '" y2="' + Y(-k) + '" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"/>';
-      svg += '<text x="' + (X(xMax) - 6) + '" y="' + (Y(k) - 8) + '" text-anchor="end" font-size="12" fill="#f59e0b">y = ' + fmtRacional(k) + '</text>';
-      svg += '<text x="' + (X(xMax) - 6) + '" y="' + (Y(-k) + 18) + '" text-anchor="end" font-size="12" fill="#f59e0b">y = −' + fmtRacional(k) + '</text>';
+      svg += '<text x="' + (X(xMax) - 6) + '" y="' + (Y(k) - 8) + '" text-anchor="end" font-size="10" fill="#f59e0b">y = ' + fmtRacional(k) + '</text>';
+      svg += '<text x="' + (X(xMax) - 6) + '" y="' + (Y(-k) + 18) + '" text-anchor="end" font-size="10" fill="#f59e0b">y = −' + fmtRacional(k) + '</text>';
 
       intervalos.forEach(function (it) {
         const x0 = isFinite(it[0]) ? it[0] : xMin;
@@ -3813,8 +3817,8 @@ function graficarAbs(f, intervalos, k, puntos) {
       }
       svg += '<line x1="' + X(xMin) + '" y1="' + Y(0) + '" x2="' + X(xMax) + '" y2="' + Y(0) + '" stroke="#475569" stroke-width="2"/>';
       svg += '<line x1="' + X(0) + '" y1="' + Y(yMin) + '" x2="' + X(0) + '" y2="' + Y(yMax) + '" stroke="#475569" stroke-width="2"/>';
-      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="14" fill="#334155">x</text>';
-      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="14" fill="#334155">y</text>';
+      svg += '<text x="' + (X(xMax) - 4) + '" y="' + (Y(0) - 6) + '" text-anchor="end" font-size="12" fill="#334155">x</text>';
+      svg += '<text x="' + (X(0) + 8) + '" y="' + (Y(yMax) + 6) + '" font-size="12" fill="#334155">y</text>';
 
       const paso = (xMax - xMin) / 320;
       curvas.forEach(function (c) {

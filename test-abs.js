@@ -84,7 +84,11 @@ t('|2x − 1| < 5: conclusión después de la cadena', function () {
 });
 t('|2x − 1| < 5: explicación al final (details tras conclusión)', function () {
   const h = resolverAbs('|2x − 1| < 5');
-  return h.lastIndexOf('<details') > h.lastIndexOf('x ∈');
+  return h.indexOf('x ∈') < h.indexOf('<details');
+});
+t('|2x − 1| < 5: explicación con 4 pasos', function () {
+  const h = resolverAbs('|2x − 1| < 5').split('<details')[1];
+  return (h.match(/Paso [1-4] —/g) || []).length === 4;
 });
 t('coef negativo |1 − 2x| < 5 → (-2, 3)', function () {
   return txt(resolverAbs('|1 − 2x| < 5')).indexOf('x ∈ (-2, 3)') !== -1;
@@ -117,7 +121,11 @@ t('|2x − 1| > 5: conclusión después de ramas', function () {
 });
 t('|2x − 1| > 5: explicación al final', function () {
   const h = resolverAbs('|2x − 1| > 5');
-  return h.lastIndexOf('<details') > h.lastIndexOf('x ∈');
+  return h.indexOf('x ∈') < h.indexOf('<details');
+});
+t('|2x − 1| > 5: explicación con 4 pasos', function () {
+  const h = resolverAbs('|2x − 1| > 5').split('<details')[1];
+  return (h.match(/Paso [1-4] —/g) || []).length === 4;
 });
 t('|x| >= 3 → (-∞, -3] ∪ [3, ∞) cerrado', function () {
   return txt(resolverAbs('|x| >= 3')).indexOf('x ∈ (−∞, -3] ∪ [3, ∞)') !== -1;
@@ -208,6 +216,11 @@ t('el número 2 aparece como tick en el plano cartesiano', function () {
   const h = resolverAbs('|x| < 5');
   const graf = h.split('Plano cartesiano')[1].split('<details')[0];
   return /<text[^>]*>2<\/text>/.test(graf) && /<text[^>]*>−?2<\/text>/.test(graf);
+});
+t('números de los ejes más pequeños (font-size 9 en ticks, 10 en el 0)', function () {
+  const h = resolverAbs('|x| < 5');
+  const graf = h.split('Plano cartesiano')[1].split('<details')[0];
+  return graf.indexOf('font-size="9"') !== -1 && graf.indexOf('font-size="10" fill="#64748b">0') !== -1;
 });
 
 console.log('\nResultado: ' + pass + ' PASS, ' + fail + ' FAIL');

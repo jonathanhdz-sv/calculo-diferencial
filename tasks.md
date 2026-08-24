@@ -22,10 +22,14 @@ desigualdad con valor absoluto.
 - [x] Caso trivial (`a = 1`, `b = 0`): la línea compuesta es `|x| < k ⇔ −k < x < k` (sin duplicar).
 - [x] Etiquetar con números (ticks) el eje x y el eje y en `graficarAbs` y `graficarFuncion`
       para identificar valores fácilmente.
+- [x] Reducir el tamaño de los números en los planos cartesianos (ticks 9, "0" 10, letras de
+      ejes 12, `y = ±k` 10) para que no se vean tan grandes.
+- [x] Mejorar la explicación de los pasos: 4 pasos didácticos por caso (significado de
+      `|u| < k` / `|u| > k`, aplicar la regla, despejar, leer la solución con recta y plano).
 - [x] Quitar helpers sin uso (`resolverLinealAbs`, `intervaloDesdeSol`, `escFormat`);
       agregar `sumaSignada`.
 - [x] Probar con Node: `|x| < 3`, `|x| < 5`, `|2x − 1| < 5`, puntas, `a < 0`, casos especiales,
-      plano cartesiano y ticks en ejes. **38/38 PASS** (`test-abs.js`).
+      plano cartesiano, ticks, tamaño de fuente y 4 pasos. **41/41 PASS** (`test-abs.js`).
 - [ ] RDD: receipt final con evidencia.
 
 ## Funciones avanzadas — Nuevos módulos (en curso, 23 ago 2026)
